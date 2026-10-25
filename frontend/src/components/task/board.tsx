@@ -109,7 +109,7 @@ export const Board = ({
             <div
               className={cn(
                 'column-cards flex flex-col flex-1 min-h-0 overflow-y-auto gap-2 pt-0 px-2 pb-2.5',
-                '[scrollbar-width:thin] [scrollbar-color:#dfe1e6_transparent] [&>*]:shrink-0',
+                '[scrollbar-width:thin] [scrollbar-color:var(--color-line)_transparent] [&>*]:shrink-0',
               )}
             >
               {tasks
@@ -127,7 +127,7 @@ export const Board = ({
                         'shadow-card text-left [transition:border-color_.12s,box-shadow_.12s]',
                         '[&:hover]:border-brand-border [&:hover]:shadow-card-hover [&:active]:[cursor:grabbing]',
                         '[&.is-done_.task-card-title]:text-muted [&.is-done_.task-card-title]:line-through',
-                        '[&.is-done_.task-card-title]:[text-decoration-color:#b3b9c4] [&:hover_.drag-grip]:opacity-100',
+                        '[&.is-done_.task-card-title]:[text-decoration-color:var(--color-disabled)] [&:hover_.drag-grip]:opacity-100',
                         status === 'done' ? 'is-done' : '',
                       )}
                       draggable={!mutation.readOnly && !mutation.saving}

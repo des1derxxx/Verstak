@@ -240,7 +240,7 @@ export const Dropdown = ({
           'dropdown-trigger [font:inherit] [-webkit-tap-highlight-color:transparent] flex items-center',
           'justify-between gap-2 w-full min-w-0 min-h-9 py-1.75 px-2.5 border border-input-border rounded',
           'bg-surface text-ink text-left text-body font-normal leading-5 cursor-pointer',
-          '[&:focus-visible]:[outline:2px_solid_#388bff] [&:focus-visible]:outline-offset-0.5',
+          '[&:focus-visible]:[outline:2px_solid_var(--color-focus)] [&:focus-visible]:outline-offset-0.5',
           '[&:hover:not(:disabled)]:bg-surface-soft [&:hover:not(:disabled)]:border-placeholder',
           '[&[aria-expanded=true]]:border-brand [&[aria-expanded=true]]:shadow-ring-brand',
           '[&>svg]:text-muted [&.filter-select]:bg-neutral [&.filter-select]:border-transparent',
