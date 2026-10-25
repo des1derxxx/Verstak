@@ -981,3 +981,72 @@ test('view tabs and project scope follow the current route', async (context) => 
   assert.equal(screen.getByRole('tab', { name: 'Доска' }).getAttribute('aria-selected'), 'false');
   assert.ok(screen.getByRole('heading', { name: project.name }));
 });
+
+const columns = [
+  { id: 'todo', name: 'К выполнению', category: 'todo' },
+  { id: 'review', name: 'Ревью', category: 'progress' },
+  { id: 'shipped', name: 'В сторе', category: 'done' },
+];
+const mountColumns = (context, path) => {
+  const mutations = [];
+  let revision = 1;
+  const data = {
+    version: 1,
+    projects: [{ ...project, statuses: columns }],
+    tasks: [{ ...task, status: 'review' }],
+    notes: [],
+  };
+  mockApi(context, async (_url, options) => {
+    if (options.method === 'PATCH') {
+      const body = JSON.parse(options.body);
+      mutations.push(body);
+      for (const item of body.upsert.projects) data.projects = [item];
+      for (const item of body.upsert.tasks)
+        data.tasks = data.tasks.map((current) => (current.id === item.id ? item : current));
+      revision += 1;
+      return Response.json({ revision, data });
+    }
+    return Response.json([]);
+  });
+  render(
+    h(WorkspaceApp, { session, space, snapshot: { revision, data: structuredClone(data) }, path }),
+  );
+  return mutations;
+};
+
+test('a project board shows its own columns and adds new ones', async (context) => {
+  const mutations = mountColumns(context, '/workspaces/space/projects/project/board');
+  const board = screen.getByRole('region', { name: 'Ревью' });
+  assert.ok(within(board).getByText(task.title));
+  assert.ok(screen.getByRole('region', { name: 'В сторе' }));
+  assert.equal(screen.queryByRole('region', { name: 'В работе' }), null);
+  fireEvent.click(screen.getByRole('button', { name: 'Добавить колонку' }));
+  fireEvent.change(screen.getByLabelText('Название колонки'), { target: { value: 'QA' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Добавить' }));
+  await waitFor(() => assert.equal(mutations.length, 1));
+  const saved = mutations[0].upsert.projects[0].statuses;
+  // A progress column goes after the existing progress columns, before done.
+  assert.deepEqual(
+    saved.map((column) => column.name),
+    ['К выполнению', 'Ревью', 'QA', 'В сторе'],
+  );
+  assert.ok(await screen.findByRole('region', { name: 'QA' }));
+});
+
+test('mixed views group custom columns by stage and label the exact column', async (context) => {
+  mountColumns(context, '/workspaces/space/board');
+  const progress = screen.getByRole('region', { name: 'В работе' });
+  assert.ok(within(progress).getByText(task.title));
+  assert.ok(within(progress).getByText('Ревью'));
+});
+
+test('the task list offers only the columns of the task project', async (context) => {
+  const mutations = mountColumns(context, '/workspaces/space/projects/project/list');
+  fireEvent.click(screen.getByRole('combobox', { name: `Статус задачи: ${task.title}` }));
+  const options = screen.getAllByRole('option').map((option) => option.textContent);
+  assert.deepEqual(options, ['К выполнению', 'Ревью', 'В сторе']);
+  fireEvent.click(screen.getByRole('option', { name: 'В сторе' }));
+  // A done-stage column still asks for a resolution first.
+  assert.ok(await screen.findByRole('textbox', { name: 'Итоговый комментарий' }));
+  assert.equal(mutations.length, 0);
+});

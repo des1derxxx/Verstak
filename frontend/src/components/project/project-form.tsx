@@ -2,7 +2,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { useContext, useRef, useState } from 'react';
 import { Check, Trash2 } from 'lucide-react';
-import { colors } from '@/lib/model/workspace';
+import { colors, projectStatuses } from '@/lib/model/workspace';
+import { ProjectColumns } from '@/components/project/project-columns';
 import type { Project } from '@/lib/model/workspace';
 import { Modal, MutationContext, useDiscardConfirmation } from '@/components/ui/modal';
 export const ProjectForm = ({
@@ -22,13 +23,17 @@ export const ProjectForm = ({
   const [key, setKey] = useState(project?.key ?? '');
   const [description, setDescription] = useState(project?.description ?? '');
   const [color, setColor] = useState(project?.color ?? colors[0]);
+  const initialColumns = useRef(projectStatuses(project));
+  const [columns, setColumns] = useState(initialColumns.current);
+  const columnsChanged = JSON.stringify(columns) !== JSON.stringify(initialColumns.current);
   const [deleting, setDeleting] = useState(false);
   const close = useDiscardConfirmation(
     !mutation.readOnly &&
       (key !== (project?.key ?? '') ||
         name !== (project?.name ?? '') ||
         description !== (project?.description ?? '') ||
-        color !== (project?.color ?? colors[0])),
+        color !== (project?.color ?? colors[0]) ||
+        columnsChanged),
     onClose,
   );
   return (
@@ -52,6 +57,12 @@ export const ProjectForm = ({
               description: description.trim(),
               color,
               ...(key ? { key } : {}),
+              // Untouched projects keep following the default columns.
+              ...(columnsChanged
+                ? { statuses: columns.map((column) => ({ ...column, name: column.name.trim() })) }
+                : project?.statuses
+                  ? { statuses: project.statuses }
+                  : {}),
             });
         }}
       >
@@ -119,6 +130,7 @@ export const ProjectForm = ({
             </button>
           ))}
         </fieldset>
+        <ProjectColumns columns={columns} onChange={setColumns} />
         {close.confirmation}
         <div
           className={cn(

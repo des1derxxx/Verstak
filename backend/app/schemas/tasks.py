@@ -2,7 +2,7 @@ from datetime import date, datetime
 from typing import Literal
 from pydantic import Field, HttpUrl, StringConstraints, field_validator, model_validator
 from typing_extensions import Annotated
-from .common import Model, Identifier, Title, IssueKey, TaskType
+from .common import Model, Identifier, Title, IssueKey, TaskType, StatusId
 
 
 class Check(Model):
@@ -21,7 +21,8 @@ class TaskFields(Model):
     projectId: Identifier
     title: Title
     description: str = Field(default="", max_length=20000)
-    status: Literal["backlog", "todo", "progress", "done"] = "todo"
+    # A status id from the task's project; empty means the project's first "todo" column.
+    status: StatusId | None = None
     priority: Literal["low", "medium", "high"] = "medium"
     due: str = ""
     labels: list[Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=40)]] = Field(default_factory=list, max_length=20)
@@ -48,6 +49,7 @@ class TaskFields(Model):
 
 class Task(TaskFields):
     id: Identifier
+    status: StatusId
     createdAt: str
     key: IssueKey | None = None
     revision: int = Field(default=0, ge=0)
@@ -71,7 +73,7 @@ class TaskPatch(Model):
     title: Title | None = None
     description: str | None = Field(default=None, max_length=20000)
     projectId: Identifier | None = None
-    status: Literal["backlog", "todo", "progress", "done"] | None = None
+    status: StatusId | None = None
     priority: Literal["low", "medium", "high"] | None = None
     due: str | None = None
     labels: list[str] | None = None

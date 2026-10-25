@@ -3,6 +3,7 @@ from fastapi import HTTPException
 from pymongo import ReturnDocument
 from pydantic import ValidationError
 from app.schemas.workspaces import Data
+from app.schemas.projects import status_category, status_for
 from app.database.mongo import now
 from ..activity import audit, add_comment
 
@@ -38,10 +39,14 @@ def reserve_prefix(db, workspace_id, project, previous, used, session):
 
 def persist(db, workspace_id, previous, proposed, actor, session, restore=False):
     """Called inside a transaction after acquiring the workspace write lock."""
+    proposed_projects = {project.get("id"): project for project in proposed.get("projects", [])}
+    for task in proposed.get("tasks", []):
+        if not task.get("status") and task.get("projectId") in proposed_projects:
+            task["status"] = status_for(proposed_projects[task["projectId"]])
     try:
         result = Data.model_validate(proposed).model_dump(mode="json")
     except ValidationError:
-        raise HTTPException(422, "Проверь поля задачи и связи подзадач: один проект, без циклов")
+        raise HTTPException(422, "Проверь поля задачи, колонки проекта и связи подзадач: один проект, без циклов")
     old_projects = {item["id"]: item for item in previous["projects"]}
     old_tasks = {item["id"]: item for item in previous["tasks"]}
     projects = {item["id"]: item for item in result["projects"]}
@@ -79,11 +84,13 @@ def persist(db, workspace_id, previous, proposed, actor, session, restore=False)
         if claim and claim["task_id"] != task["id"]:
             raise HTTPException(409, "Этот номер уже принадлежал другой задаче")
         db.issue_keys.update_one({"_id": key_id}, {"$setOnInsert": {"workspace_id": workspace_id, "task_id": task["id"]}}, upsert=True, session=session)
-        closing = task["status"] == "done" and (not old or old["status"] != "done")
+        project = projects[task["projectId"]]
+        old_category = status_category(old_projects.get(old["projectId"], project), old["status"]) if old else None
+        closing = status_category(project, task["status"]) == "done" and old_category != "done"
         if closing and not restore:
             if not resolution:
                 raise HTTPException(422, "Для завершения задачи нужен итоговый комментарий")
-            if any(child.get("parentId") == task["id"] and child["status"] != "done" for child in result["tasks"]):
+            if any(child.get("parentId") == task["id"] and status_category(projects[child["projectId"]], child["status"]) != "done" for child in result["tasks"]):
                 raise HTTPException(409, "Сначала заверши все подзадачи")
             resolutions[task["id"]] = resolution
         task["createdAt"] = old["createdAt"] if old else task["createdAt"] if restore else now().isoformat()

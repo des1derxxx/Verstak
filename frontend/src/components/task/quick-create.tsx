@@ -3,7 +3,8 @@ import { cn } from '@/lib/cn';
 import { Dropdown } from '@/components/ui/dropdown';
 import { useContext, useRef, useState } from 'react';
 import { CornerDownLeft, Plus, X } from 'lucide-react';
-import type { Project, Status, Task } from '@/lib/model/workspace';
+import { statusIndex } from '@/lib/model/workspace';
+import type { Project, Status, StatusCategory, Task } from '@/lib/model/workspace';
 import { MutationContext } from '@/components/ui/modal';
 import { createTask } from '@/lib/model/task';
 export const QuickCreate = ({
@@ -15,7 +16,8 @@ export const QuickCreate = ({
 }: {
   projects: Project[];
   projectId: string;
-  status?: Status;
+  // A column of the project, or a stage when the view mixes projects.
+  status?: Status | StatusCategory;
   today?: boolean;
   onCreate: (task: Task) => Promise<boolean>;
 }) => {
@@ -35,7 +37,12 @@ export const QuickCreate = ({
       return;
     setPending(true);
     setError('');
-    draft.current ??= createTask(selectedProject, title, status, today);
+    draft.current ??= createTask(
+      selectedProject,
+      title,
+      statusIndex(projects).resolve(selectedProject, status),
+      today,
+    );
     const candidate = { ...draft.current, projectId: selectedProject, title: title.trim() };
     let success = false;
     try {

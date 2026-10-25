@@ -1,12 +1,12 @@
-import { statusStyles } from '@/components/task/task-styles';
+import { categoryStyles } from '@/components/task/task-styles';
 import { cn } from '@/lib/cn';
 import { Dropdown } from '@/components/ui/dropdown';
-import { priorityNames, statuses, statusNames } from '@/lib/model/workspace';
-import type { Priority, Status, Task } from '@/lib/model/workspace';
+import { priorityNames } from '@/lib/model/workspace';
+import type { Priority, Task } from '@/lib/model/workspace';
 import { taskKey } from '@/lib/model/task';
 import type { TaskEditorModel } from '@/components/task/task-editor/use-task-editor';
 export const TaskMetadata = ({ model }: { model: TaskEditorModel }) => {
-  const { draft, update, task, projects, membersError, members, tasks } = model;
+  const { draft, update, task, projects, statuses, membersError, members, tasks } = model;
   return (
     <div
       className={cn(
@@ -23,11 +23,13 @@ export const TaskMetadata = ({ model }: { model: TaskEditorModel }) => {
           className={cn(
             'status-select border-0 rounded-chip text-tiny font-semibold uppercase py-1 px-1.25',
             'cursor-pointer max-w-32.5',
-            statusStyles[draft.status],
+            categoryStyles[statuses.category(draft)],
           )}
           value={draft.status}
-          onValueChange={(value) => update('status', value as Status)}
-          options={[...statuses.map((value) => ({ value: value, label: statusNames[value] }))]}
+          onValueChange={(value) => update('status', value)}
+          options={statuses
+            .list(draft.projectId)
+            .map((status) => ({ value: status.id, label: status.name }))}
         />
       </label>
       {task && (
@@ -40,6 +42,8 @@ export const TaskMetadata = ({ model }: { model: TaskEditorModel }) => {
             onValueChange={(value) => {
               update('projectId', value);
               update('parentId', null);
+              // Columns differ between projects; keep the same stage.
+              update('status', statuses.resolve(value, statuses.category(draft)));
             }}
             options={[...projects.map((project) => ({ value: project.id, label: project.name }))]}
           />

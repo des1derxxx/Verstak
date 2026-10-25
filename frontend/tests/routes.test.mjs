@@ -37,12 +37,15 @@ test('URL filters round trip search and reset without losing other parameters', 
     }),
     'tab=1',
   );
-  assert.deepEqual(parseFilters(new URLSearchParams('priority=admin&status=unknown&sort=wrong')), {
-    query: '',
-    priority: 'all',
-    status: 'all',
-    sort: 'created',
-  });
+  assert.deepEqual(
+    parseFilters(new URLSearchParams('priority=admin&status=not%20a%20status!&sort=wrong')),
+    {
+      query: '',
+      priority: 'all',
+      status: 'all',
+      sort: 'created',
+    },
+  );
 });
 test('login return URLs cannot send users to another origin', () => {
   for (const input of [

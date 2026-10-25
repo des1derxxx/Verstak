@@ -1,4 +1,4 @@
-import { statusStyles, priorityStyles } from '@/components/task/task-styles';
+import { categoryStyles, priorityStyles } from '@/components/task/task-styles';
 import { cn } from '@/lib/cn';
 import {
   ArrowDown,
@@ -12,19 +12,25 @@ import {
   Minus,
   SquareCheck,
 } from 'lucide-react';
-import { priorityNames, statusNames } from '@/lib/model/workspace';
-import type { Priority, Status, Task } from '@/lib/model/workspace';
-export const StatusIcon = ({ status, size = 14 }: { status: Status; size?: number }) => {
-  if (status === 'done') return <CircleCheck size={size} />;
-  if (status === 'progress') return <Clock3 size={size} />;
-  if (status === 'backlog') return <Circle size={size} />;
+import { priorityNames } from '@/lib/model/workspace';
+import type { Priority, ProjectStatus, StatusCategory, Task } from '@/lib/model/workspace';
+export const StatusIcon = ({
+  category,
+  size = 14,
+}: {
+  category: StatusCategory;
+  size?: number;
+}) => {
+  if (category === 'done') return <CircleCheck size={size} />;
+  if (category === 'progress') return <Clock3 size={size} />;
+  if (category === 'backlog') return <Circle size={size} />;
   return <SquareCheck size={size} />;
 };
-export const StatusBadge = ({ status }: { status: Status }) => {
+export const StatusBadge = ({ status }: { status: ProjectStatus }) => {
   return (
-    <span className={cn('status-badge', statusStyles[status])}>
-      <StatusIcon status={status} />
-      {statusNames[status]}
+    <span className={cn('status-badge', categoryStyles[status.category])}>
+      <StatusIcon category={status.category} />
+      {status.name}
     </span>
   );
 };

@@ -2,12 +2,45 @@
 
 import { useNavigation } from '@/lib/navigation-guard';
 import { createTask, emptyFilters, filterTasks } from '@/lib/model/task';
-import type { Note, Project, Status, Task } from '@/lib/model/workspace';
+import { categories, projectStatuses, statusIndex } from '@/lib/model/workspace';
+import type {
+  Note,
+  Project,
+  ProjectStatus,
+  Status,
+  StatusCategory,
+  Task,
+  Workspace,
+} from '@/lib/model/workspace';
 import { taskPath, viewPath } from '@/lib/routes';
 import { useWorkspace } from '@/lib/workspace/workspace-context';
 import { useWorkspaceUi } from '@/lib/workspace/workspace-ui';
 import { useTaskFilters, useWorkspaceLocation } from '@/lib/workspace/workspace-location';
 import { useCommitWorkspace, useWorkspaceData } from '@/queries/workspace';
+// Tasks in a removed column move to the first column of the same stage.
+const withProject = (workspace: Workspace, project: Project): Workspace => {
+  const before = statusIndex(workspace.projects);
+  const after = statusIndex([project]);
+  const kept = new Set(projectStatuses(project).map((status) => status.id));
+  return {
+    ...workspace,
+    projects: upsert(workspace.projects, project),
+    tasks: workspace.tasks.map((task) =>
+      task.projectId !== project.id || kept.has(task.status)
+        ? task
+        : { ...task, status: after.resolve(project.id, before.category(task)) },
+    ),
+  };
+};
+const rank = (category: StatusCategory) => categories.indexOf(category);
+// New columns go after the last column of the same or an earlier stage.
+export const insertColumn = (statuses: ProjectStatus[], column: ProjectStatus) => {
+  const position = statuses.reduce(
+    (last, status, index) => (rank(status.category) <= rank(column.category) ? index : last),
+    -1,
+  );
+  return [...statuses.slice(0, position + 1), column, ...statuses.slice(position + 1)];
+};
 const upsert = <T extends { id: string }>(items: T[], item: T) =>
   items.some((current) => current.id === item.id)
     ? items.map((current) => (current.id === item.id ? item : current))
@@ -23,7 +56,10 @@ export const useTaskActions = () => {
   const saveTask = async (task: Task): Promise<boolean> => {
     const original = workspace.tasks.find((item) => item.id === task.id);
     // Completing a task always goes through the editor to collect a resolution.
-    if (task.status === 'done' && original?.status !== 'done' && !task.resolutionComment?.trim()) {
+    const statuses = statusIndex(workspace.projects);
+    const completing =
+      statuses.category(task) === 'done' && (!original || statuses.category(original) !== 'done');
+    if (completing && !task.resolutionComment?.trim()) {
       openDialog({
         kind: 'task',
         task: original,
@@ -73,14 +109,22 @@ export const useProjectActions = () => {
   return {
     saveProject: async (project: Project) => {
       const exists = workspace.projects.some((item) => item.id === project.id);
-      const saved = await commit((current) => ({
-        ...current,
-        projects: upsert(current.projects, project),
-      }));
+      const saved = await commit((current) => withProject(current, project));
       if (saved) {
         notify(exists ? 'Проект обновлён' : 'Проект создан');
         navigate(viewPath(info.id, project.id));
       }
+      return saved;
+    },
+    addColumn: async (project: Project, name: string, category: StatusCategory) => {
+      const column = { id: `col-${crypto.randomUUID().slice(0, 8)}`, name, category };
+      const saved = await commit((current) =>
+        withProject(current, {
+          ...project,
+          statuses: insertColumn(projectStatuses(project), column),
+        }),
+      );
+      if (saved) notify(`Колонка «${name}» добавлена`);
       return saved;
     },
     deleteProject: async (id: string) => {

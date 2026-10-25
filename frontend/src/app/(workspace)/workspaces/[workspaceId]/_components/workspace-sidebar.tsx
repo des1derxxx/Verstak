@@ -52,7 +52,7 @@ export const WorkspaceSidebar = () => {
   const { info, spaces, session, readOnly } = useWorkspace();
   const { sidebarOpen, setSidebarOpen, openDialog } = useWorkspaceUi();
   const { navigate: go } = useNavigation();
-  const { workspace, projects: sortedProjects, scope: selected } = useTaskView();
+  const { workspace, projects: sortedProjects, scope: selected, statuses } = useTaskView();
   const { logout, error } = useLogout();
   const navigate = (href: string) => {
     setSidebarOpen(false);
@@ -145,7 +145,7 @@ export const WorkspaceSidebar = () => {
                 'text-center text-tiny font-medium',
               )}
             >
-              {workspace.tasks.filter((task) => task.status !== 'done').length}
+              {workspace.tasks.filter((task) => statuses.category(task) !== 'done').length}
             </span>
           </RouteLink>
           <RouteLink

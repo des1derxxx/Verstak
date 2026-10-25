@@ -2,7 +2,7 @@ from typing import Literal
 from pydantic import Field, StringConstraints, model_validator
 from typing_extensions import Annotated
 from .common import Model, Identifier, InviteRole
-from .projects import Project
+from .projects import Project, project_statuses
 from .notes import Note
 from .tasks import Task
 
@@ -26,9 +26,12 @@ class Data(Model):
         ids = [item.id for items in (self.projects, self.tasks, self.notes) for item in items]
         if len(ids) != len(set(ids)):
             raise ValueError("Идентификаторы должны быть уникальны")
-        projects = {project.id for project in self.projects}
+        projects = {project.id: project for project in self.projects}
         if any(item.projectId not in projects for item in [*self.tasks, *self.notes]):
             raise ValueError("Задача или заметка ссылается на неизвестный проект")
+        statuses = {project.id: {status["id"] for status in project_statuses(project)} for project in self.projects}
+        if any(task.status not in statuses[task.projectId] for task in self.tasks):
+            raise ValueError("Статус задачи должен быть колонкой её проекта")
         tasks = {task.id: task for task in self.tasks}
         for task in self.tasks:
             seen = {task.id}

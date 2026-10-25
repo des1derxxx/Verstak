@@ -1,14 +1,14 @@
 import { useCalendar } from '@/lib/calendar';
 import { TaskLink } from '@/components/task/task-link';
 import { IconButton } from '@/components/ui/button';
-import { statusStyles } from '@/components/task/task-styles';
+import { categoryStyles } from '@/components/task/task-styles';
 import { cn } from '@/lib/cn';
 import { Avatar } from '@/components/ui/avatar';
 import { Dropdown } from '@/components/ui/dropdown';
 import { useContext } from 'react';
 import { ArrowRight, CalendarDays, SquareCheck } from 'lucide-react';
-import { priorityNames, statuses, statusNames } from '@/lib/model/workspace';
-import type { Priority, Project, Status, Task } from '@/lib/model/workspace';
+import { priorityNames, statusIndex } from '@/lib/model/workspace';
+import type { Priority, Project, Task } from '@/lib/model/workspace';
 import type { Member } from '@/lib/api/types';
 import { MutationContext } from '@/components/ui/modal';
 import { dueLabel, taskKey } from '@/lib/model/task';
@@ -32,6 +32,7 @@ export const TaskTable = ({
 }) => {
   const { today: todayDate } = useCalendar();
   const mutation = useContext(MutationContext);
+  const statuses = statusIndex(projects);
   return (
     <div className={cn('issue-table-wrap overflow-x-auto w-full', compact ? 'is-compact' : '')}>
       <table
@@ -83,7 +84,7 @@ export const TaskTable = ({
                   )}
                   title={task.id}
                 >
-                  <TaskType done={task.status === 'done'} type={task.type} />
+                  <TaskType done={statuses.category(task) === 'done'} type={task.type} />
                   {taskKey(task)}
                 </TaskLink>
               </td>
@@ -95,7 +96,7 @@ export const TaskTable = ({
                     'issue-title-link text-left text-ink py-0.5 px-0 text-body max-w-110 overflow-hidden',
                     'whitespace-nowrap text-ellipsis align-middle [&:hover]:text-brand [&:hover]:underline',
                     '[&.is-done]:text-muted [&.is-done]:line-through max-desktop:max-w-65',
-                    task.status === 'done' ? 'is-done' : '',
+                    statuses.category(task) === 'done' ? 'is-done' : '',
                   )}
                 >
                   {task.title}
@@ -149,16 +150,16 @@ export const TaskTable = ({
                   className={cn(
                     'inline-status border-0 rounded-chip text-tiny font-semibold uppercase py-1 px-1.25',
                     'cursor-pointer max-w-32.5',
-                    statusStyles[task.status],
+                    categoryStyles[statuses.category(task)],
                   )}
                   disabled={mutation.readOnly || mutation.saving}
                   value={task.status}
                   onValueChange={(value) => {
-                    void onChange({ ...task, status: value as Status });
+                    void onChange({ ...task, status: value });
                   }}
-                  options={[
-                    ...statuses.map((status) => ({ value: status, label: statusNames[status] })),
-                  ]}
+                  options={statuses
+                    .list(task.projectId)
+                    .map((status) => ({ value: status.id, label: status.name }))}
                 />
               </td>
               <td>
@@ -192,7 +193,7 @@ export const TaskTable = ({
                   className={cn(
                     'table-due inline-flex items-center gap-1.25 text-caption text-muted min-h-6.5 p-0',
                     '[&:hover]:text-brand',
-                    task.due && task.due < todayDate && task.status !== 'done'
+                    task.due && task.due < todayDate && statuses.category(task) !== 'done'
                       ? 'overdue text-danger!'
                       : '',
                   )}
@@ -216,7 +217,10 @@ export const TaskTable = ({
                     aria-label={`Начать работу: ${task.title}`}
                     disabled={mutation.readOnly || mutation.saving}
                     onClick={() => {
-                      void onChange({ ...task, status: 'progress' });
+                      void onChange({
+                        ...task,
+                        status: statuses.resolve(task.projectId, 'progress'),
+                      });
                     }}
                   >
                     <ArrowRight size={17} />

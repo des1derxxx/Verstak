@@ -49,7 +49,7 @@ export const parseFilters = (search: URLSearchParams): Filters => {
   return {
     query: search.get('q') ?? '',
     priority: ['low', 'medium', 'high'].includes(priority) ? priority : 'all',
-    status: ['backlog', 'todo', 'progress', 'done'].includes(status) ? status : 'all',
+    status: /^[a-zA-Z0-9_-]{1,40}$/.test(status) ? status : 'all',
     sort: sort === 'priority' || sort === 'due' ? sort : 'created',
   };
 };

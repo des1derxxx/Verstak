@@ -3,8 +3,6 @@ import { cn } from '@/lib/cn';
 import { formatTime } from '@/lib/dates';
 import { useState } from 'react';
 import { useAddComment, useTaskActivity } from '@/queries/task-activity';
-import { statusNames } from '@/lib/model/workspace';
-import type { Status } from '@/lib/model/workspace';
 import { Markdown } from '@/components/ui/markdown';
 const events: Record<string, string> = {
   created: 'создал задачу',
@@ -34,6 +32,7 @@ export const TaskActivity = ({
   onDirty,
   onBusy,
   onActivity,
+  statusName = (id) => id,
 }: {
   workspaceId: string;
   taskId: string;
@@ -41,6 +40,7 @@ export const TaskActivity = ({
   onDirty: (value: boolean) => void;
   onBusy: (value: boolean) => void;
   onActivity: () => Promise<void>;
+  statusName?: (id: string) => string;
 }) => {
   const [tab, setTab] = useState<'comments' | 'history'>('comments');
   const [body, setBody] = useState('');
@@ -191,8 +191,8 @@ export const TaskActivity = ({
               <time dateTime={e.createdAt}>{formatTime(e.createdAt)}</time>
               {e.changes.status && (
                 <p>
-                  {statusNames[e.changes.status.from as Status]} →{' '}
-                  {statusNames[e.changes.status.to as Status]}
+                  {statusName(String(e.changes.status.from))} →{' '}
+                  {statusName(String(e.changes.status.to))}
                 </p>
               )}
               {Object.keys(e.changes).filter((f) => f !== 'status').length > 0 && (

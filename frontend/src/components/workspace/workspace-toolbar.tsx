@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { Dropdown } from '@/components/ui/dropdown';
 import { ArrowDownWideNarrow, FileText, LayoutGrid, List, ListTodo, Plus, X } from 'lucide-react';
-import { priorityNames, statuses, statusNames } from '@/lib/model/workspace';
+import { priorityNames } from '@/lib/model/workspace';
 import { emptyFilters } from '@/lib/model/task';
 import type { Sort } from '@/lib/model/task';
 import { useNavigation } from '@/lib/navigation-guard';
@@ -22,7 +22,15 @@ const views = [
 export const WorkspaceToolbar = () => {
   const { info, readOnly } = useWorkspace();
   const { navigate } = useNavigation();
-  const { view, scope, filtered, scoped, counts, filtersActive: activeFilters } = useTaskView();
+  const {
+    view,
+    scope,
+    filtered,
+    scoped,
+    counts,
+    filtersActive: activeFilters,
+    statusOptions,
+  } = useTaskView();
   const { filters, setFilters } = useTaskFilters();
   const { newNote: openPage } = useNoteActions();
   const navigationViews = scope === 'today' ? views.filter((item) => item.id !== 'notes') : views;
@@ -138,10 +146,7 @@ export const WorkspaceToolbar = () => {
                 onValueChange={(value) =>
                   setFilters((previous) => ({ ...previous, status: value }))
                 }
-                options={[
-                  { value: 'all', label: 'Статус' },
-                  ...statuses.map((status) => ({ value: status, label: statusNames[status] })),
-                ]}
+                options={[{ value: 'all', label: 'Статус' }, ...statusOptions]}
               />
               {activeFilters && (
                 <button

@@ -11,6 +11,7 @@ import {
   scopeTasks,
   sortProjects,
 } from '@/lib/model/task';
+import { categoryNames, projectStatuses, statusIndex } from '@/lib/model/workspace';
 import type { Filters, Scope, View } from '@/lib/model/task';
 import { filterSearch, locationFromSegments, parseFilters } from '@/lib/routes';
 import { useWorkspaceData } from '@/queries/workspace';
@@ -59,6 +60,9 @@ export const useTaskView = () => {
   const { today } = useCalendar();
   const project = workspace.projects.find((item) => item.id === scope);
   const scoped = scopeTasks(workspace, scope, today);
+  const statuses = statusIndex(workspace.projects);
+  const count = (category: string) =>
+    scoped.filter((task) => statuses.category(task) === category).length;
   return {
     workspace,
     scope,
@@ -70,10 +74,18 @@ export const useTaskView = () => {
     filtered: filterTasks(workspace, scoped, filters),
     notes: filterNotes(workspace.notes, project?.id, filters.query),
     filtersActive: active,
+    statuses,
+    // A project lists its own columns; mixed views offer the shared stages.
+    statusOptions: project
+      ? projectStatuses(project).map((status) => ({ value: status.id, label: status.name }))
+      : (['backlog', 'todo', 'progress', 'done'] as const).map((category) => ({
+          value: category,
+          label: categoryNames[category],
+        })),
     counts: {
-      done: scoped.filter((task) => task.status === 'done').length,
-      progress: scoped.filter((task) => task.status === 'progress').length,
-      backlog: scoped.filter((task) => task.status === 'backlog').length,
+      done: count('done'),
+      progress: count('progress'),
+      backlog: count('backlog'),
     },
   };
 };

@@ -5,7 +5,7 @@ import { taskKey } from '@/lib/model/task';
 import { TaskType } from '@/components/task/task-meta';
 import type { TaskEditorModel } from '@/components/task/task-editor/use-task-editor';
 export const TaskEditorToolbar = ({ model }: { model: TaskEditorModel }) => {
-  const { draft, task, setCopyNotice, copyNotice, mutation } = model;
+  const { draft, task, statuses, setCopyNotice, copyNotice, mutation } = model;
   if (!task) return null;
   return (
     <div
@@ -14,7 +14,7 @@ export const TaskEditorToolbar = ({ model }: { model: TaskEditorModel }) => {
         'max-phone:px-5 max-phone:gap-1.5',
       )}
     >
-      <TaskType done={draft.status === 'done'} type={draft.type} />
+      <TaskType done={statuses.category(draft) === 'done'} type={draft.type} />
       <span>{draft.type === 'bug' ? 'Ошибка' : draft.type === 'story' ? 'История' : 'Задача'}</span>
       <span className={'issue-key text-caption text-muted font-medium'} title={task.id}>
         {taskKey(task)}

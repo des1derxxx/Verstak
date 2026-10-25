@@ -1,5 +1,6 @@
 import { useRouteDraft } from '@/lib/navigation-guard';
 import { useContext, useEffect, useRef, useState } from 'react';
+import { statusIndex } from '@/lib/model/workspace';
 import type { Task } from '@/lib/model/workspace';
 import { MutationContext } from '@/components/ui/modal';
 import { createTask } from '@/lib/model/task';
@@ -23,25 +24,24 @@ export const useTaskEditor = ({
   onClose,
 }: TaskEditorProps) => {
   const mutation = useContext(MutationContext);
+  const statuses = statusIndex(projects);
+  const initialProject = projects.some((project) => project.id === projectId)
+    ? projectId
+    : projects[0].id;
   const initial = useRef(
     task
       ? structuredClone(task)
-      : (seed ??
-          createTask(
-            projects.some((project) => project.id === projectId) ? projectId : projects[0].id,
-            '',
-            status,
-            today,
-          )),
+      : (seed ?? createTask(initialProject, '', statuses.resolve(initialProject, status), today)),
   );
   const [draft, setDraft] = useState<Task>(() => ({
     ...initial.current,
-    ...(status ? { status } : {}),
+    ...(status ? { status: statuses.resolve(initial.current.projectId, status) } : {}),
   }));
   const [preview, setPreview] = useState(mutation.readOnly);
   const [commentDirty, setCommentDirty] = useState(false);
   const [commentBusy, setCommentBusy] = useState(false);
-  const closing = draft.status === 'done' && (!task || initial.current.status !== 'done');
+  const closing =
+    statuses.category(draft) === 'done' && (!task || statuses.category(initial.current) !== 'done');
   const liveTask = tasks.find((t) => t.id === task?.id);
   const stale = Boolean(
     task &&
@@ -88,6 +88,7 @@ export const useTaskEditor = ({
     task,
     seed,
     status,
+    statuses,
     projects,
     projectId,
     today,

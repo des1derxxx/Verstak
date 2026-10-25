@@ -1,4 +1,4 @@
-import { isDue, localDate } from '@/lib/model/workspace.ts';
+import { isDue, localDate, statusIndex } from '@/lib/model/workspace.ts';
 import type { Note, Priority, Project, Status, Task, Workspace } from '@/lib/model/workspace.ts';
 export type View = 'board' | 'backlog' | 'list' | 'notes';
 // 'all', 'today' or a project ID.
@@ -37,18 +37,25 @@ export const createTask = (
   };
 };
 export const scopeTasks = (workspace: Workspace, scope: Scope, today = localDate()): Task[] => {
-  if (scope === 'today') return workspace.tasks.filter((task) => isDue(task, today));
+  if (scope === 'today') {
+    const index = statusIndex(workspace.projects);
+    return workspace.tasks.filter((task) => isDue(task, today, index));
+  }
   if (scope === 'all') return workspace.tasks;
   return workspace.tasks.filter((task) => task.projectId === scope);
 };
 export const filterTasks = (workspace: Workspace, tasks: Task[], filters: Filters): Task[] => {
   const query = filters.query.trim().toLocaleLowerCase('ru');
   const projects = new Map(workspace.projects.map((project) => [project.id, project.name]));
+  const index = statusIndex(workspace.projects);
   return tasks
     .filter(
       (task) =>
         (filters.priority === 'all' || task.priority === filters.priority) &&
-        (filters.status === 'all' || task.status === filters.status) &&
+        // In a project the filter names a column; across projects it names a stage.
+        (filters.status === 'all' ||
+          task.status === filters.status ||
+          index.category(task) === filters.status) &&
         (!query ||
           [
             task.title,

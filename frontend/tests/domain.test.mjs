@@ -2,7 +2,7 @@ import { diffWorkspace } from '../src/lib/api/workspace-data.ts';
 import { mockApi } from './mock-api.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { isDue, moveTask, parseWorkspace } from '../src/lib/model/workspace.ts';
+import { isDue, moveTask, parseWorkspace, statusIndex } from '../src/lib/model/workspace.ts';
 import { api, ApiError, setCsrf } from '../src/lib/api/client.ts';
 
 const empty = () => ({ version: 1, projects: [], tasks: [], notes: [] });
@@ -107,4 +107,32 @@ test('API errors preserve conflict status and report unavailable or malformed re
     api('/workspaces'),
     (error) => error instanceof ApiError && error.status === 502,
   );
+});
+
+test('backups keep project columns and reject statuses outside them', () => {
+  const statuses = [
+    { id: 'todo', name: 'К выполнению', category: 'todo' },
+    { id: 'shipped', name: 'В сторе', category: 'done' },
+  ];
+  const project = { id: 'p', name: 'App', description: '', color: '#0c66e4', statuses };
+  const task = {
+    id: 't',
+    projectId: 'p',
+    title: 'Ship',
+    description: '',
+    status: 'shipped',
+    priority: 'medium',
+    due: '',
+    labels: [],
+    checklist: [],
+    createdAt: '2026-10-25T00:00:00Z',
+  };
+  const data = { version: 1, projects: [project], tasks: [task], notes: [] };
+  assert.equal(parseWorkspace(data).projects[0].statuses.length, 2);
+  assert.throws(() => parseWorkspace({ ...data, tasks: [{ ...task, status: 'progress' }] }));
+  assert.throws(() =>
+    parseWorkspace({ ...data, projects: [{ ...project, statuses: [statuses[0]] }], tasks: [] }),
+  );
+  // A done-stage column is finished work, so it is never overdue.
+  assert.equal(isDue({ ...task, due: '2026-01-01' }, '2026-10-25', statusIndex([project])), false);
 });

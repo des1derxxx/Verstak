@@ -1,6 +1,6 @@
-import type { Priority, Status } from '@/lib/model/workspace';
+import type { Priority, StatusCategory } from '@/lib/model/workspace';
 
-export const statusStyles: Record<Status, string> = {
+export const categoryStyles: Record<StatusCategory, string> = {
   backlog: 'status-backlog text-ink-secondary bg-neutral',
   todo: 'status-todo text-ink-secondary bg-neutral',
   progress: 'status-progress text-brand-hover bg-brand-soft',

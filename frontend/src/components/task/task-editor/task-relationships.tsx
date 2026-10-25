@@ -1,11 +1,10 @@
-import { statusStyles } from '@/components/task/task-styles';
+import { categoryStyles } from '@/components/task/task-styles';
 import { cn } from '@/lib/cn';
 import { Plus } from 'lucide-react';
-import { statusNames } from '@/lib/model/workspace';
 import { taskKey } from '@/lib/model/task';
 import type { TaskEditorModel } from '@/components/task/task-editor/use-task-editor';
 export const TaskRelationships = ({ model }: { model: TaskEditorModel }) => {
-  const { task, children, mutation, onSubtask, dirty, parent, onOpenTask } = model;
+  const { task, children, statuses, mutation, onSubtask, dirty, parent, onOpenTask } = model;
   return (
     <div
       className={'task-relationships py-0 px-6 [&:empty]:hidden max-phablet:py-0 max-phablet:px-4'}
@@ -21,7 +20,7 @@ export const TaskRelationships = ({ model }: { model: TaskEditorModel }) => {
             <h3>
               Подзадачи{' '}
               {children.length > 0 &&
-                `(${children.filter((c) => c.status === 'done').length}/${children.length})`}
+                `(${children.filter((c) => statuses.category(c) === 'done').length}/${children.length})`}
             </h3>
             {!mutation.readOnly && onSubtask && (
               <button
@@ -71,8 +70,8 @@ export const TaskRelationships = ({ model }: { model: TaskEditorModel }) => {
                 {taskKey(child)}
               </span>
               <span>{child.title}</span>
-              <span className={cn('status-badge', statusStyles[child.status])}>
-                {statusNames[child.status]}
+              <span className={cn('status-badge', categoryStyles[statuses.category(child)])}>
+                {statuses.of(child).name}
               </span>
             </button>
           ))}

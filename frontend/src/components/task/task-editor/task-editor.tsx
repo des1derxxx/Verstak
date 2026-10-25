@@ -137,6 +137,7 @@ export const TaskEditor = (props: TaskEditorProps) => {
             onDirty={setCommentDirty}
             onBusy={setCommentBusy}
             onActivity={onActivity}
+            statusName={(id) => model.statuses.of({ projectId: task.projectId, status: id }).name}
           />
         )}
         {discarding && (
