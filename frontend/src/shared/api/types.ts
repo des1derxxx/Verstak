@@ -1,4 +1,4 @@
-import type { Workspace } from '../model/workspace';
+import type { Workspace } from '@/shared/model/workspace';
 export type Role = 'owner' | 'editor' | 'viewer';
 export type User = {
   id: string;

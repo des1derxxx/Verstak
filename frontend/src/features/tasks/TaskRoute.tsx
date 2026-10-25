@@ -2,11 +2,11 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import type { Snapshot } from '../../shared/api/types';
-import { useWorkspace } from '../workspaces/WorkspaceContext';
-import { TaskEditor } from './task-editor/TaskEditor';
-import { createTask } from './task-view';
-import { viewPath } from '../../shared/lib/routes';
+import type { Snapshot } from '@/shared/api/types';
+import { useWorkspace } from '@/features/workspaces/WorkspaceContext';
+import { TaskEditor } from '@/features/tasks/task-editor/TaskEditor';
+import { createTask } from '@/features/tasks/task-view';
+import { viewPath } from '@/shared/lib/routes';
 export const TaskRoute = ({
   reference,
   snapshot,

@@ -1,10 +1,10 @@
-import { useCalendar } from '../../../shared/ui/CalendarContext';
-import { workspacePath } from '../../../shared/lib/routes';
-import { RouteLink } from '../../../shared/ui/RouteLink';
-import { IconButton } from '../../../shared/ui/Button';
-import { cn } from '../../../shared/ui/cn';
-import { Avatar } from '../../../shared/ui/Avatar';
-import { Dropdown } from '../../../shared/ui/Dropdown';
+import { useCalendar } from '@/shared/ui/CalendarContext';
+import { workspacePath } from '@/shared/lib/routes';
+import { RouteLink } from '@/shared/ui/RouteLink';
+import { IconButton } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
+import { Avatar } from '@/shared/ui/Avatar';
+import { Dropdown } from '@/shared/ui/Dropdown';
 import {
   CalendarDays,
   ChevronRight,
@@ -16,8 +16,8 @@ import {
   Settings2,
   Users,
 } from 'lucide-react';
-import { scopeTasks } from '../../tasks/task-view';
-import type { WorkspaceController } from '../hooks/useWorkspaceController';
+import { scopeTasks } from '@/features/tasks/task-view';
+import type { WorkspaceController } from '@/features/workspaces/hooks/useWorkspaceController';
 export const WorkspaceSidebar = ({ model }: { model: WorkspaceController }) => {
   const { today } = useCalendar();
   const {

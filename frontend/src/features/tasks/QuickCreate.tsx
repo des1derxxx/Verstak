@@ -1,11 +1,11 @@
-import { Button, IconButton } from '../../shared/ui/Button';
-import { cn } from '../../shared/ui/cn';
-import { Dropdown } from '../../shared/ui/Dropdown';
+import { Button, IconButton } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
+import { Dropdown } from '@/shared/ui/Dropdown';
 import { useContext, useRef, useState } from 'react';
 import { CornerDownLeft, Plus, X } from 'lucide-react';
-import type { Project, Status, Task } from '../../shared/model/workspace';
-import { MutationContext } from '../../shared/ui/Modal';
-import { createTask } from './task-view';
+import type { Project, Status, Task } from '@/shared/model/workspace';
+import { MutationContext } from '@/shared/ui/Modal';
+import { createTask } from '@/features/tasks/task-view';
 export const QuickCreate = ({
   projects,
   projectId,

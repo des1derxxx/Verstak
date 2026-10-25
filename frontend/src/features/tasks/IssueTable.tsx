@@ -1,18 +1,18 @@
-import { useCalendar } from '../../shared/ui/CalendarContext';
-import { TaskLink } from './TaskLink';
-import { IconButton } from '../../shared/ui/Button';
-import { statusStyles } from '../../shared/ui/variants';
-import { cn } from '../../shared/ui/cn';
-import { Avatar } from '../../shared/ui/Avatar';
-import { Dropdown } from '../../shared/ui/Dropdown';
+import { useCalendar } from '@/shared/ui/CalendarContext';
+import { TaskLink } from '@/features/tasks/TaskLink';
+import { IconButton } from '@/shared/ui/Button';
+import { statusStyles } from '@/shared/ui/variants';
+import { cn } from '@/shared/ui/cn';
+import { Avatar } from '@/shared/ui/Avatar';
+import { Dropdown } from '@/shared/ui/Dropdown';
 import { useContext } from 'react';
 import { ArrowRight, CalendarDays, SquareCheck } from 'lucide-react';
-import { priorityNames, statuses, statusNames } from '../../shared/model/workspace';
-import type { Priority, Project, Status, Task } from '../../shared/model/workspace';
-import type { Member } from '../../shared/api/types';
-import { MutationContext } from '../../shared/ui/Modal';
-import { dueLabel, taskKey } from './task-view';
-import { IssueType, PriorityBadge } from './IssueMeta';
+import { priorityNames, statuses, statusNames } from '@/shared/model/workspace';
+import type { Priority, Project, Status, Task } from '@/shared/model/workspace';
+import type { Member } from '@/shared/api/types';
+import { MutationContext } from '@/shared/ui/Modal';
+import { dueLabel, taskKey } from '@/features/tasks/task-view';
+import { IssueType, PriorityBadge } from '@/features/tasks/IssueMeta';
 export const IssueTable = ({
   tasks,
   projects,

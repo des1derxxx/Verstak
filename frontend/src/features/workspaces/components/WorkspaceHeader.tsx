@@ -1,10 +1,10 @@
-import { workspacePath } from '../../../shared/lib/routes';
-import { IconButton, Button } from '../../../shared/ui/Button';
-import { cn } from '../../../shared/ui/cn';
-import { Avatar } from '../../../shared/ui/Avatar';
+import { workspacePath } from '@/shared/lib/routes';
+import { IconButton, Button } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
+import { Avatar } from '@/shared/ui/Avatar';
 import { Keyboard, Menu, Plus, Search, X } from 'lucide-react';
-import { NotificationBell } from '../../notifications/Notifications';
-import type { WorkspaceController } from '../hooks/useWorkspaceController';
+import { NotificationBell } from '@/features/notifications/Notifications';
+import type { WorkspaceController } from '@/features/workspaces/hooks/useWorkspaceController';
 export const WorkspaceHeader = ({ model }: { model: WorkspaceController }) => {
   const {
     setSidebarOpen,

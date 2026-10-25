@@ -1,9 +1,9 @@
 'use client';
 
-import { CalendarContext, useBrowserCalendar } from '../shared/ui/CalendarContext';
-import type { Calendar } from '../shared/ui/CalendarContext';
+import { CalendarContext, useBrowserCalendar } from '@/shared/ui/CalendarContext';
+import type { Calendar } from '@/shared/ui/CalendarContext';
 
-import { RouteDraftContext } from '../shared/ui/RouteDraft';
+import { RouteDraftContext } from '@/shared/ui/RouteDraft';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
@@ -13,17 +13,17 @@ import {
   useSearchParams,
   useSelectedLayoutSegments,
 } from 'next/navigation';
-import type { Member, Session, Snapshot, Space } from '../shared/api/types';
-import { api, ApiError, setCsrf } from '../shared/api/client';
+import type { Member, Session, Snapshot, Space } from '@/shared/api/types';
+import { api, ApiError, setCsrf } from '@/shared/api/client';
 import {
   filterSearch,
   readWorkspaceRoute,
   taskPath,
   viewPath,
   workspacePath,
-} from '../shared/lib/routes';
-import { WorkspaceProvider } from '../features/workspaces/WorkspaceContext';
-import { useWorkspaceController } from '../features/workspaces/hooks/useWorkspaceController';
+} from '@/shared/lib/routes';
+import { WorkspaceProvider } from '@/features/workspaces/WorkspaceContext';
+import { useWorkspaceController } from '@/features/workspaces/hooks/useWorkspaceController';
 export const WorkspaceRouter = ({
   session: initialSession,
   spaces,

@@ -1,5 +1,5 @@
-import { isDue, localDate } from '../../shared/model/workspace.ts';
-import type { Priority, Status, Task, Workspace } from '../../shared/model/workspace.ts';
+import { isDue, localDate } from '@/shared/model/workspace.ts';
+import type { Priority, Status, Task, Workspace } from '@/shared/model/workspace.ts';
 export type View = 'board' | 'backlog' | 'list' | 'notes';
 export type Sort = 'created' | 'priority' | 'due';
 export type Filters = {

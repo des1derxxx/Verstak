@@ -1,12 +1,12 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { useWorkspace } from './WorkspaceContext';
-import { cn } from '../../shared/ui/cn';
+import { useWorkspace } from '@/features/workspaces/WorkspaceContext';
+import { cn } from '@/shared/ui/cn';
 import { Check } from 'lucide-react';
-import { WorkspaceHeader } from './components/WorkspaceHeader';
-import { WorkspaceSidebar } from './components/WorkspaceSidebar';
-import { WorkspaceDialogs } from './components/WorkspaceDialogs';
+import { WorkspaceHeader } from '@/features/workspaces/components/WorkspaceHeader';
+import { WorkspaceSidebar } from '@/features/workspaces/components/WorkspaceSidebar';
+import { WorkspaceDialogs } from '@/features/workspaces/components/WorkspaceDialogs';
 export const WorkspaceShell = ({ children }: { children: ReactNode }) => {
   const model = useWorkspace();
   if (model.loading)

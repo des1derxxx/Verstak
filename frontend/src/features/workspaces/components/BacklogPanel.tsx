@@ -1,9 +1,9 @@
 'use client';
 
-import { useWorkspace } from '../WorkspaceContext';
-import { cn } from '../../../shared/ui/cn';
+import { useWorkspace } from '@/features/workspaces/WorkspaceContext';
+import { cn } from '@/shared/ui/cn';
 import { ListTodo } from 'lucide-react';
-import { BacklogSection } from '../../tasks/Board';
+import { BacklogSection } from '@/features/tasks/Board';
 export const BacklogPanel = () => {
   const model = useWorkspace();
   const { selected, filtered, sortedProjects, openTask, saveTask, setView, inProgress } = model;

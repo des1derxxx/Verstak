@@ -1,4 +1,4 @@
-import type { Priority, Status } from '../model/workspace';
+import type { Priority, Status } from '@/shared/model/workspace';
 
 export const statusStyles: Record<Status, string> = {
   backlog: 'status-backlog text-[#44546f] bg-[#f1f2f4]',

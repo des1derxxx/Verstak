@@ -1,4 +1,4 @@
-import { cn } from './cn';
+import { cn } from '@/shared/ui/cn';
 export const Logo = () => {
   return (
     <div

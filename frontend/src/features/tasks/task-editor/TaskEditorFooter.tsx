@@ -1,7 +1,7 @@
-import { IconButton, Button } from '../../../shared/ui/Button';
-import { cn } from '../../../shared/ui/cn';
+import { IconButton, Button } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { Trash2 } from 'lucide-react';
-import type { TaskEditorModel } from './useTaskEditor';
+import type { TaskEditorModel } from '@/features/tasks/task-editor/useTaskEditor';
 export const TaskEditorFooter = ({ model }: { model: TaskEditorModel }) => {
   const {
     task,

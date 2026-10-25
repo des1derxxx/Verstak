@@ -1,9 +1,9 @@
-import { useRouteDraft } from '../../../shared/ui/RouteDraft';
+import { useRouteDraft } from '@/shared/ui/RouteDraft';
 import { useContext, useEffect, useRef, useState } from 'react';
-import type { Task } from '../../../shared/model/workspace';
-import { MutationContext } from '../../../shared/ui/Modal';
-import { createTask } from '../task-view';
-import type { TaskEditorProps } from './types';
+import type { Task } from '@/shared/model/workspace';
+import { MutationContext } from '@/shared/ui/Modal';
+import { createTask } from '@/features/tasks/task-view';
+import type { TaskEditorProps } from '@/features/tasks/task-editor/types';
 export const useTaskEditor = ({
   task,
   seed,

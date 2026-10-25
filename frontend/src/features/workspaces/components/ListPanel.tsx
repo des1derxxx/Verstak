@@ -1,11 +1,11 @@
 'use client';
 
-import { useWorkspace } from '../WorkspaceContext';
-import { Button } from '../../../shared/ui/Button';
-import { cn } from '../../../shared/ui/cn';
+import { useWorkspace } from '@/features/workspaces/WorkspaceContext';
+import { Button } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { Plus, Search } from 'lucide-react';
-import { emptyFilters } from '../../tasks/task-view';
-import { IssueTable } from '../../tasks/IssueTable';
+import { emptyFilters } from '@/features/tasks/task-view';
+import { IssueTable } from '@/features/tasks/IssueTable';
 export const ListPanel = () => {
   const model = useWorkspace();
   const {

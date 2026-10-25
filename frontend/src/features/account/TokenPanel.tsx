@@ -1,12 +1,12 @@
-import { Button, IconButton } from '../../shared/ui/Button';
-import { cn } from '../../shared/ui/cn';
-import { Dropdown } from '../../shared/ui/Dropdown';
+import { Button, IconButton } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
+import { Dropdown } from '@/shared/ui/Dropdown';
 import { useEffect, useState } from 'react';
 import { Copy, KeyRound, Trash2 } from 'lucide-react';
-import { api } from '../../shared/api/client';
-import type { Space } from '../../shared/api/types';
-import { Modal, useDiscardConfirmation } from '../../shared/ui/Modal';
-import { formatTime } from '../../shared/lib/dates';
+import { api } from '@/shared/api/client';
+import type { Space } from '@/shared/api/types';
+import { Modal, useDiscardConfirmation } from '@/shared/ui/Modal';
+import { formatTime } from '@/shared/lib/dates';
 type Token = {
   id: string;
   name: string;

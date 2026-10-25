@@ -1,5 +1,5 @@
-import type { Member } from '../../../shared/api/types';
-import type { Project, Status, Task } from '../../../shared/model/workspace';
+import type { Member } from '@/shared/api/types';
+import type { Project, Status, Task } from '@/shared/model/workspace';
 export type TaskEditorProps = {
   inline?: boolean;
   seed?: Task;

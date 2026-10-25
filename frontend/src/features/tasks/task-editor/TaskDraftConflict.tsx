@@ -1,6 +1,6 @@
-import { Button } from '../../../shared/ui/Button';
-import { cn } from '../../../shared/ui/cn';
-import type { TaskEditorModel } from './useTaskEditor';
+import { Button } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
+import type { TaskEditorModel } from '@/features/tasks/task-editor/useTaskEditor';
 export const TaskDraftConflict = ({ model }: { model: TaskEditorModel }) => {
   const { liveTask, initial, setDraft, setCheckText, setDiscarding } = model;
   return (

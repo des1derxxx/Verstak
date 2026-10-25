@@ -1,7 +1,7 @@
-import { Button } from '../../shared/ui/Button';
-import { cn } from '../../shared/ui/cn';
+import { Button } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { useState } from 'react';
-import { api } from '../../shared/api/client';
+import { api } from '@/shared/api/client';
 export const PasswordRecovery = ({ token, onClose }: { token?: string; onClose: () => void }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

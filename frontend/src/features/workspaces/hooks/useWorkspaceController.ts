@@ -1,14 +1,14 @@
 import type { SetStateAction } from 'react';
-import { viewPath } from '../../../shared/lib/routes';
-import { loadSnapshot, saveSnapshot } from '../../../shared/api/workspaces';
+import { viewPath } from '@/shared/lib/routes';
+import { loadSnapshot, saveSnapshot } from '@/shared/api/workspaces';
 import { useEffect, useRef, useState } from 'react';
 import { FileText, LayoutGrid, List, ListTodo } from 'lucide-react';
-import type { Status, Task, Workspace } from '../../../shared/model/workspace';
-import { api, ApiError } from '../../../shared/api/client';
-import type { Member } from '../../../shared/api/types';
-import { emptyFilters, filterTasks, isTypingTarget, scopeTasks } from '../../tasks/task-view';
-import type { Filters, View } from '../../tasks/task-view';
-import type { ModalState, WorkspaceControllerProps } from '../types';
+import type { Status, Task, Workspace } from '@/shared/model/workspace';
+import { api, ApiError } from '@/shared/api/client';
+import type { Member } from '@/shared/api/types';
+import { emptyFilters, filterTasks, isTypingTarget, scopeTasks } from '@/features/tasks/task-view';
+import type { Filters, View } from '@/features/tasks/task-view';
+import type { ModalState, WorkspaceControllerProps } from '@/features/workspaces/types';
 const views = [
   { id: 'board', label: 'Доска', icon: LayoutGrid },
   { id: 'backlog', label: 'Бэклог', icon: ListTodo },

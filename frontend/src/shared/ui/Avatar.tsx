@@ -1,6 +1,6 @@
-import { cn } from './cn';
+import { cn } from '@/shared/ui/cn';
 import { useState } from 'react';
-import type { User } from '../api/types';
+import type { User } from '@/shared/api/types';
 /** One avatar presentation everywhere; a failed image falls back to initials. */
 export const Avatar = ({
   user,

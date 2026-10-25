@@ -3,11 +3,11 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { api, setCsrf } from '../../shared/api/client';
-import type { Session, Space } from '../../shared/api/types';
-import { viewPath } from '../../shared/lib/routes';
-import { PageLoading } from '../../shared/ui/PageLoading';
-import { Button } from '../../shared/ui/Button';
+import { api, setCsrf } from '@/shared/api/client';
+import type { Session, Space } from '@/shared/api/types';
+import { viewPath } from '@/shared/lib/routes';
+import { PageLoading } from '@/shared/ui/PageLoading';
+import { Button } from '@/shared/ui/Button';
 export const InviteScreen = ({ session }: { session: Session | null }) => {
   const router = useRouter();
   const [ready, setReady] = useState(false);

@@ -1,7 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useWorkspace } from '../WorkspaceContext';
-import { viewPath } from '../../../shared/lib/routes';
+import { useWorkspace } from '@/features/workspaces/WorkspaceContext';
+import { viewPath } from '@/shared/lib/routes';
 export const useSettingsPage = () => {
   const model = useWorkspace();
   const router = useRouter();

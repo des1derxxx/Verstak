@@ -1,9 +1,9 @@
-import { IconButton } from '../../../shared/ui/Button';
-import { cn } from '../../../shared/ui/cn';
+import { IconButton } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { Copy } from 'lucide-react';
-import { taskKey } from '../task-view';
-import { IssueType } from '../IssueMeta';
-import type { TaskEditorModel } from './useTaskEditor';
+import { taskKey } from '@/features/tasks/task-view';
+import { IssueType } from '@/features/tasks/IssueMeta';
+import type { TaskEditorModel } from '@/features/tasks/task-editor/useTaskEditor';
 export const TaskEditorToolbar = ({ model }: { model: TaskEditorModel }) => {
   const { draft, task, setCopyNotice, copyNotice, mutation } = model;
   if (!task) return null;

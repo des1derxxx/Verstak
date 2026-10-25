@@ -1,9 +1,9 @@
-import { statusStyles } from '../../../shared/ui/variants';
-import { cn } from '../../../shared/ui/cn';
+import { statusStyles } from '@/shared/ui/variants';
+import { cn } from '@/shared/ui/cn';
 import { Plus } from 'lucide-react';
-import { statusNames } from '../../../shared/model/workspace';
-import { taskKey } from '../task-view';
-import type { TaskEditorModel } from './useTaskEditor';
+import { statusNames } from '@/shared/model/workspace';
+import { taskKey } from '@/features/tasks/task-view';
+import type { TaskEditorModel } from '@/features/tasks/task-editor/useTaskEditor';
 export const TaskRelationships = ({ model }: { model: TaskEditorModel }) => {
   const { task, children, mutation, onSubtask, dirty, parent, onOpenTask } = model;
   return (

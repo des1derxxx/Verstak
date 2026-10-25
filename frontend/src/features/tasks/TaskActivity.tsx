@@ -1,11 +1,11 @@
-import { Button } from '../../shared/ui/Button';
-import { cn } from '../../shared/ui/cn';
-import { formatTime } from '../../shared/lib/dates';
+import { Button } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
+import { formatTime } from '@/shared/lib/dates';
 import { useEffect, useState } from 'react';
-import { api } from '../../shared/api/client';
-import { statusNames } from '../../shared/model/workspace';
-import type { Status } from '../../shared/model/workspace';
-import { Markdown } from '../../shared/ui/Markdown';
+import { api } from '@/shared/api/client';
+import { statusNames } from '@/shared/model/workspace';
+import type { Status } from '@/shared/model/workspace';
+import { Markdown } from '@/shared/ui/Markdown';
 type Comment = {
   id: string;
   authorName: string;

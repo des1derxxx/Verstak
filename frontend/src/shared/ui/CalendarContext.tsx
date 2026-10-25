@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { localDate } from '../model/workspace';
+import { localDate } from '@/shared/model/workspace';
 export type Calendar = { today: string; timeZone: string };
 export const CalendarContext = createContext<Calendar | null>(null);
 export const useCalendar = () =>

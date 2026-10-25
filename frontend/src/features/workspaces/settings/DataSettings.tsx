@@ -1,7 +1,7 @@
 'use client';
 
-import { DataModal } from '../DataModal';
-import { useSettingsPage } from './useSettingsPage';
+import { DataModal } from '@/features/workspaces/DataModal';
+import { useSettingsPage } from '@/features/workspaces/settings/useSettingsPage';
 export const DataSettings = () => {
   const { model, close, router } = useSettingsPage();
   return (

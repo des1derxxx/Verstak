@@ -1,10 +1,10 @@
-import { createTask } from '../../tasks/task-view';
-import type { WorkspaceController } from '../hooks/useWorkspaceController';
-import { useWorkspace } from '../WorkspaceContext';
+import { createTask } from '@/features/tasks/task-view';
+import type { WorkspaceController } from '@/features/workspaces/hooks/useWorkspaceController';
+import { useWorkspace } from '@/features/workspaces/WorkspaceContext';
 import dynamic from 'next/dynamic';
-import { PageLoading } from '../../../shared/ui/PageLoading';
-import { cn } from '../../../shared/ui/cn';
-import { Modal } from '../../../shared/ui/Modal';
+import { PageLoading } from '@/shared/ui/PageLoading';
+import { cn } from '@/shared/ui/cn';
+import { Modal } from '@/shared/ui/Modal';
 const EditorLoading = () => {
   const model = useWorkspace();
   return (
@@ -14,14 +14,17 @@ const EditorLoading = () => {
   );
 };
 const TaskEditor = dynamic(
-  () => import('../../tasks/task-editor/TaskEditor').then((module) => module.TaskEditor),
+  () => import('@/features/tasks/task-editor/TaskEditor').then((module) => module.TaskEditor),
   { loading: EditorLoading },
 );
-const NoteForm = dynamic(() => import('../../notes/NoteForm').then((module) => module.NoteForm), {
-  loading: EditorLoading,
-});
+const NoteForm = dynamic(
+  () => import('@/features/notes/NoteForm').then((module) => module.NoteForm),
+  {
+    loading: EditorLoading,
+  },
+);
 const ProjectForm = dynamic(
-  () => import('../../projects/ProjectForm').then((module) => module.ProjectForm),
+  () => import('@/features/projects/ProjectForm').then((module) => module.ProjectForm),
   { loading: EditorLoading },
 );
 export const WorkspaceDialogs = ({ model }: { model: WorkspaceController }) => {

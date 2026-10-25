@@ -1,12 +1,12 @@
-import { IconButton, Button } from '../../shared/ui/Button';
-import { cn } from '../../shared/ui/cn';
+import { IconButton, Button } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { useEffect, useState } from 'react';
 import { Check, Copy, Plus, Trash2, X } from 'lucide-react';
-import { api } from '../../shared/api/client';
-import type { Invitation, Member, Role, Session, Space } from '../../shared/api/types';
-import { Modal } from '../../shared/ui/Modal';
-import { Dropdown } from '../../shared/ui/Dropdown';
-import { Avatar } from '../../shared/ui/Avatar';
+import { api } from '@/shared/api/client';
+import type { Invitation, Member, Role, Session, Space } from '@/shared/api/types';
+import { Modal } from '@/shared/ui/Modal';
+import { Dropdown } from '@/shared/ui/Dropdown';
+import { Avatar } from '@/shared/ui/Avatar';
 export const roleNames: Record<Role, string> = {
   owner: 'Владелец',
   editor: 'Редактор',

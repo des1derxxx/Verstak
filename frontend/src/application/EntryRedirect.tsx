@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { PageLoading } from '../shared/ui/PageLoading';
+import { PageLoading } from '@/shared/ui/PageLoading';
 export const EntryRedirect = ({ destination }: { destination: string }) => {
   const router = useRouter();
   useEffect(() => {

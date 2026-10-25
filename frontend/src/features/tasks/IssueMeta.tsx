@@ -1,5 +1,5 @@
-import { statusStyles, priorityStyles } from '../../shared/ui/variants';
-import { cn } from '../../shared/ui/cn';
+import { statusStyles, priorityStyles } from '@/shared/ui/variants';
+import { cn } from '@/shared/ui/cn';
 import {
   ArrowDown,
   ArrowUp,
@@ -12,8 +12,8 @@ import {
   Minus,
   SquareCheck,
 } from 'lucide-react';
-import { priorityNames, statusNames } from '../../shared/model/workspace';
-import type { Priority, Status, Task } from '../../shared/model/workspace';
+import { priorityNames, statusNames } from '@/shared/model/workspace';
+import type { Priority, Status, Task } from '@/shared/model/workspace';
 export const StatusIcon = ({ status, size = 14 }: { status: Status; size?: number }) => {
   if (status === 'done') return <CircleCheck size={size} />;
   if (status === 'progress') return <Clock3 size={size} />;

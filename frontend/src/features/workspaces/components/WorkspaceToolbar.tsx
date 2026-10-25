@@ -1,12 +1,12 @@
-import { RouteLink } from '../../../shared/ui/RouteLink';
-import { Button } from '../../../shared/ui/Button';
-import { cn } from '../../../shared/ui/cn';
-import { Dropdown } from '../../../shared/ui/Dropdown';
+import { RouteLink } from '@/shared/ui/RouteLink';
+import { Button } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
+import { Dropdown } from '@/shared/ui/Dropdown';
 import { ArrowDownWideNarrow, Plus, X } from 'lucide-react';
-import { priorityNames, statuses, statusNames } from '../../../shared/model/workspace';
-import { emptyFilters } from '../../tasks/task-view';
-import type { Sort } from '../../tasks/task-view';
-import type { WorkspaceController } from '../hooks/useWorkspaceController';
+import { priorityNames, statuses, statusNames } from '@/shared/model/workspace';
+import { emptyFilters } from '@/features/tasks/task-view';
+import type { Sort } from '@/features/tasks/task-view';
+import type { WorkspaceController } from '@/features/workspaces/hooks/useWorkspaceController';
 export const WorkspaceToolbar = ({ model }: { model: WorkspaceController }) => {
   const {
     navigationViews,

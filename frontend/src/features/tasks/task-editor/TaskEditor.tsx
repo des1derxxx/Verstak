@@ -1,20 +1,20 @@
-import { useCalendar } from '../../../shared/ui/CalendarContext';
-import { TaskMainFields } from './TaskMainFields';
-import { TaskEditorToolbar } from './TaskEditorToolbar';
-import { TaskDraftConflict } from './TaskDraftConflict';
-import { Button } from '../../../shared/ui/Button';
-import { cn } from '../../../shared/ui/cn';
+import { useCalendar } from '@/shared/ui/CalendarContext';
+import { TaskMainFields } from '@/features/tasks/task-editor/TaskMainFields';
+import { TaskEditorToolbar } from '@/features/tasks/task-editor/TaskEditorToolbar';
+import { TaskDraftConflict } from '@/features/tasks/task-editor/TaskDraftConflict';
+import { Button } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 
-import { TaskActivity } from '../TaskActivity';
-import { Modal } from '../../../shared/ui/Modal';
-import { taskKey } from '../task-view';
+import { TaskActivity } from '@/features/tasks/TaskActivity';
+import { Modal } from '@/shared/ui/Modal';
+import { taskKey } from '@/features/tasks/task-view';
 
-import { useTaskEditor } from './useTaskEditor';
-import type { TaskEditorProps } from './types';
-import { TaskMetadata } from './TaskMetadata';
+import { useTaskEditor } from '@/features/tasks/task-editor/useTaskEditor';
+import type { TaskEditorProps } from '@/features/tasks/task-editor/types';
+import { TaskMetadata } from '@/features/tasks/task-editor/TaskMetadata';
 
-import { TaskRelationships } from './TaskRelationships';
-import { TaskEditorFooter } from './TaskEditorFooter';
+import { TaskRelationships } from '@/features/tasks/task-editor/TaskRelationships';
+import { TaskEditorFooter } from '@/features/tasks/task-editor/TaskEditorFooter';
 export const TaskEditor = (props: TaskEditorProps) => {
   const { timeZone } = useCalendar();
   const model = useTaskEditor(props);

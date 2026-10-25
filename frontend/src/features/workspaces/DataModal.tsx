@@ -1,10 +1,10 @@
-import { Button } from '../../shared/ui/Button';
-import { cn } from '../../shared/ui/cn';
+import { Button } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { useRef, useState } from 'react';
 import { Download, FolderKanban, Upload } from 'lucide-react';
-import { localDate, parseWorkspace } from '../../shared/model/workspace';
-import type { Workspace } from '../../shared/model/workspace';
-import { Modal } from '../../shared/ui/Modal';
+import { localDate, parseWorkspace } from '@/shared/model/workspace';
+import type { Workspace } from '@/shared/model/workspace';
+import { Modal } from '@/shared/ui/Modal';
 const download = (text: string, name: string) => {
   const url = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
   const link = document.createElement('a');

@@ -1,10 +1,10 @@
-import { IconButton } from '../../shared/ui/Button';
-import { cn } from '../../shared/ui/cn';
+import { IconButton } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { useEffect, useRef, useState } from 'react';
 import { Bell } from 'lucide-react';
-import { api } from '../../shared/api/client';
-import { Modal } from '../../shared/ui/Modal';
-import { formatTime } from '../../shared/lib/dates';
+import { api } from '@/shared/api/client';
+import { Modal } from '@/shared/ui/Modal';
+import { formatTime } from '@/shared/lib/dates';
 type Notification = {
   id: string;
   workspaceId: string;

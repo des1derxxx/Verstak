@@ -1,6 +1,6 @@
-import { useRouteDraft } from './RouteDraft';
-import { Button, IconButton } from './Button';
-import { cn } from './cn';
+import { useRouteDraft } from '@/shared/ui/RouteDraft';
+import { Button, IconButton } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { X } from 'lucide-react';

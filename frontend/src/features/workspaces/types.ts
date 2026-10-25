@@ -1,6 +1,6 @@
-import type { Note, Project, Status, Task } from '../../shared/model/workspace';
-import type { Filters, View } from '../tasks/task-view';
-import type { Session, Space, Snapshot, Member, User } from '../../shared/api/types';
+import type { Note, Project, Status, Task } from '@/shared/model/workspace';
+import type { Filters, View } from '@/features/tasks/task-view';
+import type { Session, Space, Snapshot, Member, User } from '@/shared/api/types';
 export type WorkspaceControllerProps = {
   todayDate?: string;
   initialSnapshot?: Snapshot;

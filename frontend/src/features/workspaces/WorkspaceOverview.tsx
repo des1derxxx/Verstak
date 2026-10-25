@@ -1,12 +1,12 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { useWorkspace } from './WorkspaceContext';
-import { WorkspaceHeading } from './components/WorkspaceHeading';
-import { WorkspaceToolbar } from './components/WorkspaceToolbar';
-import { NoProjects } from './NoProjects';
+import { useWorkspace } from '@/features/workspaces/WorkspaceContext';
+import { WorkspaceHeading } from '@/features/workspaces/components/WorkspaceHeading';
+import { WorkspaceToolbar } from '@/features/workspaces/components/WorkspaceToolbar';
+import { NoProjects } from '@/features/workspaces/NoProjects';
 import { CalendarDays, Check, Keyboard } from 'lucide-react';
-import { cn } from '../../shared/ui/cn';
+import { cn } from '@/shared/ui/cn';
 export const WorkspaceOverview = ({ children }: { children: ReactNode }) => {
   const model = useWorkspace();
   const { view, workspace, storageError, readOnly, setModal, selected, scoped, done } = model;

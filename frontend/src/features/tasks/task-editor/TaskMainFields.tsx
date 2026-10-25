@@ -1,11 +1,11 @@
-import { cn } from '../../../shared/ui/cn';
-import { Dropdown } from '../../../shared/ui/Dropdown';
-import { Markdown } from '../../../shared/ui/Markdown';
-import { taskKey } from '../task-view';
-import { TaskMetadata } from './TaskMetadata';
-import { TaskChecklist } from './TaskChecklist';
-import { TaskLinks } from './TaskLinks';
-import type { TaskEditorModel } from './useTaskEditor';
+import { cn } from '@/shared/ui/cn';
+import { Dropdown } from '@/shared/ui/Dropdown';
+import { Markdown } from '@/shared/ui/Markdown';
+import { taskKey } from '@/features/tasks/task-view';
+import { TaskMetadata } from '@/features/tasks/task-editor/TaskMetadata';
+import { TaskChecklist } from '@/features/tasks/task-editor/TaskChecklist';
+import { TaskLinks } from '@/features/tasks/task-editor/TaskLinks';
+import type { TaskEditorModel } from '@/features/tasks/task-editor/useTaskEditor';
 
 export const TaskMainFields = ({ model }: { model: TaskEditorModel }) => {
   const { task, titleRef, draft, update, parent, projects, preview, setPreview, closing } = model;

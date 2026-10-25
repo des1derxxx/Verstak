@@ -1,11 +1,11 @@
-import { Button, IconButton } from '../../shared/ui/Button';
-import { cn } from '../../shared/ui/cn';
+import { Button, IconButton } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { useRef, useState } from 'react';
 import { Camera, Trash2, UserRound } from 'lucide-react';
-import { api, ApiError } from '../../shared/api/client';
-import type { User } from '../../shared/api/types';
-import { Modal, useDiscardConfirmation } from '../../shared/ui/Modal';
-import { Avatar } from '../../shared/ui/Avatar';
+import { api, ApiError } from '@/shared/api/client';
+import type { User } from '@/shared/api/types';
+import { Modal, useDiscardConfirmation } from '@/shared/ui/Modal';
+import { Avatar } from '@/shared/ui/Avatar';
 export const prepareAvatar = async (file: File): Promise<string> => {
   if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type))
     throw new Error('Выбери фото в формате PNG, JPEG или WebP.');

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import './globals.css';
+import '@/app/globals.css';
 // The CSP nonce must be generated for every page, including error pages.
 export const dynamic = 'force-dynamic';
 

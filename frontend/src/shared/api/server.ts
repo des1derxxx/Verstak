@@ -3,9 +3,9 @@ import axios from 'axios';
 import { cache } from 'react';
 import { cookies, headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
-import { safeReturnPath } from '../lib/routes';
-import type { Member, Session, Snapshot, Space } from './types';
-import { parseWorkspace } from '../model/workspace';
+import { safeReturnPath } from '@/shared/lib/routes';
+import type { Member, Session, Snapshot, Space } from '@/shared/api/types';
+import { parseWorkspace } from '@/shared/model/workspace';
 export class ServerApiError extends Error {
   constructor(public readonly status: number) {
     super('Не удалось загрузить данные с сервера');

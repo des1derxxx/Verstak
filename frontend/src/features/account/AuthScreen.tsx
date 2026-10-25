@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { PageLoading } from '../../shared/ui/PageLoading';
-import { AuthForm } from './AuthForm';
-import { PasswordRecovery } from './PasswordRecovery';
-import { safeReturnPath } from '../../shared/lib/routes';
+import { PageLoading } from '@/shared/ui/PageLoading';
+import { AuthForm } from '@/features/account/AuthForm';
+import { PasswordRecovery } from '@/features/account/PasswordRecovery';
+import { safeReturnPath } from '@/shared/lib/routes';
 export const AuthScreen = ({ mode }: { mode: 'login' | 'register' | 'forgot' | 'reset' }) => {
   const router = useRouter();
   const search = useSearchParams();

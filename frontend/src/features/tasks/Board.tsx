@@ -1,18 +1,18 @@
-import { useCalendar } from '../../shared/ui/CalendarContext';
-import { TaskLink } from './TaskLink';
-import { statusStyles } from '../../shared/ui/variants';
-import { cn } from '../../shared/ui/cn';
-import { Avatar } from '../../shared/ui/Avatar';
+import { useCalendar } from '@/shared/ui/CalendarContext';
+import { TaskLink } from '@/features/tasks/TaskLink';
+import { statusStyles } from '@/shared/ui/variants';
+import { cn } from '@/shared/ui/cn';
+import { Avatar } from '@/shared/ui/Avatar';
 import { useContext, useRef, useState } from 'react';
 import { ArrowRight, CalendarDays, ChevronDown, GripVertical, SquareCheck } from 'lucide-react';
-import { statusNames } from '../../shared/model/workspace';
-import type { Project, Status, Task } from '../../shared/model/workspace';
-import type { Member } from '../../shared/api/types';
-import { MutationContext } from '../../shared/ui/Modal';
-import { dueLabel, taskKey } from './task-view';
-import { IssueType, PriorityBadge, StatusIcon } from './IssueMeta';
-import { IssueTable } from './IssueTable';
-import { QuickCreate } from './QuickCreate';
+import { statusNames } from '@/shared/model/workspace';
+import type { Project, Status, Task } from '@/shared/model/workspace';
+import type { Member } from '@/shared/api/types';
+import { MutationContext } from '@/shared/ui/Modal';
+import { dueLabel, taskKey } from '@/features/tasks/task-view';
+import { IssueType, PriorityBadge, StatusIcon } from '@/features/tasks/IssueMeta';
+import { IssueTable } from '@/features/tasks/IssueTable';
+import { QuickCreate } from '@/features/tasks/QuickCreate';
 const boardStatuses: Status[] = ['todo', 'progress', 'done'];
 export const Board = ({
   tasks,

@@ -1,7 +1,7 @@
-import { IconButton } from '../../../shared/ui/Button';
-import { cn } from '../../../shared/ui/cn';
+import { IconButton } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { Plus, X } from 'lucide-react';
-import type { TaskEditorModel } from './useTaskEditor';
+import type { TaskEditorModel } from '@/features/tasks/task-editor/useTaskEditor';
 export const TaskChecklist = ({ model }: { model: TaskEditorModel }) => {
   const { draft, update, mutation, checkText, setCheckText, addCheck } = model;
   return (

@@ -2,8 +2,8 @@
 
 import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
-import { MutationContext } from '../../shared/ui/Modal';
-import type { WorkspaceController } from './hooks/useWorkspaceController';
+import { MutationContext } from '@/shared/ui/Modal';
+import type { WorkspaceController } from '@/features/workspaces/hooks/useWorkspaceController';
 export const WorkspaceContext = createContext<WorkspaceController | null>(null);
 export const useWorkspace = () => {
   const workspace = useContext(WorkspaceContext);

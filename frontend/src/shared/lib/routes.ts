@@ -1,5 +1,5 @@
-import type { Filters, View } from '../../features/tasks/task-view';
-import { emptyFilters } from '../../features/tasks/task-view';
+import type { Filters, View } from '@/features/tasks/task-view';
+import { emptyFilters } from '@/features/tasks/task-view';
 export const workspacePath = (id: string) => `/workspaces/${encodeURIComponent(id)}`;
 export const viewPath = (id: string, selected = 'all', view: View = 'board') => {
   const base = workspacePath(id);

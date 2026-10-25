@@ -1,10 +1,10 @@
-import { statusStyles } from '../../../shared/ui/variants';
-import { cn } from '../../../shared/ui/cn';
-import { Dropdown } from '../../../shared/ui/Dropdown';
-import { priorityNames, statuses, statusNames } from '../../../shared/model/workspace';
-import type { Priority, Status, Task } from '../../../shared/model/workspace';
-import { taskKey } from '../task-view';
-import type { TaskEditorModel } from './useTaskEditor';
+import { statusStyles } from '@/shared/ui/variants';
+import { cn } from '@/shared/ui/cn';
+import { Dropdown } from '@/shared/ui/Dropdown';
+import { priorityNames, statuses, statusNames } from '@/shared/model/workspace';
+import type { Priority, Status, Task } from '@/shared/model/workspace';
+import { taskKey } from '@/features/tasks/task-view';
+import type { TaskEditorModel } from '@/features/tasks/task-editor/useTaskEditor';
 export const TaskMetadata = ({ model }: { model: TaskEditorModel }) => {
   const { draft, update, task, projects, membersError, members, tasks } = model;
   return (

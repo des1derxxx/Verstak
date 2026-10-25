@@ -1,7 +1,7 @@
 'use client';
 
-import { useWorkspace } from '../WorkspaceContext';
-import { Board } from '../../tasks/Board';
+import { useWorkspace } from '@/features/workspaces/WorkspaceContext';
+import { Board } from '@/features/tasks/Board';
 export const BoardPanel = () => {
   const model = useWorkspace();
   const {

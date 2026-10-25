@@ -1,7 +1,7 @@
-import { Button, IconButton } from '../../../shared/ui/Button';
-import { cn } from '../../../shared/ui/cn';
+import { Button, IconButton } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { ChevronRight, FolderKanban, RefreshCw, Settings2, Users } from 'lucide-react';
-import type { WorkspaceController } from '../hooks/useWorkspaceController';
+import type { WorkspaceController } from '@/features/workspaces/hooks/useWorkspaceController';
 export const WorkspaceHeading = ({ model }: { model: WorkspaceController }) => {
   const {
     storageError,

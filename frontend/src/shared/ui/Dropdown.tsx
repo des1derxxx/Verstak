@@ -1,4 +1,4 @@
-import { cn } from './cn';
+import { cn } from '@/shared/ui/cn';
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import type { ButtonHTMLAttributes, CSSProperties, KeyboardEvent, ReactNode } from 'react';
 import { Check, ChevronDown, Search } from 'lucide-react';

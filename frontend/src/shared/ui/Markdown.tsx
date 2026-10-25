@@ -1,4 +1,4 @@
-import { cn } from './cn';
+import { cn } from '@/shared/ui/cn';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 export const Markdown = ({ text }: { text: string }) => {

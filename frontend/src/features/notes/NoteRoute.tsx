@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect } from 'react';
-import type { Snapshot } from '../../shared/api/types';
-import { useWorkspace } from '../workspaces/WorkspaceContext';
-import { NoteForm } from './NoteForm';
-import { viewPath } from '../../shared/lib/routes';
+import type { Snapshot } from '@/shared/api/types';
+import { useWorkspace } from '@/features/workspaces/WorkspaceContext';
+import { NoteForm } from '@/features/notes/NoteForm';
+import { viewPath } from '@/shared/lib/routes';
 export const NoteRoute = ({ noteId, snapshot }: { noteId: string; snapshot: Snapshot }) => {
   const model = useWorkspace();
   useEffect(() => {

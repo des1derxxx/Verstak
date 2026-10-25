@@ -1,7 +1,7 @@
-import { api } from './client';
-import { parseWorkspace } from '../model/workspace';
-import type { Workspace } from '../model/workspace';
-import type { Snapshot } from './types';
+import { api } from '@/shared/api/client';
+import { parseWorkspace } from '@/shared/model/workspace';
+import type { Workspace } from '@/shared/model/workspace';
+import type { Snapshot } from '@/shared/api/types';
 export const loadSnapshot = async (id: string): Promise<Snapshot> => {
   const result = await api<Snapshot>(`/workspaces/${id}/data`);
   return { ...result, data: parseWorkspace(result.data) };

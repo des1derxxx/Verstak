@@ -1,8 +1,8 @@
-import { IconButton } from '../../../shared/ui/Button';
-import { cn } from '../../../shared/ui/cn';
-import { Dropdown } from '../../../shared/ui/Dropdown';
+import { IconButton } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
+import { Dropdown } from '@/shared/ui/Dropdown';
 import { Plus, X } from 'lucide-react';
-import type { TaskEditorModel } from './useTaskEditor';
+import type { TaskEditorModel } from '@/features/tasks/task-editor/useTaskEditor';
 export const TaskLinks = ({ model }: { model: TaskEditorModel }) => {
   const { draft, update, mutation } = model;
   return (

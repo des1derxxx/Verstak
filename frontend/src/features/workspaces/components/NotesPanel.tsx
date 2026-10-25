@@ -1,12 +1,12 @@
 'use client';
 
-import { useCalendar } from '../../../shared/ui/CalendarContext';
+import { useCalendar } from '@/shared/ui/CalendarContext';
 
-import { RouteLink } from '../../../shared/ui/RouteLink';
-import { useWorkspace } from '../WorkspaceContext';
-import { workspacePath } from '../../../shared/lib/routes';
-import { Button } from '../../../shared/ui/Button';
-import { cn } from '../../../shared/ui/cn';
+import { RouteLink } from '@/shared/ui/RouteLink';
+import { useWorkspace } from '@/features/workspaces/WorkspaceContext';
+import { workspacePath } from '@/shared/lib/routes';
+import { Button } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { FileText, Plus } from 'lucide-react';
 export const NotesPanel = () => {
   const { timeZone } = useCalendar();

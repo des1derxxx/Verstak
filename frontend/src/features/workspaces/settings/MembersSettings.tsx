@@ -1,7 +1,7 @@
 'use client';
 
-import { TeamPanel } from '../TeamPanel';
-import { useSettingsPage } from './useSettingsPage';
+import { TeamPanel } from '@/features/workspaces/TeamPanel';
+import { useSettingsPage } from '@/features/workspaces/settings/useSettingsPage';
 export const MembersSettings = () => {
   const { model, close, router } = useSettingsPage();
   return (

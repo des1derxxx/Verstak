@@ -1,11 +1,11 @@
-import { IconButton, Button } from '../../shared/ui/Button';
-import { cn } from '../../shared/ui/cn';
+import { IconButton, Button } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { useState } from 'react';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
-import { api, setCsrf } from '../../shared/api/client';
-import type { Session } from '../../shared/api/types';
-import { Logo } from '../../shared/ui/Logo';
-import { PasswordRecovery } from './PasswordRecovery';
+import { api, setCsrf } from '@/shared/api/client';
+import type { Session } from '@/shared/api/types';
+import { Logo } from '@/shared/ui/Logo';
+import { PasswordRecovery } from '@/features/account/PasswordRecovery';
 export const AuthForm = ({
   invitation,
   initialMode = 'login',

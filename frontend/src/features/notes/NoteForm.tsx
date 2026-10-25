@@ -1,11 +1,11 @@
-import { Button } from '../../shared/ui/Button';
-import { cn } from '../../shared/ui/cn';
+import { Button } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { useContext, useRef, useState } from 'react';
 import { Trash2 } from 'lucide-react';
-import type { Note, Project } from '../../shared/model/workspace';
-import { Modal, MutationContext, useDiscardConfirmation } from '../../shared/ui/Modal';
-import { Dropdown } from '../../shared/ui/Dropdown';
-import { Markdown } from '../../shared/ui/Markdown';
+import type { Note, Project } from '@/shared/model/workspace';
+import { Modal, MutationContext, useDiscardConfirmation } from '@/shared/ui/Modal';
+import { Dropdown } from '@/shared/ui/Dropdown';
+import { Markdown } from '@/shared/ui/Markdown';
 export const NoteForm = ({
   note,
   projects,

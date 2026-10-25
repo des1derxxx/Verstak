@@ -1,5 +1,5 @@
-import { Button } from '../../shared/ui/Button';
-import { cn } from '../../shared/ui/cn';
+import { Button } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { Plus } from 'lucide-react';
 export const NoProjects = ({ readOnly, onCreate }: { readOnly: boolean; onCreate: () => void }) => {
   return (

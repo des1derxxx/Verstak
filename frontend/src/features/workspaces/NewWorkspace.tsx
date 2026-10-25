@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { api, setCsrf } from '../../shared/api/client';
-import type { Space } from '../../shared/api/types';
-import { viewPath } from '../../shared/lib/routes';
-import { Button } from '../../shared/ui/Button';
+import { api, setCsrf } from '@/shared/api/client';
+import type { Space } from '@/shared/api/types';
+import { viewPath } from '@/shared/lib/routes';
+import { Button } from '@/shared/ui/Button';
 export const NewWorkspace = ({ csrf }: { csrf: string }) => {
   const router = useRouter();
   const [name, setName] = useState('');

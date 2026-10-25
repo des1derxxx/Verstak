@@ -1,10 +1,10 @@
-import { Button } from '../../shared/ui/Button';
-import { cn } from '../../shared/ui/cn';
+import { Button } from '@/shared/ui/Button';
+import { cn } from '@/shared/ui/cn';
 import { useContext, useRef, useState } from 'react';
 import { Check, Trash2 } from 'lucide-react';
-import { colors } from '../../shared/model/workspace';
-import type { Project } from '../../shared/model/workspace';
-import { Modal, MutationContext, useDiscardConfirmation } from '../../shared/ui/Modal';
+import { colors } from '@/shared/model/workspace';
+import type { Project } from '@/shared/model/workspace';
+import { Modal, MutationContext, useDiscardConfirmation } from '@/shared/ui/Modal';
 export const ProjectForm = ({
   project,
   onSave,
