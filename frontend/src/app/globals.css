@@ -1,0 +1,119 @@
+@import 'tailwindcss';
+@source "../";
+
+@theme {
+  --color-ink: #172b4d;
+  --color-muted: #626f86;
+  --color-subtle: #758195;
+  --color-line: #dfe1e6;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f7f8f9;
+  --color-brand: #0c66e4;
+  --color-brand-hover: #0055cc;
+  --color-brand-soft: #e9f2ff;
+  --color-danger: #c9372c;
+  --color-success: #1f845a;
+}
+
+@layer base {
+  :root {
+    --text: #172b4d;
+    --subtle: #626f86;
+    --muted: #758195;
+    --line: #dfe1e6;
+    --surface: #fff;
+    --surface-subtle: #f7f8f9;
+    --blue: #0c66e4;
+    --blue-hover: #0055cc;
+    --blue-light: #e9f2ff;
+    --danger: #c9372c;
+    --green: #1f845a;
+    --sidebar-width: 240px;
+    --header-height: 56px;
+  }
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-synthesis: none;
+  }
+  body {
+    @apply m-0 bg-white text-sm text-ink;
+  }
+  button,
+  input,
+  textarea {
+    font: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button {
+    @apply cursor-pointer border-0 bg-transparent text-inherit;
+  }
+  button:disabled {
+    @apply cursor-default opacity-50;
+  }
+  a {
+    @apply text-brand no-underline;
+  }
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    @apply outline-2 outline-offset-2 outline-[#388bff];
+  }
+  svg {
+    @apply shrink-0 align-middle;
+  }
+  fieldset {
+    @apply m-0 min-w-0 border-0 p-0;
+  }
+  h1 {
+    @apply text-[25px] font-semibold tracking-[-.55px] leading-[34px] wrap-anywhere;
+  }
+  kbd {
+    @apply inline-flex min-w-[19px] items-center justify-center rounded-[3px] border border-b-2 border-[#c8cdd6] bg-surface-soft px-1 py-px text-[11px] leading-4 whitespace-nowrap text-muted;
+  }
+}
+
+@media (max-width: 1000px) {
+  :root {
+    --sidebar-width: 215px;
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@layer base {
+  form label:not(.sr-only):not(.checkbox-label):not(.sort-control) {
+    @apply flex flex-col gap-1.5 text-xs leading-[18px] font-medium text-[#44546f];
+  }
+  input:not([type='checkbox']):not([type='file']),
+  textarea {
+    @apply min-h-9 w-full rounded border border-[#b6beca] bg-white px-2.5 py-2 text-[13px] leading-5 font-normal text-ink;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    @apply text-[#8590a2];
+  }
+  textarea {
+    @apply resize-y leading-[22px];
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --sidebar-width: 240px;
+  }
+}
+
+@layer base {
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      @apply animate-none transition-none;
+      scroll-behavior: auto;
+    }
+  }
+}

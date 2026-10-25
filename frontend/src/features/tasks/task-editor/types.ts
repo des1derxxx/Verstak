@@ -1,0 +1,21 @@
+import type { Member } from '../../../shared/api/types';
+import type { Project, Status, Task } from '../../../shared/model/workspace';
+export type TaskEditorProps = {
+  inline?: boolean;
+  seed?: Task;
+  tasks?: Task[];
+  members?: Member[];
+  membersError?: string;
+  workspaceId?: string;
+  onOpenTask?: (task: Task) => void;
+  onSubtask?: (parent: Task) => void;
+  onActivity?: () => Promise<void>;
+  task?: Task;
+  status?: Status;
+  projects: Project[];
+  projectId: string;
+  today?: boolean;
+  onSave: (task: Task) => Promise<boolean>;
+  onDelete: (id: string) => Promise<boolean>;
+  onClose: () => void;
+};

@@ -2,3 +2,11 @@ node_modules/
 dist/
 *.local
 .DS_Store
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+.env
+*.tsbuildinfo
+
+.next/

@@ -1,0 +1,94 @@
+name: verstak
+
+services:
+  mongo:
+    image: mongo:8.0
+    entrypoint: ["bash", "/opt/verstak/mongo-entrypoint.sh"]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: verstak_admin
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?Run python3 scripts/setup_env.py}
+    volumes:
+      - mongo_data:/data/db
+      - mongo_config:/data/configdb
+      - ./deploy/mongo/entrypoint.sh:/opt/verstak/mongo-entrypoint.sh:ro
+      - ./deploy/mongo/healthcheck.sh:/opt/verstak/mongo-healthcheck.sh:ro
+    networks: [database]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "bash", "/opt/verstak/mongo-healthcheck.sh"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  mongo-init:
+    image: mongo:8.0
+    depends_on:
+      mongo: {condition: service_healthy}
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: verstak_admin
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?Run python3 scripts/setup_env.py}
+      MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD:?Run python3 scripts/setup_env.py}
+      MONGODB_DATABASE: ${MONGODB_DATABASE:-verstak}
+    volumes:
+      - ./deploy/mongo/init.sh:/opt/verstak/mongo-init.sh:ro
+    entrypoint: ["bash", "/opt/verstak/mongo-init.sh"]
+    networks: [database]
+    restart: "no"
+
+  api:
+    build: ./backend
+    depends_on:
+      mongo-init: {condition: service_completed_successfully}
+    environment:
+      MONGODB_URI: mongodb://verstak_app:${MONGO_APP_PASSWORD}@mongo:27017/${MONGODB_DATABASE:-verstak}?authSource=${MONGODB_DATABASE:-verstak}&replicaSet=rs0
+      MONGODB_DATABASE: ${MONGODB_DATABASE:-verstak}
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:8080}
+      APP_ENV: ${APP_ENV:-development}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      ALLOW_REGISTRATION: ${ALLOW_REGISTRATION:-true}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      SMTP_SECURITY: ${SMTP_SECURITY:-starttls}
+    networks: [database, frontend]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  frontend:
+    build: ./frontend
+    environment:
+      API_INTERNAL_ORIGIN: http://api:8000
+    networks: [frontend]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:3000', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  web:
+    build: ./deploy/gateway
+    depends_on:
+      api: {condition: service_healthy}
+      frontend: {condition: service_healthy}
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${PORT:-8080}:8080"
+    networks: [frontend]
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+  mongo_config:
+
+networks:
+  database: {internal: true}
+  frontend:
