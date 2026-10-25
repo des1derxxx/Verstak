@@ -11,12 +11,12 @@ export const TaskEditorToolbar = ({ model }: { model: TaskEditorModel }) => {
     <div
       className={cn(
         'issue-editor-toolbar flex items-center gap-2 pt-4 px-5.5 pb-0 text-xs text-muted',
-        'max-[520px]:px-5 max-[520px]:gap-1.5',
+        'max-phone:px-5 max-phone:gap-1.5',
       )}
     >
       <TaskType done={draft.status === 'done'} type={draft.type} />
       <span>{draft.type === 'bug' ? 'Ошибка' : draft.type === 'story' ? 'История' : 'Задача'}</span>
-      <span className={'issue-key text-[11px] text-muted font-medium'} title={task.id}>
+      <span className={'issue-key text-caption text-muted font-medium'} title={task.id}>
         {taskKey(task)}
       </span>
       <IconButton
@@ -33,13 +33,11 @@ export const TaskEditorToolbar = ({ model }: { model: TaskEditorModel }) => {
       >
         <Copy size={15} />
       </IconButton>
-      <span className={'copy-notice text-[10px] max-[520px]:hidden'} role="status">
+      <span className={'copy-notice text-tiny max-phone:hidden'} role="status">
         {copyNotice}
       </span>
       {mutation.readOnly && (
-        <span
-          className={'read-only-label ml-auto bg-[#f1f2f4] rounded-[3px] py-0.5 px-1.5 text-[10px]'}
-        >
+        <span className={'read-only-label ml-auto bg-neutral rounded-chip py-0.5 px-1.5 text-tiny'}>
           Только просмотр
         </span>
       )}

@@ -12,7 +12,7 @@ export const TaskMainFields = ({ model }: { model: TaskEditorModel }) => {
   const metadata = <TaskMetadata model={model} />;
   const checklist = <TaskChecklist model={model} />;
   return (
-    <div className={'issue-main-fields flex flex-col gap-[23px] p-5.5 min-w-0 max-[760px]:p-5'}>
+    <div className={'issue-main-fields flex flex-col gap-5.75 p-5.5 min-w-0 max-tablet:p-5'}>
       <label className={task ? 'issue-title-label' : ''}>
         <span
           className={
@@ -31,7 +31,7 @@ export const TaskMainFields = ({ model }: { model: TaskEditorModel }) => {
             required
             maxLength={180}
             rows={1}
-            className="issue-title-input resize-none overflow-hidden border-transparent px-[5px] py-1 text-[23px] font-semibold leading-[31px] hover:bg-surface-soft focus:border-brand"
+            className="issue-title-input resize-none overflow-hidden border-transparent px-1.25 py-1 text-heading-lg font-semibold leading-7.75 hover:bg-surface-soft focus:border-brand"
             value={draft.title}
             onChange={(event) => update('title', event.target.value.replace(/\n/g, ' '))}
             onKeyDown={(event) => {
@@ -51,7 +51,7 @@ export const TaskMainFields = ({ model }: { model: TaskEditorModel }) => {
         )}
       </label>
       {!task && parent && (
-        <p className={'body-muted text-[13px] text-muted leading-[21px]'}>
+        <p className={'body-muted text-body text-muted leading-5.25'}>
           Подзадача для {taskKey(parent)} · {parent.title}
         </p>
       )}
@@ -75,17 +75,17 @@ export const TaskMainFields = ({ model }: { model: TaskEditorModel }) => {
         <div
           className={cn(
             'issue-section-heading [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-ink flex items-center',
-            'gap-2.5 [&>span]:text-[11px] [&>span]:text-muted [&_.segmented]:ml-auto',
+            'gap-2.5 [&>span]:text-caption [&>span]:text-muted [&_.segmented]:ml-auto',
           )}
         >
           <h3>Описание</h3>
           <div
             className={cn(
-              'segmented flex p-[3px] rounded bg-[#f1f2f4] ml-auto shrink-0 [&_button]:py-[5px]',
-              '[&_button]:px-2.5 [&_button]:text-[11px] [&_button]:rounded-[3px] [&_button]:text-muted',
-              '[&_button[aria-pressed=true]]:bg-white [&_button[aria-pressed=true]]:text-ink',
-              '[&_button[aria-pressed=true]]:shadow-[0_1px_3px_#091e421f] max-[520px]:[&_button]:text-[10px]',
-              'max-[520px]:[&_button]:px-[7px]',
+              'segmented flex p-0.75 rounded bg-neutral ml-auto shrink-0 [&_button]:py-1.25',
+              '[&_button]:px-2.5 [&_button]:text-caption [&_button]:rounded-chip [&_button]:text-muted',
+              '[&_button[aria-pressed=true]]:bg-surface [&_button[aria-pressed=true]]:text-ink',
+              '[&_button[aria-pressed=true]]:shadow-raised max-phone:[&_button]:text-tiny',
+              'max-phone:[&_button]:px-1.75',
             )}
           >
             <button type="button" aria-pressed={!preview} onClick={() => setPreview(false)}>
@@ -111,7 +111,7 @@ export const TaskMainFields = ({ model }: { model: TaskEditorModel }) => {
       </section>
       {closing && (
         <label
-          className={'resolution-field p-3.5 bg-[#e9f2ff] border border-[#85b8ff] rounded-[5px]'}
+          className={'resolution-field p-3.5 bg-brand-soft border border-brand-border rounded-card'}
         >
           Итоговый комментарий <span className={'required-mark text-danger'}>*</span>
           <textarea
@@ -123,7 +123,7 @@ export const TaskMainFields = ({ model }: { model: TaskEditorModel }) => {
             onChange={(e) => update('resolutionComment', e.target.value)}
             placeholder="Что сделано и как проверено?"
           />
-          <span className={'field-hint text-[10px] font-normal text-muted'}>
+          <span className={'field-hint text-tiny font-normal text-muted'}>
             Будет сохранён вместе со сменой статуса.
           </span>
         </label>
@@ -134,11 +134,11 @@ export const TaskMainFields = ({ model }: { model: TaskEditorModel }) => {
       ) : (
         <details
           className={cn(
-            'create-extra-fields border-t border-line pt-[15px] [&>summary]:text-muted',
-            '[&>summary]:text-[13px] [&>summary]:cursor-pointer [&[open]>summary]:mb-5',
+            'create-extra-fields border-t border-line pt-3.75 [&>summary]:text-muted',
+            '[&>summary]:text-body [&>summary]:cursor-pointer [&[open]>summary]:mb-5',
             '[&>.issue-metadata-fields]:grid [&>.issue-metadata-fields]:grid-cols-[1fr_1fr]',
             '[&>.issue-metadata-fields]:gap-4 [&>.checklist-editor]:mt-5.5',
-            'max-[520px]:[&>.issue-metadata-fields]:grid-cols-[1fr]',
+            'max-phone:[&>.issue-metadata-fields]:grid-cols-[1fr]',
           )}
         >
           <summary>Дополнительные поля</summary>

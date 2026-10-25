@@ -8,13 +8,13 @@ export const TaskChecklist = ({ model }: { model: TaskEditorModel }) => {
     <section
       className={cn(
         'issue-section flex flex-col gap-2.5 [&>textarea]:min-h-28 checklist-editor flex flex-col',
-        'gap-[11px]',
+        'gap-2.75',
       )}
     >
       <div
         className={cn(
           'issue-section-heading [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-ink flex items-center',
-          'gap-2.5 [&>span]:text-[11px] [&>span]:text-muted [&_.segmented]:ml-auto',
+          'gap-2.5 [&>span]:text-caption [&>span]:text-muted [&_.segmented]:ml-auto',
         )}
       >
         <h3>Чеклист</h3>
@@ -27,7 +27,7 @@ export const TaskChecklist = ({ model }: { model: TaskEditorModel }) => {
       {draft.checklist.map((item) => (
         <div
           className={cn(
-            'checklist-item flex items-center gap-[9px] text-[13px] leading-[21px] [&>span]:flex-1',
+            'checklist-item flex items-center gap-2.25 text-body leading-5.25 [&>span]:flex-1',
             '[&>span]:wrap-anywhere',
           )}
           key={item.id}
@@ -88,7 +88,7 @@ export const TaskChecklist = ({ model }: { model: TaskEditorModel }) => {
         </div>
       )}
       {mutation.readOnly && !draft.checklist.length && (
-        <p className={'body-muted text-[13px] text-muted leading-[21px]'}>Нет пунктов</p>
+        <p className={'body-muted text-body text-muted leading-5.25'}>Нет пунктов</p>
       )}
     </section>
   );

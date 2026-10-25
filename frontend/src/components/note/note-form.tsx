@@ -51,13 +51,13 @@ export const NoteForm = ({
     >
       <form
         className={cn(
-          'editor-form flex flex-col gap-5 p-6 [&_h2]:text-[21px] [&_h2]:font-semibold [&_h3]:text-[15px]',
+          'editor-form flex flex-col gap-5 p-6 [&_h2]:text-heading-sm [&_h2]:font-semibold [&_h3]:text-lead',
           '[&_h3]:font-semibold',
-          '[&_.title-input]:text-[23px] [&_.title-input]:font-semibold [&_.title-input]:pt-[3px]',
+          '[&_.title-input]:text-heading-lg [&_.title-input]:font-semibold [&_.title-input]:pt-0.75',
           '[&_.title-input]:px-0 [&_.title-input]:pb-3 [&_.title-input]:border-0 [&_.title-input]:border-b',
           '[&_.title-input]:border-line [&_.title-input]:rounded-none [&_.note-textarea]:min-h-85',
-          '[&_.note-textarea]:font-mono [&_.note-textarea]:text-[13px] [&_.note-textarea]:leading-[23px]',
-          'max-[520px]:p-5 max-[520px]:gap-4.5',
+          '[&_.note-textarea]:font-mono [&_.note-textarea]:text-body [&_.note-textarea]:leading-5.75',
+          'max-phone:p-5 max-phone:gap-4.5',
         )}
         onSubmit={(event) => {
           event.preventDefault();
@@ -86,8 +86,8 @@ export const NoteForm = ({
           className={cn(
             'note-editor-toolbar flex items-center gap-3.5 [&>.dropdown_.dropdown-trigger]:w-auto',
             '[&>.dropdown_.dropdown-trigger]:max-w-57.5 [&>.dropdown_.dropdown-trigger]:text-xs',
-            'max-[520px]:gap-2.5 max-[520px]:[&>.dropdown_.dropdown-trigger]:max-w-35',
-            'max-[520px]:[&>.dropdown_.dropdown-trigger]:text-[11px] [&>.dropdown]:w-auto',
+            'max-phone:gap-2.5 max-phone:[&>.dropdown_.dropdown-trigger]:max-w-35',
+            'max-phone:[&>.dropdown_.dropdown-trigger]:text-caption [&>.dropdown]:w-auto',
             '[&>.dropdown]:min-w-32.5 [&>.dropdown]:max-w-[65%]',
           )}
         >
@@ -108,18 +108,20 @@ export const NoteForm = ({
           />
           <div
             className={cn(
-              'segmented flex p-[3px] rounded bg-[#f1f2f4] ml-auto shrink-0 [&_button]:py-[5px]',
-              '[&_button]:px-2.5 [&_button]:text-[11px] [&_button]:rounded-[3px] [&_button]:text-muted',
-              '[&_button.active]:bg-white [&_button.active]:text-ink',
-              '[&_button.active]:shadow-[0_1px_3px_#091e421f] max-[520px]:[&_button]:text-[10px]',
-              'max-[520px]:[&_button]:px-[7px]',
+              'segmented flex p-0.75 rounded bg-neutral ml-auto shrink-0 [&_button]:py-1.25',
+              '[&_button]:px-2.5 [&_button]:text-caption [&_button]:rounded-chip [&_button]:text-muted',
+              '[&_button.active]:bg-surface [&_button.active]:text-ink',
+              '[&_button.active]:shadow-raised max-phone:[&_button]:text-tiny',
+              'max-phone:[&_button]:px-1.75',
             )}
           >
             <button
               type="button"
               aria-pressed={!preview}
               className={
-                !preview ? 'active [&_.tab-count]:bg-[#deebff] [&_.tab-count]:text-[#0052cc]' : ''
+                !preview
+                  ? 'active [&_.tab-count]:bg-brand-tint [&_.tab-count]:text-brand-strong'
+                  : ''
               }
               onClick={() => setPreview(false)}
             >
@@ -129,7 +131,9 @@ export const NoteForm = ({
               type="button"
               aria-pressed={preview}
               className={
-                preview ? 'active [&_.tab-count]:bg-[#deebff] [&_.tab-count]:text-[#0052cc]' : ''
+                preview
+                  ? 'active [&_.tab-count]:bg-brand-tint [&_.tab-count]:text-brand-strong'
+                  : ''
               }
               onClick={() => setPreview(true)}
             >
@@ -140,7 +144,7 @@ export const NoteForm = ({
         {preview ? (
           <div
             className={
-              'note-preview min-h-85 py-4 px-5 border border-line rounded max-[520px]:px-3.5'
+              'note-preview min-h-85 py-4 px-5 border border-line rounded max-phone:px-3.5'
             }
           >
             <Markdown text={body || 'Здесь появится твоя заметка.'} />
@@ -162,16 +166,16 @@ export const NoteForm = ({
         {close.confirmation}
         <div
           className={cn(
-            'modal-footer flex items-center justify-between gap-[15px] pt-4.5 border-t border-line',
-            'max-[520px]:gap-2.5 max-[520px]:flex-wrap max-[520px]:[&_.button]:text-xs',
-            'max-[520px]:[&_.button]:px-[11px]',
+            'modal-footer flex items-center justify-between gap-3.75 pt-4.5 border-t border-line',
+            'max-phone:gap-2.5 max-phone:flex-wrap max-phone:[&_.button]:text-xs',
+            'max-phone:[&_.button]:px-2.75',
           )}
         >
           {note && !mutation.readOnly && (
             <button
               type="button"
               className={cn(
-                'text-button inline-flex items-center gap-[5px] py-1 px-0 text-[13px] text-muted',
+                'text-button inline-flex items-center gap-1.25 py-1 px-0 text-body text-muted',
                 '[&:hover]:text-brand [&.danger]:text-danger danger text-danger',
               )}
               onClick={() => setDeleting(!deleting)}
@@ -194,8 +198,8 @@ export const NoteForm = ({
         {deleting && (
           <div
             className={cn(
-              'delete-confirm p-[15px] border border-[#f5c8c5] bg-[#fff1f0] rounded text-xs leading-5',
-              'text-[#5d1f1a] flex items-center flex-wrap gap-2.5 [&>span]:flex-1 [&>span]:min-w-42.5',
+              'delete-confirm p-3.75 border border-danger-border bg-danger-soft rounded text-xs leading-5',
+              'text-danger-ink flex items-center flex-wrap gap-2.5 [&>span]:flex-1 [&>span]:min-w-42.5',
             )}
           >
             <span>Удалить эту страницу?</span>

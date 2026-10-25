@@ -35,13 +35,13 @@ export const ProjectForm = ({
     <Modal title={project ? 'Настройки проекта' : 'Новый проект'} onClose={close.requestClose}>
       <form
         className={cn(
-          'editor-form flex flex-col gap-5 p-6 [&_h2]:text-[21px] [&_h2]:font-semibold [&_h3]:text-[15px]',
+          'editor-form flex flex-col gap-5 p-6 [&_h2]:text-heading-sm [&_h2]:font-semibold [&_h3]:text-lead',
           '[&_h3]:font-semibold',
-          '[&_.title-input]:text-[23px] [&_.title-input]:font-semibold [&_.title-input]:pt-[3px]',
+          '[&_.title-input]:text-heading-lg [&_.title-input]:font-semibold [&_.title-input]:pt-0.75',
           '[&_.title-input]:px-0 [&_.title-input]:pb-3 [&_.title-input]:border-0 [&_.title-input]:border-b',
           '[&_.title-input]:border-line [&_.title-input]:rounded-none [&_.note-textarea]:min-h-85',
-          '[&_.note-textarea]:font-mono [&_.note-textarea]:text-[13px] [&_.note-textarea]:leading-[23px]',
-          'max-[520px]:p-5 max-[520px]:gap-4.5',
+          '[&_.note-textarea]:font-mono [&_.note-textarea]:text-body [&_.note-textarea]:leading-5.75',
+          'max-phone:p-5 max-phone:gap-4.5',
         )}
         onSubmit={(event) => {
           event.preventDefault();
@@ -79,7 +79,7 @@ export const ProjectForm = ({
             value={key}
             onChange={(event) => setKey(event.target.value.toUpperCase())}
           />
-          <span className={'field-hint text-[10px] font-normal text-muted'}>
+          <span className={'field-hint text-tiny font-normal text-muted'}>
             Например OM → OM-52. Пустой ключ сервер подберёт по названию.
           </span>
         </label>
@@ -96,12 +96,12 @@ export const ProjectForm = ({
         </label>
         <fieldset
           className={cn(
-            'color-field flex gap-[9px] border-0 p-0 m-0 [&_legend]:text-xs [&_legend]:font-medium',
-            '[&_legend]:text-[#44546f] [&_legend]:mb-2.5 [&_button]:w-[29px] [&_button]:h-[29px]',
+            'color-field flex gap-2.25 border-0 p-0 m-0 [&_legend]:text-xs [&_legend]:font-medium',
+            '[&_legend]:text-ink-secondary [&_legend]:mb-2.5 [&_button]:w-7.25 [&_button]:h-7.25',
             '[&_button]:rounded [&_button]:text-white [&_button]:inline-flex [&_button]:items-center',
             '[&_button]:justify-center [&_button]:border-2 [&_button]:border-white',
             '[&_button]:[outline:1px_solid_transparent]',
-            '[&_button[aria-pressed=true]]:[outline-color:var(--blue)]',
+            '[&_button[aria-pressed=true]]:[outline-color:var(--color-brand)]',
           )}
           disabled={mutation.readOnly}
         >
@@ -122,16 +122,16 @@ export const ProjectForm = ({
         {close.confirmation}
         <div
           className={cn(
-            'modal-footer flex items-center justify-between gap-[15px] pt-4.5 border-t border-line',
-            'max-[520px]:gap-2.5 max-[520px]:flex-wrap max-[520px]:[&_.button]:text-xs',
-            'max-[520px]:[&_.button]:px-[11px]',
+            'modal-footer flex items-center justify-between gap-3.75 pt-4.5 border-t border-line',
+            'max-phone:gap-2.5 max-phone:flex-wrap max-phone:[&_.button]:text-xs',
+            'max-phone:[&_.button]:px-2.75',
           )}
         >
           {project && !mutation.readOnly && (
             <button
               type="button"
               className={cn(
-                'text-button inline-flex items-center gap-[5px] py-1 px-0 text-[13px] text-muted',
+                'text-button inline-flex items-center gap-1.25 py-1 px-0 text-body text-muted',
                 '[&:hover]:text-brand [&.danger]:text-danger danger text-danger',
               )}
               onClick={() => setDeleting(!deleting)}
@@ -152,8 +152,8 @@ export const ProjectForm = ({
         {deleting && (
           <div
             className={cn(
-              'delete-confirm p-[15px] border border-[#f5c8c5] bg-[#fff1f0] rounded text-xs leading-5',
-              'text-[#5d1f1a] flex items-center flex-wrap gap-2.5 [&>span]:flex-1 [&>span]:min-w-42.5',
+              'delete-confirm p-3.75 border border-danger-border bg-danger-soft rounded text-xs leading-5',
+              'text-danger-ink flex items-center flex-wrap gap-2.5 [&>span]:flex-1 [&>span]:min-w-42.5',
             )}
           >
             <span>Проект, его задачи и заметки будут удалены.</span>

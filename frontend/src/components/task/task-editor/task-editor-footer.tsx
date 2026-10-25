@@ -19,9 +19,9 @@ export const TaskEditorFooter = ({ model }: { model: TaskEditorModel }) => {
   return (
     <div
       className={cn(
-        'issue-editor-footer flex items-center gap-2.5 py-4 px-5.5 border-t border-line bg-white sticky',
-        'bottom-0 mt-auto z-1 max-[760px]:py-3.5 max-[760px]:px-5 max-[520px]:gap-[5px] max-[520px]:px-4',
-        'max-[520px]:flex-wrap max-[520px]:[&_.button]:text-xs max-[520px]:[&_.button]:px-2.5',
+        'issue-editor-footer flex items-center gap-2.5 py-4 px-5.5 border-t border-line bg-surface sticky',
+        'bottom-0 mt-auto z-1 max-tablet:py-3.5 max-tablet:px-5 max-phone:gap-1.25 max-phone:px-4',
+        'max-phone:flex-wrap max-phone:[&_.button]:text-xs max-phone:[&_.button]:px-2.5',
       )}
     >
       {task && !mutation.readOnly && (
@@ -38,8 +38,8 @@ export const TaskEditorFooter = ({ model }: { model: TaskEditorModel }) => {
       )}
       <span
         className={cn(
-          'editor-save-hint text-[10px] leading-4 text-muted max-w-60 max-[760px]:text-[10px]',
-          'max-[760px]:max-w-37.5 max-[520px]:max-w-35',
+          'editor-save-hint text-tiny leading-4 text-muted max-w-60 max-tablet:text-tiny',
+          'max-tablet:max-w-37.5 max-phone:max-w-35',
         )}
       >
         {commentDirty

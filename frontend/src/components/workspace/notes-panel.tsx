@@ -21,7 +21,7 @@ export const NotesPanel = () => {
     <div
       className={cn(
         'notes-grid grid grid-cols-[repeat(auto-fill,minmax(245px,1fr))] gap-4',
-        'max-[520px]:grid-cols-[1fr]',
+        'max-phone:grid-cols-[1fr]',
       )}
     >
       {notes.map((note) => (
@@ -29,17 +29,17 @@ export const NotesPanel = () => {
           href={notePath(info.id, note.id)}
           navigate={navigate}
           className={cn(
-            'note-card text-left p-[21px] border border-line rounded-[5px] bg-white min-h-55 flex flex-col',
-            '[&:hover]:border-[#85b8ff] [&:hover]:shadow-[0_2px_6px_#091e421a] [&_h2]:text-[15px]',
+            'note-card text-left p-5.25 border border-line rounded-card bg-surface min-h-55 flex flex-col',
+            '[&:hover]:border-brand-border [&:hover]:shadow-tile-hover [&_h2]:text-lead',
             '[&_h2]:font-semibold [&_h2]:leading-5.5 [&_h2]:wrap-anywhere [&_p]:text-xs [&_p]:leading-5',
-            '[&_p]:mt-[9px] [&_p]:mx-0 [&_p]:mb-5 [&_p]:text-muted [&_p]:[display:-webkit-box]',
+            '[&_p]:mt-2.25 [&_p]:mx-0 [&_p]:mb-5 [&_p]:text-muted [&_p]:[display:-webkit-box]',
             '[&_p]:[-webkit-box-orient:vertical] [&_p]:[-webkit-line-clamp:3] [&_p]:overflow-hidden',
-            '[&_p]:wrap-anywhere [&>div]:flex [&>div]:justify-between [&>div]:gap-3 [&>div]:text-[10px]',
+            '[&_p]:wrap-anywhere [&>div]:flex [&>div]:justify-between [&>div]:gap-3 [&>div]:text-tiny',
             '[&>div]:text-muted [&>div]:mt-auto',
           )}
           key={note.id}
         >
-          <span className={'note-icon inline-flex text-brand mb-[15px]'}>
+          <span className={'note-icon inline-flex text-brand mb-3.75'}>
             <FileText size={23} />
           </span>
           <h2>{note.title}</h2>
@@ -60,11 +60,11 @@ export const NotesPanel = () => {
       {!notes.length && (
         <div
           className={cn(
-            'empty-state flex flex-col items-center justify-center gap-[15px] text-center min-h-65 py-12.5',
-            'px-6 text-muted col-[1/-1] [&>svg]:text-[#8590a2] [&_h2]:text-[19px] [&_h2]:font-semibold',
-            '[&_h2]:leading-7 [&_h2]:text-ink [&_p]:text-[13px] [&_p]:leading-[21px] [&_p]:max-w-102.5',
-            '[&_p]:text-muted max-[520px]:py-9.5 max-[520px]:px-[15px] max-[520px]:[&_h2]:text-[17px]',
-            'max-[520px]:[&_p]:text-xs',
+            'empty-state flex flex-col items-center justify-center gap-3.75 text-center min-h-65 py-12.5',
+            'px-6 text-muted col-[1/-1] [&>svg]:text-placeholder [&_h2]:text-title [&_h2]:font-semibold',
+            '[&_h2]:leading-7 [&_h2]:text-ink [&_p]:text-body [&_p]:leading-5.25 [&_p]:max-w-102.5',
+            '[&_p]:text-muted max-phone:py-9.5 max-phone:px-3.75 max-phone:[&_h2]:text-title-sm',
+            'max-phone:[&_p]:text-xs',
           )}
         >
           <FileText size={34} strokeWidth={1.5} />

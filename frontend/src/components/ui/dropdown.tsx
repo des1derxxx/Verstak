@@ -238,18 +238,18 @@ export const Dropdown = ({
         disabled={disabled}
         className={cn(
           'dropdown-trigger [font:inherit] [-webkit-tap-highlight-color:transparent] flex items-center',
-          'justify-between gap-2 w-full min-w-0 min-h-9 py-[7px] px-2.5 border border-[#b6beca] rounded',
-          'bg-white text-ink text-left text-[13px] font-normal leading-5 cursor-pointer',
+          'justify-between gap-2 w-full min-w-0 min-h-9 py-1.75 px-2.5 border border-input-border rounded',
+          'bg-surface text-ink text-left text-body font-normal leading-5 cursor-pointer',
           '[&:focus-visible]:[outline:2px_solid_#388bff] [&:focus-visible]:outline-offset-0.5',
-          '[&:hover:not(:disabled)]:bg-[#f7f8f9] [&:hover:not(:disabled)]:border-[#8590a2]',
-          '[&[aria-expanded=true]]:border-brand [&[aria-expanded=true]]:shadow-[0_0_0_1px_var(--blue)]',
-          '[&>svg]:text-[#626f86] [&.filter-select]:bg-[#f1f2f4] [&.filter-select]:border-transparent',
-          '[&.filter-select]:min-h-8 [&.filter-select]:text-xs [&.filter-select.is-active]:bg-[#e9f2ff]',
-          '[&.filter-select.is-active]:text-[#0052cc] [&.filter-select.is-active]:border-[#85b8ff]',
+          '[&:hover:not(:disabled)]:bg-surface-soft [&:hover:not(:disabled)]:border-placeholder',
+          '[&[aria-expanded=true]]:border-brand [&[aria-expanded=true]]:shadow-ring-brand',
+          '[&>svg]:text-muted [&.filter-select]:bg-neutral [&.filter-select]:border-transparent',
+          '[&.filter-select]:min-h-8 [&.filter-select]:text-xs [&.filter-select.is-active]:bg-brand-soft',
+          '[&.filter-select.is-active]:text-brand-strong [&.filter-select.is-active]:border-brand-border',
           '[&.inline-status]:w-full [&.inline-status]:min-h-7 [&.inline-status]:border-0',
-          '[&.inline-status]:text-[10px] [&.inline-status]:font-semibold [&.inline-status]:uppercase',
+          '[&.inline-status]:text-tiny [&.inline-status]:font-semibold [&.inline-status]:uppercase',
           '[&.inline-status]:py-1 [&.inline-status]:px-1.5 [&.status-select]:w-full',
-          '[&.status-select]:min-h-7 [&.status-select]:border-0 [&.status-select]:text-[10px]',
+          '[&.status-select]:min-h-7 [&.status-select]:border-0 [&.status-select]:text-tiny',
           '[&.status-select]:font-semibold [&.status-select]:uppercase [&.status-select]:py-1',
           '[&.status-select]:px-1.5',
           className,
@@ -275,9 +275,9 @@ export const Dropdown = ({
           ref={popup}
           popover={typeof HTMLElement.prototype.showPopover === 'function' ? 'manual' : undefined}
           className={cn(
-            'dropdown-popup flex flex-col fixed [inset:auto] m-0 p-1 overflow-hidden border border-[#dfe1e6]',
-            'rounded-md bg-white text-ink shadow-[0_8px_24px_#091e4229,_0_1px_4px_#091e421f] z-1000',
-            'text-[13px] font-normal text-left normal-case tracking-[normal] [&::backdrop]:bg-transparent',
+            'dropdown-popup flex flex-col fixed [inset:auto] m-0 p-1 overflow-hidden border border-line',
+            'rounded-md bg-surface text-ink shadow-popover z-1000',
+            'text-body font-normal text-left normal-case tracking-[normal] [&::backdrop]:bg-transparent',
           )}
           style={position}
           onKeyDown={keyboard}
@@ -285,9 +285,9 @@ export const Dropdown = ({
           {searchable && (
             <div
               className={cn(
-                'dropdown-search flex items-center gap-[7px] pt-1 px-[7px] pb-2 mb-1 border-b border-line',
+                'dropdown-search flex items-center gap-1.75 pt-1 px-1.75 pb-2 mb-1 border-b border-line',
                 'text-muted [&_input]:w-full [&_input]:min-w-0 [&_input]:min-h-7.5 [&_input]:h-7.5 [&_input]:p-1',
-                '[&_input]:border-0 [&_input]:outline-none [&_input]:bg-transparent [&_input]:text-[13px]',
+                '[&_input]:border-0 [&_input]:outline-none [&_input]:bg-transparent [&_input]:text-body',
                 '[&_input:focus-visible]:outline-none',
               )}
             >
@@ -329,9 +329,9 @@ export const Dropdown = ({
                 aria-selected={String(option.value) === String(value)}
                 aria-disabled={Boolean(option.disabled)}
                 className={cn(
-                  'dropdown-option flex items-center justify-between gap-3 py-2 px-2.5 rounded-[3px] leading-5',
-                  'cursor-pointer [&>span]:wrap-anywhere [&>span]:min-w-0 [&.is-focused]:bg-[#f1f2f4]',
-                  '[&[aria-selected=true]]:bg-[#e9f2ff] [&[aria-selected=true]]:text-[#0052cc]',
+                  'dropdown-option flex items-center justify-between gap-3 py-2 px-2.5 rounded-chip leading-5',
+                  'cursor-pointer [&>span]:wrap-anywhere [&>span]:min-w-0 [&.is-focused]:bg-neutral',
+                  '[&[aria-selected=true]]:bg-brand-soft [&[aria-selected=true]]:text-brand-strong',
                   '[&[aria-selected=true]]:font-medium [&[aria-disabled=true]]:opacity-[.45]',
                   '[&[aria-disabled=true]]:cursor-default',
                   active === String(option.value) ? 'is-focused' : '',

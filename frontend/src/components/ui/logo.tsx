@@ -3,15 +3,15 @@ export const Logo = () => {
   return (
     <div
       className={cn(
-        'auth-logo flex items-center gap-[9px] text-[#253858] text-[29px] font-bold tracking-[-.8px]',
-        '[&_.brand-mark]:w-[31px] [&_.brand-mark]:h-[33px] [&_.brand-mark]:text-[25px]',
+        'auth-logo flex items-center gap-2.25 text-ink-strong text-hero font-bold tracking-[-.8px]',
+        '[&_.brand-mark]:w-7.75 [&_.brand-mark]:h-8.25 [&_.brand-mark]:text-display-sm',
         '[&_.brand-mark]:font-semibold [&_.brand-period]:hidden',
       )}
     >
       <span
         className={cn(
-          'brand-mark w-7 h-7.5 inline-flex items-center justify-center bg-brand rounded-[5px] text-white',
-          '[&_svg]:w-[27px] [&_svg]:h-[27px]',
+          'brand-mark w-7 h-7.5 inline-flex items-center justify-center bg-brand rounded-card text-white',
+          '[&_svg]:w-6.75 [&_svg]:h-6.75',
         )}
       >
         <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">

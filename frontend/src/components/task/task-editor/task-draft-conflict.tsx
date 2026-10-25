@@ -6,7 +6,7 @@ export const TaskDraftConflict = ({ model }: { model: TaskEditorModel }) => {
   return (
     <div
       className={cn(
-        'draft-conflict my-4 mx-6 p-3 bg-[#fff7d6] border border-[#e2b203] rounded-[5px] [&_p]:my-2',
+        'draft-conflict my-4 mx-6 p-3 bg-warning-soft border border-warning-bold rounded-card [&_p]:my-2',
         '[&_p]:mx-0 [&_p]:text-xs [&_p]:leading-[1.5]',
       )}
       role="alert"

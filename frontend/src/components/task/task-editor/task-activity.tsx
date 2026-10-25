@@ -67,18 +67,18 @@ export const TaskActivity = ({
     <section
       className={cn(
         'issue-section flex flex-col gap-2.5 [&>textarea]:min-h-28 activity [&_h3]:mb-3 pt-0 px-6 pb-6',
-        '[&>.segmented]:mb-3.5 max-[620px]:pt-0 max-[620px]:px-4 max-[620px]:pb-5',
+        '[&>.segmented]:mb-3.5 max-phablet:pt-0 max-phablet:px-4 max-phablet:pb-5',
       )}
       onKeyDown={(e) => e.stopPropagation()}
     >
       <h3>Активность</h3>
       <div
         className={cn(
-          'segmented flex p-[3px] rounded bg-[#f1f2f4] ml-auto shrink-0 [&_button]:py-[5px]',
-          '[&_button]:px-2.5 [&_button]:text-[11px] [&_button]:rounded-[3px] [&_button]:text-muted',
-          '[&_button[aria-pressed=true]]:bg-white [&_button[aria-pressed=true]]:text-ink',
-          '[&_button[aria-pressed=true]]:shadow-[0_1px_3px_#091e421f] max-[520px]:[&_button]:text-[10px]',
-          'max-[520px]:[&_button]:px-[7px]',
+          'segmented flex p-0.75 rounded bg-neutral ml-auto shrink-0 [&_button]:py-1.25',
+          '[&_button]:px-2.5 [&_button]:text-caption [&_button]:rounded-chip [&_button]:text-muted',
+          '[&_button[aria-pressed=true]]:bg-surface [&_button[aria-pressed=true]]:text-ink',
+          '[&_button[aria-pressed=true]]:shadow-raised max-phone:[&_button]:text-tiny',
+          'max-phone:[&_button]:px-1.75',
         )}
       >
         <button type="button" aria-pressed={tab === 'comments'} onClick={() => setTab('comments')}>
@@ -92,15 +92,15 @@ export const TaskActivity = ({
         <p
           role="alert"
           className={cn(
-            'error-text py-2.5 px-3 text-[#ae2e24] bg-[#fff1f0] border border-[#f5c8c5] rounded text-xs',
-            'leading-[19px]',
+            'error-text py-2.5 px-3 text-danger-strong bg-danger-soft border border-danger-border rounded text-xs',
+            'leading-4.75',
           )}
         >
           {error}{' '}
           <button
             type="button"
             className={cn(
-              'text-button inline-flex items-center gap-[5px] py-1 px-0 text-[13px] text-muted',
+              'text-button inline-flex items-center gap-1.25 py-1 px-0 text-body text-muted',
               '[&:hover]:text-brand [&.danger]:text-danger',
             )}
             onClick={() => {
@@ -113,21 +113,19 @@ export const TaskActivity = ({
         </p>
       )}
       {!ready && !error && (
-        <p className={'body-muted text-[13px] text-muted leading-[21px]'}>Загружаем активность…</p>
+        <p className={'body-muted text-body text-muted leading-5.25'}>Загружаем активность…</p>
       )}
       {tab === 'comments' ? (
         <>
           {ready && !comments.length && (
-            <p className={'body-muted text-[13px] text-muted leading-[21px]'}>
-              Пока нет комментариев
-            </p>
+            <p className={'body-muted text-body text-muted leading-5.25'}>Пока нет комментариев</p>
           )}
           {comments.map((c) => (
             <article
               className={cn(
-                'task-comment my-4.5 mx-0 border-b border-[#ebecf0] pb-3.5 [&>div:first-child]:flex',
+                'task-comment my-4.5 mx-0 border-b border-line-soft pb-3.5 [&>div:first-child]:flex',
                 '[&>div:first-child]:items-center [&>div:first-child]:flex-wrap [&>div:first-child]:gap-2.5',
-                '[&>div:first-child]:mb-2 [&_time]:text-[#626f86] [&_time]:text-[11px]',
+                '[&>div:first-child]:mb-2 [&_time]:text-muted [&_time]:text-caption',
               )}
               key={c.id}
             >
@@ -137,7 +135,7 @@ export const TaskActivity = ({
                 {c.kind === 'resolution' && (
                   <span
                     className={
-                      'resolution-badge bg-[#dcfff1] text-[#216e4e] rounded-[3px] py-0.5 px-1.5 text-[11px]'
+                      'resolution-badge bg-success-soft text-success-strong rounded-chip py-0.5 px-1.5 text-caption'
                     }
                   >
                     Итог работы
@@ -181,8 +179,8 @@ export const TaskActivity = ({
       ) : (
         <ol
           className={cn(
-            'task-history [&_time]:text-[#626f86] [&_time]:text-[11px] [&_time]:block [&_time]:mt-[3px] pl-5',
-            '[&_li]:my-3.5 [&_li]:mx-0 [&_li]:pl-[5px] [&_p]:my-1 [&_p]:mx-0 [&_p]:text-[#44546f]',
+            'task-history [&_time]:text-muted [&_time]:text-caption [&_time]:block [&_time]:mt-0.75 pl-5',
+            '[&_li]:my-3.5 [&_li]:mx-0 [&_li]:pl-1.25 [&_p]:my-1 [&_p]:mx-0 [&_p]:text-ink-secondary',
             '[&_p]:text-xs',
           )}
         >

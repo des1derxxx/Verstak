@@ -19,10 +19,10 @@ export const useDiscardConfirmation = (dirty: boolean, onClose: () => void) => {
     discarding && dirty ? (
       <div
         className={cn(
-          'discard-confirm p-[15px] border border-[#f5c8c5] bg-[#fff1f0] rounded text-xs leading-5',
-          'text-[#5d1f1a] mt-0 mx-5 mb-4 [&>div]:flex [&>div]:flex-wrap [&>div]:justify-end [&>div]:gap-2',
-          '[&>div]:mt-3.5 max-[520px]:mx-[15px] max-[520px]:[&_.button]:text-[11px]',
-          'max-[520px]:[&_.button]:whitespace-normal',
+          'discard-confirm p-3.75 border border-danger-border bg-danger-soft rounded text-xs leading-5',
+          'text-danger-ink mt-0 mx-5 mb-4 [&>div]:flex [&>div]:flex-wrap [&>div]:justify-end [&>div]:gap-2',
+          '[&>div]:mt-3.5 max-phone:mx-3.75 max-phone:[&_.button]:text-caption',
+          'max-phone:[&_.button]:whitespace-normal',
         )}
         role="alert"
       >
@@ -70,9 +70,9 @@ export const Modal = ({
     <>
       <div
         className={cn(
-          'modal-heading flex items-center justify-between gap-4 py-[15px] px-5 border-b border-line',
-          'min-h-[57px] text-base font-semibold [&>span]:overflow-hidden [&>span]:text-ellipsis',
-          '[&>span]:whitespace-nowrap max-[520px]:py-[13px] max-[520px]:px-[17px] max-[520px]:text-base',
+          'modal-heading flex items-center justify-between gap-4 py-3.75 px-5 border-b border-line',
+          'min-h-14.25 text-base font-semibold [&>span]:overflow-hidden [&>span]:text-ellipsis',
+          '[&>span]:whitespace-nowrap max-phone:py-3.25 max-phone:px-4.25 max-phone:text-base',
         )}
       >
         <span>{title}</span>
@@ -84,8 +84,8 @@ export const Modal = ({
         <p
           role="alert"
           className={cn(
-            'error-text py-2.5 px-3 text-[#ae2e24] bg-[#fff1f0] border border-[#f5c8c5] rounded text-xs',
-            'leading-[19px] modal-error mt-3.5 mx-5 mb-0',
+            'error-text py-2.5 px-3 text-danger-strong bg-danger-soft border border-danger-border rounded text-xs',
+            'leading-4.75 modal-error mt-3.5 mx-5 mb-0',
           )}
         >
           {mutation.error}
@@ -99,7 +99,7 @@ export const Modal = ({
   if (inline)
     return (
       <section
-        className="mx-auto w-full max-w-5xl overflow-hidden rounded-md border border-line bg-white"
+        className="mx-auto w-full max-w-5xl overflow-hidden rounded-md border border-line bg-surface"
         aria-label={title}
       >
         {content}
@@ -109,12 +109,12 @@ export const Modal = ({
     <dialog
       ref={ref}
       className={cn(
-        'modal p-0 w-120 max-w-[calc(100vw_-_32px)] max-h-[90dvh] overflow-auto border border-[#dfe1e6]',
-        'rounded-[7px] text-ink bg-white shadow-[0_10px_40px_#091e4233] [&::backdrop]:bg-[#091e424d]',
-        'max-[760px]:max-w-[calc(100vw_-_24px)] max-[760px]:max-h-[94dvh]',
+        'modal p-0 w-120 max-w-[calc(100vw_-_32px)] max-h-[90dvh] overflow-auto border border-line',
+        'rounded-dialog text-ink bg-surface shadow-modal [&::backdrop]:bg-overlay-strong',
+        'max-tablet:max-w-[calc(100vw_-_24px)] max-tablet:max-h-[94dvh]',
         wide ? 'modal-wide w-170' : '',
         drawer
-          ? 'modal-drawer fixed [inset:0_0_0_auto] m-0 w-[min(880px,90vw)] h-dvh max-h-dvh max-w-screen rounded-none [border-width:0_0_0_1px] shadow-[-10px_0_35px_#091e4221] [&::backdrop]:bg-[#091e4226] [&_.modal-heading]:text-xs [&_.modal-heading]:font-normal [&_.modal-heading]:text-muted max-[760px]:w-screen max-[760px]:max-w-screen max-[760px]:max-h-dvh'
+          ? 'modal-drawer fixed [inset:0_0_0_auto] m-0 w-[min(880px,90vw)] h-dvh max-h-dvh max-w-screen rounded-none [border-width:0_0_0_1px] shadow-drawer [&::backdrop]:bg-overlay-light [&_.modal-heading]:text-xs [&_.modal-heading]:font-normal [&_.modal-heading]:text-muted max-tablet:w-screen max-tablet:max-w-screen max-tablet:max-h-dvh'
           : 'fixed inset-0 m-auto',
       )}
       aria-label={title}

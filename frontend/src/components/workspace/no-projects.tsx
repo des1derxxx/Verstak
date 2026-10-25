@@ -5,23 +5,23 @@ export const NoProjects = ({ readOnly, onCreate }: { readOnly: boolean; onCreate
   return (
     <div
       className={cn(
-        'empty-state flex flex-col items-center justify-center gap-[15px] text-center min-h-65 py-12.5',
-        'px-6 text-muted col-[1/-1] [&>svg]:text-[#8590a2] [&_h2]:text-[19px] [&_h2]:font-semibold',
-        '[&_h2]:leading-7 [&_h2]:text-ink [&_p]:text-[13px] [&_p]:leading-[21px] [&_p]:max-w-102.5',
-        '[&_p]:text-muted max-[520px]:py-9.5 max-[520px]:px-[15px] max-[520px]:[&_h2]:text-[17px]',
-        'max-[520px]:[&_p]:text-xs onboarding-empty min-h-107.5',
+        'empty-state flex flex-col items-center justify-center gap-3.75 text-center min-h-65 py-12.5',
+        'px-6 text-muted col-[1/-1] [&>svg]:text-placeholder [&_h2]:text-title [&_h2]:font-semibold',
+        '[&_h2]:leading-7 [&_h2]:text-ink [&_p]:text-body [&_p]:leading-5.25 [&_p]:max-w-102.5',
+        '[&_p]:text-muted max-phone:py-9.5 max-phone:px-3.75 max-phone:[&_h2]:text-title-sm',
+        'max-phone:[&_p]:text-xs onboarding-empty min-h-107.5',
       )}
     >
       <div
         className={cn(
-          'empty-board flex gap-[7px] p-[11px] w-40.5 h-25 bg-[#f1f2f4] border border-line rounded-[5px]',
-          'mb-[3px] [&_span]:w-10 [&_span]:h-[65px] [&_span]:bg-white [&_span]:border',
-          '[&_span]:border-[#dfe1e6] [&_span]:rounded-[3px] [&_span]:relative',
+          'empty-board flex gap-1.75 p-2.75 w-40.5 h-25 bg-neutral border border-line rounded-card',
+          'mb-0.75 [&_span]:w-10 [&_span]:h-16.25 [&_span]:bg-surface [&_span]:border',
+          '[&_span]:border-line [&_span]:rounded-chip [&_span]:relative',
           "[&_span::before]:content-[''] [&_span::before]:absolute [&_span::before]:top-2.5",
-          '[&_span::before]:left-1.5 [&_span::before]:right-1.5 [&_span::before]:h-[5px]',
-          '[&_span::before]:bg-[#deebff] [&_span::before]:rounded-[1px]',
-          '[&_span::before]:shadow-[0_12px_#f1f2f4,0_24px_#f1f2f4] [&_span:nth-child(2)]:h-[49px]',
-          '[&_span:nth-child(3)::before]:bg-[#baf3db]',
+          '[&_span::before]:left-1.5 [&_span::before]:right-1.5 [&_span::before]:h-1.25',
+          '[&_span::before]:bg-brand-tint [&_span::before]:rounded-hairline',
+          '[&_span::before]:shadow-skeleton [&_span:nth-child(2)]:h-12.25',
+          '[&_span:nth-child(3)::before]:bg-success-border',
         )}
         aria-hidden="true"
       >

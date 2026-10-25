@@ -20,10 +20,10 @@ export const Avatar = ({
   return (
     <span
       className={cn(
-        'avatar inline-flex items-center justify-center w-7.5 h-7.5 shrink-0 rounded-full bg-[#deebff]',
-        'text-[#0747a6] text-xs font-semibold overflow-hidden [&_img]:w-full [&_img]:h-full',
+        'avatar inline-flex items-center justify-center w-7.5 h-7.5 shrink-0 rounded-full bg-brand-tint',
+        'text-brand-deep text-xs font-semibold overflow-hidden [&_img]:w-full [&_img]:h-full',
         '[&_img]:[object-fit:cover] [&.profile-avatar]:w-21 [&.profile-avatar]:h-21',
-        '[&.profile-avatar]:text-[28px]',
+        '[&.profile-avatar]:text-display-lg',
         className,
       )}
       aria-hidden="true"

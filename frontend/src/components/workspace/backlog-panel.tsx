@@ -17,8 +17,8 @@ export const BacklogPanel = () => {
     <div className={'backlog-view'}>
       <div
         className={cn(
-          'backlog-intro flex items-center gap-2 text-muted text-xs pb-5 max-[520px]:text-[11px]',
-          'max-[520px]:leading-4.5',
+          'backlog-intro flex items-center gap-2 text-muted text-xs pb-5 max-phone:text-caption',
+          'max-phone:leading-4.5',
         )}
       >
         <ListTodo size={18} />
@@ -40,7 +40,7 @@ export const BacklogPanel = () => {
       {counts.progress > 0 && (
         <p
           className={cn(
-            'backlog-footnote text-muted text-xs [&_button]:text-brand [&_button]:py-0 [&_button]:px-[3px]',
+            'backlog-footnote text-muted text-xs [&_button]:text-brand [&_button]:py-0 [&_button]:px-0.75',
             '[&_button]:text-xs',
           )}
         >

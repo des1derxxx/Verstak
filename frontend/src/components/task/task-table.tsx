@@ -36,17 +36,17 @@ export const TaskTable = ({
     <div className={cn('issue-table-wrap overflow-x-auto w-full', compact ? 'is-compact' : '')}>
       <table
         className={cn(
-          'issue-table w-full border-collapse text-left text-xs whitespace-nowrap [&_th]:py-[11px]',
-          '[&_th]:px-3 [&_th]:border-b-2 [&_th]:border-[#dfe1e6] [&_th]:text-muted [&_th]:text-[11px]',
-          '[&_th]:font-semibold [&_td]:py-2.5 [&_td]:px-3 [&_td]:border-b [&_td]:border-[#ebecf0]',
-          '[&_td]:h-[49px] [&_tr:hover_td]:bg-[#f7f8f9] [&_th:nth-child(2)]:w-full',
-          '[&_th:nth-child(2)]:min-w-55 max-[1200px]:[&_td]:px-2.5 max-[1200px]:[&_th]:px-2.5',
-          '[&_.dropdown]:w-auto [&_.dropdown]:max-w-[145px]',
+          'issue-table w-full border-collapse text-left text-xs whitespace-nowrap [&_th]:py-2.75',
+          '[&_th]:px-3 [&_th]:border-b-2 [&_th]:border-line [&_th]:text-muted [&_th]:text-caption',
+          '[&_th]:font-semibold [&_td]:py-2.5 [&_td]:px-3 [&_td]:border-b [&_td]:border-line-soft',
+          '[&_td]:h-12.25 [&_tr:hover_td]:bg-surface-soft [&_th:nth-child(2)]:w-full',
+          '[&_th:nth-child(2)]:min-w-55 max-desktop:[&_td]:px-2.5 max-desktop:[&_th]:px-2.5',
+          '[&_.dropdown]:w-auto [&_.dropdown]:max-w-36.25',
         )}
       >
         <thead>
           <tr>
-            <th className={'issue-key-column min-w-[125px]'}>Ключ</th>
+            <th className={'issue-key-column min-w-31.25'}>Ключ</th>
             <th>Название</th>
             {!compact && (
               <>
@@ -78,7 +78,7 @@ export const TaskTable = ({
                   task={task}
                   onOpen={onOpen}
                   className={cn(
-                    'issue-key-link inline-flex items-center gap-[7px] text-muted py-0.5 px-0 text-[10px]',
+                    'issue-key-link inline-flex items-center gap-1.75 text-muted py-0.5 px-0 text-tiny',
                     'font-medium [&:hover]:text-brand',
                   )}
                   title={task.id}
@@ -92,9 +92,9 @@ export const TaskTable = ({
                   task={task}
                   onOpen={onOpen}
                   className={cn(
-                    'issue-title-link text-left text-ink py-0.5 px-0 text-[13px] max-w-110 overflow-hidden',
+                    'issue-title-link text-left text-ink py-0.5 px-0 text-body max-w-110 overflow-hidden',
                     'whitespace-nowrap text-ellipsis align-middle [&:hover]:text-brand [&:hover]:underline',
-                    '[&.is-done]:text-muted [&.is-done]:line-through max-[1200px]:max-w-65',
+                    '[&.is-done]:text-muted [&.is-done]:line-through max-desktop:max-w-65',
                     task.status === 'done' ? 'is-done' : '',
                   )}
                 >
@@ -103,7 +103,7 @@ export const TaskTable = ({
                 {task.checklist.length > 0 && (
                   <span
                     className={
-                      'table-checks inline-flex items-center gap-1 ml-2.5 text-[10px] text-muted'
+                      'table-checks inline-flex items-center gap-1 ml-2.5 text-tiny text-muted'
                     }
                   >
                     <SquareCheck size={12} />
@@ -115,7 +115,7 @@ export const TaskTable = ({
                 <td>
                   <span
                     className={
-                      'table-project text-muted text-[11px] max-w-27.5 overflow-hidden block text-ellipsis'
+                      'table-project text-muted text-caption max-w-27.5 overflow-hidden block text-ellipsis'
                     }
                   >
                     {projects.find((project) => project.id === task.projectId)?.name}
@@ -126,8 +126,8 @@ export const TaskTable = ({
                 <td>
                   <button
                     className={cn(
-                      'table-assignee text-xs text-[#44546f] bg-transparent whitespace-nowrap max-w-37.5',
-                      'overflow-hidden text-ellipsis inline-flex items-center gap-1.5 [&:hover]:text-[#0c66e4]',
+                      'table-assignee text-xs text-ink-secondary bg-transparent whitespace-nowrap max-w-37.5',
+                      'overflow-hidden text-ellipsis inline-flex items-center gap-1.5 [&:hover]:text-brand',
                     )}
                     onClick={() => onOpen(task)}
                     aria-label={`Исполнитель задачи: ${task.title}`}
@@ -135,7 +135,7 @@ export const TaskTable = ({
                     {members.find((m) => m.user.id === task.assigneeId)?.user && (
                       <Avatar
                         user={members.find((m) => m.user.id === task.assigneeId)!.user}
-                        className={'issue-assignee w-5.5 h-5.5 text-[10px]'}
+                        className={'issue-assignee w-5.5 h-5.5 text-tiny'}
                       />
                     )}
                     {members.find((m) => m.user.id === task.assigneeId)?.user.name ??
@@ -147,7 +147,7 @@ export const TaskTable = ({
                 <Dropdown
                   aria-label={`Статус задачи: ${task.title}`}
                   className={cn(
-                    'inline-status border-0 rounded-[3px] text-[10px] font-semibold uppercase py-1 px-[5px]',
+                    'inline-status border-0 rounded-chip text-tiny font-semibold uppercase py-1 px-1.25',
                     'cursor-pointer max-w-32.5',
                     statusStyles[task.status],
                   )}
@@ -164,10 +164,10 @@ export const TaskTable = ({
               <td>
                 <div
                   className={cn(
-                    'inline-priority flex items-center gap-[3px] [&_.dropdown-trigger]:p-[3px]',
-                    '[&_.dropdown-trigger]:border-0 [&_.dropdown-trigger]:text-[#44546f]',
-                    '[&_.dropdown-trigger]:bg-transparent [&_.dropdown-trigger]:text-[11px]',
-                    '[&_.dropdown-trigger]:cursor-pointer [&_.dropdown-trigger]:min-h-[27px]',
+                    'inline-priority flex items-center gap-0.75 [&_.dropdown-trigger]:p-0.75',
+                    '[&_.dropdown-trigger]:border-0 [&_.dropdown-trigger]:text-ink-secondary',
+                    '[&_.dropdown-trigger]:bg-transparent [&_.dropdown-trigger]:text-caption',
+                    '[&_.dropdown-trigger]:cursor-pointer [&_.dropdown-trigger]:min-h-6.75',
                   )}
                 >
                   <PriorityBadge priority={task.priority} label={false} />
@@ -190,7 +190,7 @@ export const TaskTable = ({
               <td>
                 <button
                   className={cn(
-                    'table-due inline-flex items-center gap-[5px] text-[11px] text-muted min-h-6.5 p-0',
+                    'table-due inline-flex items-center gap-1.25 text-caption text-muted min-h-6.5 p-0',
                     '[&:hover]:text-brand',
                     task.due && task.due < todayDate && task.status !== 'done'
                       ? 'overdue text-danger!'

@@ -37,16 +37,16 @@ export const TokenPanel = ({
     <Modal inline={inline} title="API-токены" onClose={close.requestClose} pending={busy}>
       <div
         className={cn(
-          'editor-form flex flex-col gap-5 p-6 [&_h2]:text-[21px] [&_h2]:font-semibold [&_h3]:text-[15px]',
+          'editor-form flex flex-col gap-5 p-6 [&_h2]:text-heading-sm [&_h2]:font-semibold [&_h3]:text-lead',
           '[&_h3]:font-semibold',
-          '[&_.title-input]:text-[23px] [&_.title-input]:font-semibold [&_.title-input]:pt-[3px]',
+          '[&_.title-input]:text-heading-lg [&_.title-input]:font-semibold [&_.title-input]:pt-0.75',
           '[&_.title-input]:px-0 [&_.title-input]:pb-3 [&_.title-input]:border-0 [&_.title-input]:border-b',
           '[&_.title-input]:border-line [&_.title-input]:rounded-none [&_.note-textarea]:min-h-85',
-          '[&_.note-textarea]:font-mono [&_.note-textarea]:text-[13px] [&_.note-textarea]:leading-[23px]',
-          'max-[520px]:p-5 max-[520px]:gap-4.5',
+          '[&_.note-textarea]:font-mono [&_.note-textarea]:text-body [&_.note-textarea]:leading-5.75',
+          'max-phone:p-5 max-phone:gap-4.5',
         )}
       >
-        <p className={'body-muted text-[13px] text-muted leading-[21px]'}>
+        <p className={'body-muted text-body text-muted leading-5.25'}>
           Для бота или скрипта. Токен действует от твоего имени только в пространстве «{space.name}»
           и учитывает твою текущую роль.
         </p>
@@ -54,20 +54,20 @@ export const TokenPanel = ({
           <p
             role="alert"
             className={cn(
-              'error-text py-2.5 px-3 text-[#ae2e24] bg-[#fff1f0] border border-[#f5c8c5] rounded text-xs',
-              'leading-[19px]',
+              'error-text py-2.5 px-3 text-danger-strong bg-danger-soft border border-danger-border rounded text-xs',
+              'leading-4.75',
             )}
           >
             {error}
           </p>
         )}
         {!ready && !error && (
-          <p className={'body-muted text-[13px] text-muted leading-[21px]'}>Загружаем токены…</p>
+          <p className={'body-muted text-body text-muted leading-5.25'}>Загружаем токены…</p>
         )}
         {secret ? (
           <div
             className={cn(
-              'token-secret grid gap-3 p-3.5 bg-[#e9f2ff] border border-[#85b8ff] rounded-[5px]',
+              'token-secret grid gap-3 p-3.5 bg-brand-soft border border-brand-border rounded-card',
               '[&_input[readonly]]:font-mono [&_.checkbox-label]:flex [&_.checkbox-label]:items-center',
               '[&_.checkbox-label]:gap-2 [&_input[type=checkbox]]:w-auto',
             )}
@@ -106,7 +106,7 @@ export const TokenPanel = ({
               <button
                 type="button"
                 className={cn(
-                  'text-button inline-flex items-center gap-[5px] py-1 px-0 text-[13px] text-muted',
+                  'text-button inline-flex items-center gap-1.25 py-1 px-0 text-body text-muted',
                   '[&:hover]:text-brand [&.danger]:text-danger',
                 )}
                 onClick={() => setSecret('')}
@@ -188,8 +188,8 @@ export const TokenPanel = ({
             .map((t) => (
               <div
                 className={cn(
-                  'token-row flex items-center justify-between py-3.5 px-0 border-b border-[#ebecf0]',
-                  '[&_small]:block [&_small]:text-[#626f86] [&_small]:leading-[1.6] [&_small]:mt-1',
+                  'token-row flex items-center justify-between py-3.5 px-0 border-b border-line-soft',
+                  '[&_small]:block [&_small]:text-muted [&_small]:leading-[1.6] [&_small]:mt-1',
                 )}
                 key={t.id}
               >
@@ -218,7 +218,7 @@ export const TokenPanel = ({
             ))}
         </div>
         {close.confirmation}
-        <p className={'small-print text-[11px] text-muted leading-4.5 text-center'}>
+        <p className={'small-print text-caption text-muted leading-4.5 text-center'}>
           REST: /api/tasks · Authorization: Bearer …<br />
           Примеры запросов — в README проекта.
         </p>

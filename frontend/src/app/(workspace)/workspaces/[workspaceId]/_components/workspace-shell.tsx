@@ -26,13 +26,13 @@ export const WorkspaceShell = ({ children }: { children: ReactNode }) => {
         <main
           className={cn(
             'main-area ml-[var(--sidebar-width)] pt-[var(--header-height)] min-h-dvh min-w-0',
-            'max-[760px]:ml-0',
+            'max-tablet:ml-0',
           )}
         >
           <div
             className={cn(
-              'content pt-5.5 px-7 pb-4 max-w-500 my-0 mx-auto px-9 max-[1200px]:px-5.5 max-[1000px]:px-5',
-              'max-[760px]:pt-4.5 max-[760px]:px-4.5 max-[760px]:pb-4 max-[520px]:py-4 max-[520px]:px-3.5',
+              'content pt-5.5 px-7 pb-4 max-w-500 my-0 mx-auto px-9 max-desktop:px-5.5 max-laptop:px-5',
+              'max-tablet:pt-4.5 max-tablet:px-4.5 max-tablet:pb-4 max-phone:py-4 max-phone:px-3.5',
             )}
           >
             {children}
@@ -43,11 +43,11 @@ export const WorkspaceShell = ({ children }: { children: ReactNode }) => {
       <div
         className={cn(
           'toast flex items-center gap-2 fixed bottom-6 left-[calc(50%_+_120px)]',
-          '[transform:translate(-50%,10px)] opacity-[0] [pointer-events:none] py-3 px-[17px] bg-white',
-          'border border-[#baf3db] rounded-[5px] shadow-[0_5px_20px_#091e4226] text-[#216e4e] text-[13px]',
+          '[transform:translate(-50%,10px)] opacity-0 [pointer-events:none] py-3 px-4.25 bg-surface',
+          'border border-success-border rounded-card shadow-toast text-success-strong text-body',
           'z-50 max-w-[calc(100vw_-_30px)] [transition:opacity_.16s,transform_.16s]',
-          '[&.visible]:opacity-[1] [&.visible]:[transform:translate(-50%,0)]',
-          'max-[1000px]:left-[calc(50%_+_107px)] max-[760px]:left-[50%] max-[760px]:text-xs',
+          '[&.visible]:opacity-100 [&.visible]:[transform:translate(-50%,0)]',
+          'max-laptop:left-[calc(50%_+_107px)] max-tablet:left-[50%] max-tablet:text-xs',
           toast ? 'visible' : '',
         )}
         role="status"

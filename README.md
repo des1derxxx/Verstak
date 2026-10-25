@@ -209,6 +209,7 @@ URI держи в окружении или локальном файле сек
 - `lib/` — API-клиент (`lib/api/`), модель данных (`lib/model/`), маршруты (`lib/routes.ts`), защита черновиков (`lib/navigation-guard.tsx`) и состояние пространства (`lib/workspace/`).
 - Раздел и представление определяются сегментами App Router (`useSelectedLayoutSegments`), фильтры — параметрами URL. Ручного разбора адреса нет.
 - Компоненты, хуки и утилиты — типизированные стрелочные функции. Стили — Tailwind в компонентах; в `app/globals.css` только токены и базовые стили.
+- Цвета, тени, размеры шрифта, радиусы и брейкпоинты — токены из `@theme` в `app/globals.css` (`text-ink-secondary`, `bg-danger-soft`, `shadow-card`, `text-body`, `rounded-card`, `max-tablet:`). Hex-значения и `max-[760px]` в классах не пишем; отступы — шкалой Tailwind (`py-3.75` = 15px).
 - Форматирование: `pnpm format`; проверка: `pnpm format:check`. Зависимости фронтенда устанавливаются внутри `frontend/`.
 
 Production-сборка: `pnpm build`, standalone-артефакт — `.next/standalone`, запуск проверенного контейнера использует `node server.js`. Для локальной проверки production-сборки — `pnpm start`. Next.js генерирует отдельный nonce для script-src в CSP и динамически рендерит страницу; внешние шрифты и CDN не требуются. Схема развёртывания следует [standalone output Next.js](https://nextjs.org/docs/app/api-reference/config/next-config-js/output), подключение Tailwind — [официальному руководству](https://tailwindcss.com/docs/installation/framework-guides/nextjs).

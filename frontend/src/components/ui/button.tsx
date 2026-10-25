@@ -6,12 +6,12 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 const variants = {
   primary: 'primary bg-brand text-white hover:bg-brand-hover',
-  secondary: 'secondary border-line bg-white text-[#44546f] hover:bg-[#f1f2f4]',
-  danger: 'danger-button bg-danger text-white hover:bg-[#ae2e24]',
+  secondary: 'secondary border-line bg-surface text-ink-secondary hover:bg-neutral',
+  danger: 'danger-button bg-danger text-white hover:bg-danger-strong',
 };
 const sizes = {
-  default: 'min-h-9 px-[13px] py-[7px] text-sm',
-  compact: 'compact min-h-8 px-2.5 py-[5px] text-[13px]',
+  default: 'min-h-9 px-3.25 py-1.75 text-sm',
+  compact: 'compact min-h-8 px-2.5 py-1.25 text-body',
 };
 export const Button = ({
   variant = 'secondary',
@@ -24,7 +24,7 @@ export const Button = ({
     {...props}
     type={type}
     className={cn(
-      'button inline-flex items-center justify-center gap-[7px] rounded border border-transparent font-medium leading-5 whitespace-nowrap',
+      'button inline-flex items-center justify-center gap-1.75 rounded border border-transparent font-medium leading-5 whitespace-nowrap',
       variants[variant],
       sizes[size],
       className,
@@ -44,7 +44,7 @@ export const IconButton = ({
     {...props}
     type={type}
     className={cn(
-      'icon-button inline-flex size-[30px] shrink-0 items-center justify-center rounded p-[5px] hover:bg-[#091e420f]',
+      'icon-button inline-flex size-7.5 shrink-0 items-center justify-center rounded p-1.25 hover:bg-overlay-pressed',
       tone === 'danger' ? 'danger text-danger' : 'text-muted hover:text-ink',
       className,
     )}

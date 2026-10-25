@@ -47,20 +47,20 @@ export const Board = ({
     <>
       <div
         className={cn(
-          'board grid grid-cols-[repeat(3,minmax(245px,1fr))] items-start gap-5 overflow-x-auto pb-[3px]',
-          'max-[1000px]:grid-cols-[repeat(3,minmax(250px,1fr))]',
-          'max-[760px]:grid-cols-[repeat(3,minmax(270px,1fr))] max-[760px]:gap-3',
-          'max-[520px]:grid-cols-[repeat(3,minmax(275px,1fr))]',
+          'board grid grid-cols-[repeat(3,minmax(245px,1fr))] items-start gap-5 overflow-x-auto pb-0.75',
+          'max-laptop:grid-cols-[repeat(3,minmax(250px,1fr))]',
+          'max-tablet:grid-cols-[repeat(3,minmax(270px,1fr))] max-tablet:gap-3',
+          'max-phone:grid-cols-[repeat(3,minmax(275px,1fr))]',
         )}
         aria-label="Доска задач"
       >
         {boardStatuses.map((status) => (
           <section
             className={cn(
-              'board-column flex flex-col bg-surface-soft border border-transparent rounded-[5px]',
+              'board-column flex flex-col bg-surface-soft border border-transparent rounded-card',
               'h-[max(390px,calc(100dvh_-_340px))] [transition:border-color_.15s,background_.15s]',
-              '[&.drag-over]:border-[#388bff] [&.drag-over]:bg-[#e9f2ff]',
-              'max-[760px]:h-[max(390px,calc(100dvh_-_330px))]',
+              '[&.drag-over]:border-focus [&.drag-over]:bg-brand-soft',
+              'max-tablet:h-[max(390px,calc(100dvh_-_330px))]',
               `column-${status}`,
               dragOver === status ? 'drag-over' : '',
             )}
@@ -86,8 +86,8 @@ export const Board = ({
           >
             <div
               className={cn(
-                'column-heading flex items-center min-h-12 py-3 px-[13px] [&>div]:flex [&>div]:items-center',
-                '[&>div]:gap-[7px] [&_h2]:text-[11px] [&_h2]:font-semibold [&_h2]:text-[#44546f]',
+                'column-heading flex items-center min-h-12 py-3 px-3.25 [&>div]:flex [&>div]:items-center',
+                '[&>div]:gap-1.75 [&_h2]:text-caption [&_h2]:font-semibold [&_h2]:text-ink-secondary',
                 '[&_h2]:uppercase [&_h2]:tracking-[.35px]',
               )}
             >
@@ -101,7 +101,7 @@ export const Board = ({
                   <StatusIcon status={status} />
                 </span>
                 <h2>{statusNames[status]}</h2>
-                <span className={'column-count text-[11px] text-muted pl-[3px]'}>
+                <span className={'column-count text-caption text-muted pl-0.75'}>
                   {tasks.filter((task) => task.status === status).length}
                 </span>
               </div>
@@ -123,11 +123,11 @@ export const Board = ({
                       onOpen={onOpen}
                       key={task.id}
                       className={cn(
-                        'task-card flex flex-col w-full p-[15px] bg-white border border-[#dfe1e6] rounded-[5px]',
-                        'shadow-[0_1px_1px_#091e4214] text-left [transition:border-color_.12s,box-shadow_.12s]',
-                        '[&:hover]:border-[#85b8ff] [&:hover]:shadow-[0_1px_5px_#091e4226] [&:active]:[cursor:grabbing]',
+                        'task-card flex flex-col w-full p-3.75 bg-surface border border-line rounded-card',
+                        'shadow-card text-left [transition:border-color_.12s,box-shadow_.12s]',
+                        '[&:hover]:border-brand-border [&:hover]:shadow-card-hover [&:active]:[cursor:grabbing]',
                         '[&.is-done_.task-card-title]:text-muted [&.is-done_.task-card-title]:line-through',
-                        '[&.is-done_.task-card-title]:[text-decoration-color:#b3b9c4] [&:hover_.drag-grip]:opacity-[1]',
+                        '[&.is-done_.task-card-title]:[text-decoration-color:#b3b9c4] [&:hover_.drag-grip]:opacity-100',
                         status === 'done' ? 'is-done' : '',
                       )}
                       draggable={!mutation.readOnly && !mutation.saving}
@@ -143,7 +143,7 @@ export const Board = ({
                     >
                       <span
                         className={
-                          'task-card-title text-sm leading-[21px] font-normal text-[#172b4d] wrap-anywhere'
+                          'task-card-title text-sm leading-5.25 font-normal text-ink wrap-anywhere'
                         }
                       >
                         {task.title}
@@ -153,7 +153,7 @@ export const Board = ({
                           {task.labels.slice(0, 3).map((label) => (
                             <span
                               className={cn(
-                                'tag text-[10px] leading-4 bg-[#f1f2f4] rounded-[3px] py-px px-[5px] text-[#44546f]',
+                                'tag text-tiny leading-4 bg-neutral rounded-chip py-px px-1.25 text-ink-secondary',
                                 'overflow-hidden text-ellipsis max-w-full',
                               )}
                               key={label}
@@ -170,8 +170,8 @@ export const Board = ({
                           {task.due && (
                             <span
                               className={cn(
-                                'due-chip inline-flex items-center gap-1 text-[10px] leading-[17px] text-muted py-px px-[5px]',
-                                'border border-[#dfe1e6] rounded-[3px] [&.overdue]:border-[#f5c8c5] [&.overdue]:bg-[#fff1f0]',
+                                'due-chip inline-flex items-center gap-1 text-tiny leading-4.25 text-muted py-px px-1.25',
+                                'border border-line rounded-chip [&.overdue]:border-danger-border [&.overdue]:bg-danger-soft',
                                 task.due < todayDate && status !== 'done'
                                   ? 'overdue text-danger!'
                                   : '',
@@ -184,7 +184,7 @@ export const Board = ({
                           {task.checklist.length > 0 && (
                             <span
                               className={
-                                'check-chip inline-flex items-center gap-1 text-[10px] leading-[17px] text-muted'
+                                'check-chip inline-flex items-center gap-1 text-tiny leading-4.25 text-muted'
                               }
                             >
                               <SquareCheck size={13} />
@@ -196,12 +196,12 @@ export const Board = ({
                       )}
                       <span
                         className={
-                          'card-footer flex items-center justify-between gap-2 mt-[17px] w-full'
+                          'card-footer flex items-center justify-between gap-2 mt-4.25 w-full'
                         }
                       >
                         <span
                           className={
-                            'card-key inline-flex items-center gap-1.5 text-[11px] font-medium text-muted tracking-[.15px]'
+                            'card-key inline-flex items-center gap-1.5 text-caption font-medium text-muted tracking-[.15px]'
                           }
                         >
                           <TaskType done={status === 'done'} type={task.type} />
@@ -211,7 +211,7 @@ export const Board = ({
                           {projectId === 'all' || projectId === 'today' ? (
                             <span
                               className={cn(
-                                'card-project max-w-[105px] overflow-hidden whitespace-nowrap text-ellipsis text-[10px]',
+                                'card-project max-w-26.25 overflow-hidden whitespace-nowrap text-ellipsis text-tiny',
                                 'text-muted',
                               )}
                               title={project?.name}
@@ -224,13 +224,13 @@ export const Board = ({
                             <span title={`Исполнитель: ${assignee.name}`}>
                               <Avatar
                                 user={assignee}
-                                className={'issue-assignee w-5.5 h-5.5 text-[10px]'}
+                                className={'issue-assignee w-5.5 h-5.5 text-tiny'}
                               />
                             </span>
                           )}
                           <GripVertical
                             size={13}
-                            className={'drag-grip text-[#8590a2] opacity-[0] w-2.5'}
+                            className={'drag-grip text-placeholder opacity-0 w-2.5'}
                           />
                         </span>
                       </span>
@@ -239,9 +239,7 @@ export const Board = ({
                 })}
               {!tasks.some((task) => task.status === status) && (
                 <p
-                  className={
-                    'column-empty text-xs text-muted leading-4.5 text-center py-7 px-[15px]'
-                  }
+                  className={'column-empty text-xs text-muted leading-4.5 text-center py-7 px-3.75'}
                 >
                   {filtered
                     ? 'Нет задач по выбранным фильтрам'
@@ -267,8 +265,8 @@ export const Board = ({
       {backlogCount > 0 && (
         <button
           className={cn(
-            'backlog-link flex items-center gap-2 text-muted text-[11px] pt-3.5 px-px pb-px [&>span]:ml-1',
-            '[&>span]:text-brand [&>svg]:text-brand max-[520px]:text-[10px]',
+            'backlog-link flex items-center gap-2 text-muted text-caption pt-3.5 px-px pb-px [&>span]:ml-1',
+            '[&>span]:text-brand [&>svg]:text-brand max-phone:text-tiny',
           )}
           onClick={onBacklog}
         >
@@ -302,14 +300,14 @@ export const BacklogSection = ({
   const [expanded, setExpanded] = useState(true);
   return (
     <section
-      className={'backlog-section border border-line rounded-[5px] mb-5'}
+      className={'backlog-section border border-line rounded-card mb-5'}
       aria-label={statusNames[status]}
     >
       <button
         className={cn(
-          'backlog-section-heading flex items-center gap-2 py-3.5 px-3 w-full bg-[#f7f8f9] text-left',
+          'backlog-section-heading flex items-center gap-2 py-3.5 px-3 w-full bg-surface-soft text-left',
           '[&_h2]:text-sm [&_h2]:font-semibold [&>svg]:text-muted [&>svg]:[transition:transform_.15s]',
-          '[&_.is-collapsed]:[transform:rotate(-90deg)] max-[520px]:px-2.5 max-[520px]:[&_h2]:text-[13px]',
+          '[&_.is-collapsed]:[transform:rotate(-90deg)] max-phone:px-2.5 max-phone:[&_h2]:text-body',
         )}
         aria-expanded={expanded}
         onClick={() => setExpanded(!expanded)}
@@ -318,15 +316,15 @@ export const BacklogSection = ({
         <h2>{statusNames[status]}</h2>
         <span
           className={cn(
-            'count-badge min-w-4.5 py-px px-[5px] text-center rounded-[3px] text-[10px] leading-4',
-            'bg-[#dfe1e6] text-[#44546f]',
+            'count-badge min-w-4.5 py-px px-1.25 text-center rounded-chip text-tiny leading-4',
+            'bg-line text-ink-secondary',
           )}
         >
           {tasks.length}
         </span>
         <span
           className={
-            'backlog-description ml-1.5 text-[11px] font-normal text-muted max-[1000px]:hidden'
+            'backlog-description ml-1.5 text-caption font-normal text-muted max-laptop:hidden'
           }
         >
           {status === 'todo' ? 'Задачи, которые можно брать в работу' : 'Идеи и будущие задачи'}
@@ -336,7 +334,7 @@ export const BacklogSection = ({
         <div
           className={cn(
             'backlog-section-content border-t border-line [&>.quick-create]:m-2.5',
-            '[&>.quick-create]:max-w-140 [&>.quick-create-trigger]:py-3 [&>.quick-create-trigger]:px-[15px]',
+            '[&>.quick-create]:max-w-140 [&>.quick-create-trigger]:py-3 [&>.quick-create-trigger]:px-3.75',
           )}
         >
           {tasks.length > 0 ? (
@@ -349,7 +347,7 @@ export const BacklogSection = ({
               startAction
             />
           ) : (
-            <p className={'backlog-empty py-[23px] px-5 text-xs text-muted'}>
+            <p className={'backlog-empty py-5.75 px-5 text-xs text-muted'}>
               {status === 'todo'
                 ? 'Переведи сюда задачу из бэклога, когда будешь готов начать.'
                 : 'Добавь идеи, которые хочешь запланировать.'}

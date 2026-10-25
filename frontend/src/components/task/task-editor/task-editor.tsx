@@ -62,9 +62,9 @@ export const TaskEditor = (props: TaskEditorProps) => {
         className={cn(
           'issue-editor',
           'flex flex-col',
-          'max-[520px]:[&_.issue-title-input]:text-[21px]',
+          'max-phone:[&_.issue-title-input]:text-heading-sm',
           task
-            ? 'issue-editor-existing min-h-[calc(100dvh_-_58px)] [&_.issue-editor-body]:grid-cols-[minmax(0,1fr)_240px] [&_.issue-editor-body]:flex-1 [&_.issue-editor-body]:mt-2 max-[760px]:[&_.issue-editor-body]:grid-cols-[minmax(0,1fr)_215px] max-[520px]:[&_.issue-editor-body]:flex max-[520px]:[&_.issue-editor-body]:flex-col'
+            ? 'issue-editor-existing min-h-[calc(100dvh_-_58px)] [&_.issue-editor-body]:grid-cols-[minmax(0,1fr)_240px] [&_.issue-editor-body]:flex-1 [&_.issue-editor-body]:mt-2 max-tablet:[&_.issue-editor-body]:grid-cols-[minmax(0,1fr)_215px] max-phone:[&_.issue-editor-body]:flex max-phone:[&_.issue-editor-body]:flex-col'
             : '',
         )}
         onKeyDown={(event) => {
@@ -106,17 +106,17 @@ export const TaskEditor = (props: TaskEditorProps) => {
           {task && (
             <aside
               className={cn(
-                'issue-details py-[21px] px-4.5 bg-[#fafbfc] border-l border-line min-w-0 [&>h3]:text-[13px]',
-                '[&>h3]:font-semibold [&>h3]:mb-[21px] max-[760px]:py-5 max-[760px]:px-[15px]',
-                'max-[520px]:border-l-0 max-[520px]:border-t max-[520px]:border-line max-[520px]:p-5',
-                'max-[520px]:[&_.issue-metadata-fields]:grid',
-                'max-[520px]:[&_.issue-metadata-fields]:grid-cols-[1fr_1fr]',
-                'max-[520px]:[&_.issue-metadata-fields]:gap-4 max-[520px]:[&>h3]:mb-[17px]',
+                'issue-details py-5.25 px-4.5 bg-surface-faint border-l border-line min-w-0 [&>h3]:text-body',
+                '[&>h3]:font-semibold [&>h3]:mb-5.25 max-tablet:py-5 max-tablet:px-3.75',
+                'max-phone:border-l-0 max-phone:border-t max-phone:border-line max-phone:p-5',
+                'max-phone:[&_.issue-metadata-fields]:grid',
+                'max-phone:[&_.issue-metadata-fields]:grid-cols-[1fr_1fr]',
+                'max-phone:[&_.issue-metadata-fields]:gap-4 max-phone:[&>h3]:mb-4.25',
               )}
             >
               <h3>Сведения</h3>
               {metadata}
-              <p className={'issue-created-at text-muted text-[10px] leading-4.5 mt-7'}>
+              <p className={'issue-created-at text-muted text-tiny leading-4.5 mt-7'}>
                 Создано{' '}
                 {new Intl.DateTimeFormat('ru', {
                   timeZone,
@@ -142,10 +142,10 @@ export const TaskEditor = (props: TaskEditorProps) => {
         {discarding && (
           <div
             className={cn(
-              'discard-confirm p-[15px] border border-[#f5c8c5] bg-[#fff1f0] rounded text-xs leading-5',
-              'text-[#5d1f1a] mt-0 mx-5 mb-4 [&>div]:flex [&>div]:flex-wrap [&>div]:justify-end [&>div]:gap-2',
-              '[&>div]:mt-3.5 max-[520px]:mx-[15px] max-[520px]:[&_.button]:text-[11px]',
-              'max-[520px]:[&_.button]:whitespace-normal',
+              'discard-confirm p-3.75 border border-danger-border bg-danger-soft rounded text-xs leading-5',
+              'text-danger-ink mt-0 mx-5 mb-4 [&>div]:flex [&>div]:flex-wrap [&>div]:justify-end [&>div]:gap-2',
+              '[&>div]:mt-3.5 max-phone:mx-3.75 max-phone:[&_.button]:text-caption',
+              'max-phone:[&_.button]:whitespace-normal',
             )}
             role="alert"
           >
@@ -163,8 +163,8 @@ export const TaskEditor = (props: TaskEditorProps) => {
         {deleting && (
           <div
             className={cn(
-              'delete-confirm p-[15px] border border-[#f5c8c5] bg-[#fff1f0] rounded text-xs leading-5',
-              'text-[#5d1f1a] flex items-center flex-wrap gap-2.5 [&>span]:flex-1 [&>span]:min-w-42.5',
+              'delete-confirm p-3.75 border border-danger-border bg-danger-soft rounded text-xs leading-5',
+              'text-danger-ink flex items-center flex-wrap gap-2.5 [&>span]:flex-1 [&>span]:min-w-42.5',
             )}
             role="alert"
           >

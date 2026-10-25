@@ -58,8 +58,8 @@ export const QuickCreate = ({
       <button
         type="button"
         className={cn(
-          'quick-create-trigger flex items-center gap-[7px] w-full text-left text-[13px] text-muted py-2.5',
-          'px-1.5 rounded [&:hover]:bg-[#091e420f] [&:hover]:text-ink',
+          'quick-create-trigger flex items-center gap-1.75 w-full text-left text-body text-muted py-2.5',
+          'px-1.5 rounded [&:hover]:bg-overlay-pressed [&:hover]:text-ink',
         )}
         disabled={mutation.readOnly || !projects.length}
         onClick={() => setExpanded(true)}
@@ -71,14 +71,14 @@ export const QuickCreate = ({
   return (
     <form
       className={cn(
-        'quick-create p-[9px] border-2 border-[#388bff] rounded-[5px] bg-white [&_textarea]:w-full',
-        '[&_textarea]:resize-y [&_textarea]:min-h-[65px] [&_textarea]:p-[3px] [&_textarea]:bg-white',
+        'quick-create p-2.25 border-2 border-focus rounded-card bg-surface [&_textarea]:w-full',
+        '[&_textarea]:resize-y [&_textarea]:min-h-16.25 [&_textarea]:p-0.75 [&_textarea]:bg-surface',
         '[&_textarea]:border-0 [&_textarea]:outline-none [&_textarea]:text-sm [&_textarea]:text-ink',
-        '[&_textarea]:leading-[21px] [&>.dropdown_.dropdown-trigger]:p-1',
+        '[&_textarea]:leading-5.25 [&>.dropdown_.dropdown-trigger]:p-1',
         '[&>.dropdown_.dropdown-trigger]:max-w-full [&>.dropdown_.dropdown-trigger]:border',
-        '[&>.dropdown_.dropdown-trigger]:border-line [&>.dropdown_.dropdown-trigger]:bg-white',
-        '[&>.dropdown_.dropdown-trigger]:rounded-[3px] [&>.dropdown_.dropdown-trigger]:text-[11px]',
-        '[&>.dropdown]:my-[4px_8px] [&_.dropdown-trigger]:min-h-7 [&_.dropdown-trigger]:text-[11px]',
+        '[&>.dropdown_.dropdown-trigger]:border-line [&>.dropdown_.dropdown-trigger]:bg-surface',
+        '[&>.dropdown_.dropdown-trigger]:rounded-chip [&>.dropdown_.dropdown-trigger]:text-caption',
+        '[&>.dropdown]:mt-1 [&>.dropdown]:mb-2 [&_.dropdown-trigger]:min-h-7 [&_.dropdown-trigger]:text-caption',
       )}
       aria-label="Быстрое создание задачи"
       onSubmit={(event) => {
@@ -121,7 +121,7 @@ export const QuickCreate = ({
       ) : null}
       {error && (
         <p
-          className={'quick-create-error mt-1.5 mx-0 mb-2.5 text-[11px] leading-[17px] text-danger'}
+          className={'quick-create-error mt-1.5 mx-0 mb-2.5 text-caption leading-4.25 text-danger'}
           role="alert"
         >
           {error}
@@ -129,7 +129,7 @@ export const QuickCreate = ({
       )}
       <div
         className={cn(
-          'quick-create-actions flex items-center gap-[5px] [&>span]:ml-auto [&>span]:text-[9px]',
+          'quick-create-actions flex items-center gap-1.25 [&>span]:ml-auto [&>span]:text-micro',
           '[&>span]:text-muted',
         )}
       >

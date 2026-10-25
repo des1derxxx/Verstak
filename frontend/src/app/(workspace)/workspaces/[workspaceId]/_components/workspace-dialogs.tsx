@@ -91,11 +91,11 @@ export const WorkspaceDialogs = () => {
         <Modal title="Сочетания клавиш" onClose={closeDialog}>
           <div
             className={cn(
-              'shortcuts-list py-5 px-6 [&>p]:text-xs [&>p]:leading-5 [&>p]:text-muted [&>p]:mb-[15px]',
-              '[&>div]:flex [&>div]:items-center [&>div]:justify-between [&>div]:gap-5 [&>div]:py-[13px]',
-              '[&>div]:px-0 [&>div]:text-xs [&>div]:border-b [&>div]:border-[#f1f2f4]',
-              '[&>div>span:last-child]:whitespace-nowrap max-[520px]:py-[17px] max-[520px]:px-5',
-              'max-[520px]:[&>div]:gap-3 max-[520px]:[&>div]:text-[11px]',
+              'shortcuts-list py-5 px-6 [&>p]:text-xs [&>p]:leading-5 [&>p]:text-muted [&>p]:mb-3.75',
+              '[&>div]:flex [&>div]:items-center [&>div]:justify-between [&>div]:gap-5 [&>div]:py-3.25',
+              '[&>div]:px-0 [&>div]:text-xs [&>div]:border-b [&>div]:border-neutral',
+              '[&>div>span:last-child]:whitespace-nowrap max-phone:py-4.25 max-phone:px-5',
+              'max-phone:[&>div]:gap-3 max-phone:[&>div]:text-caption',
             )}
           >
             <p>Работают, когда курсор находится вне поля ввода.</p>

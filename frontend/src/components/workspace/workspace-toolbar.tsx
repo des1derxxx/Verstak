@@ -31,17 +31,17 @@ export const WorkspaceToolbar = () => {
     <>
       <div
         className={cn(
-          'view-tabs flex gap-[25px] min-h-10.5 border-b-2 border-[#f1f2f4] [&>:is(button,a)]:inline-flex',
-          '[&>:is(button,a)]:items-center [&>:is(button,a)]:gap-[7px] [&>:is(button,a)]:relative [&>:is(button,a)]:text-muted',
-          '[&>:is(button,a)]:font-medium [&>:is(button,a)]:text-[13px] [&>:is(button,a)]:pt-0 [&>:is(button,a)]:px-0',
-          "[&>:is(button,a)]:pb-[13px] [&>:is(button,a).active]:text-brand [&>:is(button,a).active::after]:content-['']",
+          'view-tabs flex gap-6.25 min-h-10.5 border-b-2 border-neutral [&>:is(button,a)]:inline-flex',
+          '[&>:is(button,a)]:items-center [&>:is(button,a)]:gap-1.75 [&>:is(button,a)]:relative [&>:is(button,a)]:text-muted',
+          '[&>:is(button,a)]:font-medium [&>:is(button,a)]:text-body [&>:is(button,a)]:pt-0 [&>:is(button,a)]:px-0',
+          "[&>:is(button,a)]:pb-3.25 [&>:is(button,a).active]:text-brand [&>:is(button,a).active::after]:content-['']",
           '[&>:is(button,a).active::after]:absolute [&>:is(button,a).active::after]:[inset:auto_0_-2px]',
-          '[&>:is(button,a).active::after]:h-[3px] [&>:is(button,a).active::after]:rounded-[2px]',
-          '[&>:is(button,a).active::after]:bg-brand [&>:is(button,a):hover]:text-brand max-[760px]:gap-[25px]',
-          'max-[760px]:[&>:is(button,a)]:text-xs max-[760px]:[&>:is(button,a)]:gap-1.5 max-[760px]:[&>:is(button,a)]:pb-3',
-          'max-[520px]:gap-[21px] max-[520px]:[&>:is(button,a)]:gap-[5px] max-[520px]:[&>:is(button,a)>svg]:w-3.5',
-          'max-[520px]:[&_.tab-count]:text-[9px] max-[520px]:[&_.tab-count]:px-1',
-          'max-[520px]:[&_.tab-count]:min-w-3.5',
+          '[&>:is(button,a).active::after]:h-0.75 [&>:is(button,a).active::after]:rounded-xs',
+          '[&>:is(button,a).active::after]:bg-brand [&>:is(button,a):hover]:text-brand max-tablet:gap-6.25',
+          'max-tablet:[&>:is(button,a)]:text-xs max-tablet:[&>:is(button,a)]:gap-1.5 max-tablet:[&>:is(button,a)]:pb-3',
+          'max-phone:gap-5.25 max-phone:[&>:is(button,a)]:gap-1.25 max-phone:[&>:is(button,a)>svg]:w-3.5',
+          'max-phone:[&_.tab-count]:text-micro max-phone:[&_.tab-count]:px-1',
+          'max-phone:[&_.tab-count]:min-w-3.5',
         )}
         role="tablist"
         aria-label="Представление задач"
@@ -71,7 +71,7 @@ export const WorkspaceToolbar = () => {
             tabIndex={view === tab.id ? 0 : -1}
             className={
               view === tab.id
-                ? 'active [&_.tab-count]:bg-[#deebff] [&_.tab-count]:text-[#0052cc]'
+                ? 'active [&_.tab-count]:bg-brand-tint [&_.tab-count]:text-brand-strong'
                 : ''
             }
           >
@@ -80,8 +80,8 @@ export const WorkspaceToolbar = () => {
             {tab.id === 'backlog' && counts.backlog > 0 && (
               <span
                 className={cn(
-                  'tab-count min-w-4.5 py-px px-[5px] text-center rounded-[3px] text-[10px] leading-4 bg-[#dfe1e6]',
-                  'text-[#44546f]',
+                  'tab-count min-w-4.5 py-px px-1.25 text-center rounded-chip text-tiny leading-4 bg-line',
+                  'text-ink-secondary',
                 )}
               >
                 {counts.backlog}
@@ -92,13 +92,13 @@ export const WorkspaceToolbar = () => {
       </div>
       <div
         className={cn(
-          'toolbar flex justify-between items-center gap-5 min-h-[69px] py-4 px-0 max-[760px]:min-h-[65px]',
-          'max-[760px]:gap-2.5 max-[520px]:items-start',
+          'toolbar flex justify-between items-center gap-5 min-h-17.25 py-4 px-0 max-tablet:min-h-16.25',
+          'max-tablet:gap-2.5 max-phone:items-start',
         )}
       >
         <div
           className={cn(
-            'toolbar-filters flex items-center gap-2 min-w-0 max-[760px]:gap-1.5 max-[520px]:flex-wrap',
+            'toolbar-filters flex items-center gap-2 min-w-0 max-tablet:gap-1.5 max-phone:flex-wrap',
             '[&>.dropdown]:w-auto [&>.dropdown]:max-w-47.5',
           )}
         >
@@ -106,10 +106,10 @@ export const WorkspaceToolbar = () => {
             <>
               <Dropdown
                 className={cn(
-                  'filter-select border border-transparent rounded bg-[#f1f2f4] text-[#44546f] min-h-8 py-[5px]',
-                  'px-2 max-w-[175px] text-xs cursor-pointer [&:hover]:bg-[#dfe1e6] [&.is-active]:bg-[#e9f2ff]',
-                  '[&.is-active]:text-[#0052cc] [&.is-active]:border-[#85b8ff] max-[760px]:max-w-[125px]',
-                  'max-[760px]:text-[11px]',
+                  'filter-select border border-transparent rounded bg-neutral text-ink-secondary min-h-8 py-1.25',
+                  'px-2 max-w-43.75 text-xs cursor-pointer [&:hover]:bg-line [&.is-active]:bg-brand-soft',
+                  '[&.is-active]:text-brand-strong [&.is-active]:border-brand-border max-tablet:max-w-31.25',
+                  'max-tablet:text-caption',
                   filters.priority !== 'all' ? 'is-active' : '',
                 )}
                 aria-label="Фильтр по приоритету"
@@ -127,10 +127,10 @@ export const WorkspaceToolbar = () => {
               />
               <Dropdown
                 className={cn(
-                  'filter-select border border-transparent rounded bg-[#f1f2f4] text-[#44546f] min-h-8 py-[5px]',
-                  'px-2 max-w-[175px] text-xs cursor-pointer [&:hover]:bg-[#dfe1e6] [&.is-active]:bg-[#e9f2ff]',
-                  '[&.is-active]:text-[#0052cc] [&.is-active]:border-[#85b8ff] max-[760px]:max-w-[125px]',
-                  'max-[760px]:text-[11px]',
+                  'filter-select border border-transparent rounded bg-neutral text-ink-secondary min-h-8 py-1.25',
+                  'px-2 max-w-43.75 text-xs cursor-pointer [&:hover]:bg-line [&.is-active]:bg-brand-soft',
+                  '[&.is-active]:text-brand-strong [&.is-active]:border-brand-border max-tablet:max-w-31.25',
+                  'max-tablet:text-caption',
                   filters.status !== 'all' ? 'is-active' : '',
                 )}
                 aria-label="Фильтр по статусу"
@@ -146,9 +146,9 @@ export const WorkspaceToolbar = () => {
               {activeFilters && (
                 <button
                   className={cn(
-                    'text-button inline-flex items-center gap-[5px] py-1 px-0 text-[13px] text-muted',
-                    '[&:hover]:text-brand [&.danger]:text-danger clear-filters text-xs whitespace-nowrap px-[5px]',
-                    'max-[760px]:text-[10px]',
+                    'text-button inline-flex items-center gap-1.25 py-1 px-0 text-body text-muted',
+                    '[&:hover]:text-brand [&.danger]:text-danger clear-filters text-xs whitespace-nowrap px-1.25',
+                    'max-tablet:text-tiny',
                   )}
                   onClick={() => setFilters(emptyFilters)}
                 >
@@ -160,8 +160,8 @@ export const WorkspaceToolbar = () => {
           ) : (
             <span
               className={cn(
-                'toolbar-description text-muted text-[13px] max-[1000px]:text-xs max-[520px]:max-w-[175px]',
-                'max-[520px]:text-[11px] max-[520px]:leading-4.5',
+                'toolbar-description text-muted text-body max-laptop:text-xs max-phone:max-w-43.75',
+                'max-phone:text-caption max-phone:leading-4.5',
               )}
             >
               Документация, решения и заметки проекта
@@ -170,8 +170,8 @@ export const WorkspaceToolbar = () => {
         </div>
         <div
           className={cn(
-            'toolbar-right flex items-center gap-2 min-w-0 max-[520px]:[&>.button]:text-[11px]',
-            'max-[520px]:[&>.button]:px-2',
+            'toolbar-right flex items-center gap-2 min-w-0 max-phone:[&>.button]:text-caption',
+            'max-phone:[&>.button]:px-2',
           )}
         >
           {view === 'notes' ? (
@@ -183,7 +183,7 @@ export const WorkspaceToolbar = () => {
             <>
               <span
                 className={
-                  'results-count text-muted text-[11px] whitespace-nowrap pr-1.5 max-[1000px]:hidden'
+                  'results-count text-muted text-caption whitespace-nowrap pr-1.5 max-laptop:hidden'
                 }
               >
                 {activeFilters
@@ -192,14 +192,14 @@ export const WorkspaceToolbar = () => {
               </span>
               <label
                 className={cn(
-                  'sort-control flex items-center gap-[5px] text-muted [&_.dropdown-trigger]:border-0',
-                  '[&_.dropdown-trigger]:bg-transparent [&_.dropdown-trigger]:p-[3px]',
-                  '[&_.dropdown-trigger]:text-muted [&_.dropdown-trigger]:text-[11px]',
-                  '[&_.dropdown-trigger]:max-w-[145px] [&_.dropdown-trigger]:cursor-pointer',
-                  '[&_.dropdown-trigger]:min-h-7 max-[760px]:[&>svg]:hidden',
-                  'max-[760px]:[&>.dropdown_.dropdown-trigger]:text-[10px]',
-                  'max-[760px]:[&>.dropdown_.dropdown-trigger]:max-w-[125px]',
-                  'max-[520px]:[&_.dropdown-trigger]:max-w-[115px]',
+                  'sort-control flex items-center gap-1.25 text-muted [&_.dropdown-trigger]:border-0',
+                  '[&_.dropdown-trigger]:bg-transparent [&_.dropdown-trigger]:p-0.75',
+                  '[&_.dropdown-trigger]:text-muted [&_.dropdown-trigger]:text-caption',
+                  '[&_.dropdown-trigger]:max-w-36.25 [&_.dropdown-trigger]:cursor-pointer',
+                  '[&_.dropdown-trigger]:min-h-7 max-tablet:[&>svg]:hidden',
+                  'max-tablet:[&>.dropdown_.dropdown-trigger]:text-tiny',
+                  'max-tablet:[&>.dropdown_.dropdown-trigger]:max-w-31.25',
+                  'max-phone:[&_.dropdown-trigger]:max-w-28.75',
                 )}
               >
                 <ArrowDownWideNarrow size={15} />

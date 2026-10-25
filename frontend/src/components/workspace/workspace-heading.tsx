@@ -38,9 +38,9 @@ export const WorkspaceHeading = () => {
         <div
           role="alert"
           className={cn(
-            'storage-alert flex justify-between items-center gap-[15px] py-3 px-[15px] bg-[#fff7d6] border',
-            'border-[#f5cd47] rounded text-xs leading-5 mb-[17px] max-[760px]:flex-wrap',
-            'max-[760px]:gap-[9px]',
+            'storage-alert flex justify-between items-center gap-3.75 py-3 px-3.75 bg-warning-soft border',
+            'border-warning-border rounded text-xs leading-5 mb-4.25 max-tablet:flex-wrap',
+            'max-tablet:gap-2.25',
           )}
         >
           <span>{storageError}</span>
@@ -58,12 +58,12 @@ export const WorkspaceHeading = () => {
       )}
       <div
         className={cn(
-          'breadcrumbs flex items-center gap-[7px] text-muted text-xs leading-5 mb-[13px] [&_button]:p-0',
+          'breadcrumbs flex items-center gap-1.75 text-muted text-xs leading-5 mb-3.25 [&_button]:p-0',
           '[&_button]:text-xs [&_button]:text-muted [&_button:hover]:text-brand [&_button:hover]:underline',
           '[&>span]:overflow-hidden [&>span]:text-ellipsis [&>span]:whitespace-nowrap [&>span]:max-w-60',
-          'max-[760px]:text-[11px] max-[760px]:mb-3 max-[760px]:gap-[5px]',
-          'max-[760px]:[&_button]:text-[11px] max-[760px]:[&>span]:max-w-42.5',
-          'max-[520px]:[&>span]:max-w-32.5',
+          'max-tablet:text-caption max-tablet:mb-3 max-tablet:gap-1.25',
+          'max-tablet:[&_button]:text-caption max-tablet:[&>span]:max-w-42.5',
+          'max-phone:[&>span]:max-w-32.5',
         )}
       >
         <button onClick={() => navigate(viewPath(info.id))}>Пространство</button>
@@ -78,21 +78,21 @@ export const WorkspaceHeading = () => {
       </div>
       <div
         className={cn(
-          'project-heading flex justify-between items-center gap-5 mb-5 max-[760px]:mb-[19px]',
-          'max-[760px]:gap-2.5',
+          'project-heading flex justify-between items-center gap-5 mb-5 max-tablet:mb-4.75',
+          'max-tablet:gap-2.5',
         )}
       >
         <div
           className={cn(
-            'project-title-group flex items-center gap-3 min-w-0 [&>div]:min-w-0 max-[760px]:gap-2.5',
-            'max-[520px]:gap-[9px]',
+            'project-title-group flex items-center gap-3 min-w-0 [&>div]:min-w-0 max-tablet:gap-2.5',
+            'max-phone:gap-2.25',
           )}
         >
           {project && (
             <span
               className={cn(
                 'project-heading-icon flex items-center justify-center w-10.5 h-10.5 text-white rounded-md',
-                'shrink-0 max-[760px]:w-[35px] max-[760px]:h-[35px] max-[520px]:hidden',
+                'shrink-0 max-tablet:w-8.75 max-tablet:h-8.75 max-phone:hidden',
               )}
               style={{ background: project.color }}
             >
@@ -104,8 +104,8 @@ export const WorkspaceHeading = () => {
             <p
               className={cn(
                 'project-description text-xs text-muted mt-1 leading-4.5 overflow-hidden text-ellipsis',
-                'whitespace-nowrap max-w-162.5 max-[1200px]:max-w-102.5 max-[1000px]:max-w-77.5',
-                'max-[760px]:text-[11px] max-[760px]:max-w-87.5 max-[520px]:max-w-60',
+                'whitespace-nowrap max-w-162.5 max-desktop:max-w-102.5 max-laptop:max-w-77.5',
+                'max-tablet:text-caption max-tablet:max-w-87.5 max-phone:max-w-60',
               )}
               title={project?.description}
             >
@@ -117,12 +117,12 @@ export const WorkspaceHeading = () => {
         </div>
         <div
           className={
-            'project-heading-actions flex items-center gap-[9px] shrink-0 max-[760px]:gap-0.5'
+            'project-heading-actions flex items-center gap-2.25 shrink-0 max-tablet:gap-0.5'
           }
         >
           {saving && (
             <span
-              className={'save-indicator text-muted text-[11px] max-[760px]:hidden'}
+              className={'save-indicator text-muted text-caption max-tablet:hidden'}
               role="status"
             >
               Сохраняем…
@@ -142,7 +142,7 @@ export const WorkspaceHeading = () => {
             <RefreshCw size={17} />
           </IconButton>
           <Button
-            className={'team-button max-[1000px]:hidden'}
+            className={'team-button max-laptop:hidden'}
             onClick={() => navigate(settingsPath(info.id, 'members'))}
             variant="secondary"
             size="compact"

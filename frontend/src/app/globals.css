@@ -2,41 +2,127 @@
 @source "../";
 
 @theme {
+  /* Text */
   --color-ink: #172b4d;
+  --color-ink-strong: #253858;
+  --color-ink-soft: #344563;
+  --color-ink-secondary: #44546f;
   --color-muted: #626f86;
   --color-subtle: #758195;
-  --color-line: #dfe1e6;
+  --color-placeholder: #8590a2;
+  --color-disabled: #b3b9c4;
+
+  /* Surfaces and lines */
   --color-surface: #ffffff;
+  --color-surface-faint: #fafbfc;
   --color-surface-soft: #f7f8f9;
+  --color-surface-muted: #f4f5f7;
+  --color-neutral: #f1f2f4;
+  --color-line-soft: #ebecf0;
+  --color-line: #dfe1e6;
+  --color-line-muted: #dcdfe4;
+  --color-input-border: #b6beca;
+  --color-kbd-border: #c8cdd6;
+
+  /* Brand */
   --color-brand: #0c66e4;
   --color-brand-hover: #0055cc;
+  --color-brand-strong: #0052cc;
+  --color-brand-deep: #0747a6;
+  --color-brand-light: #4b9ce8;
+  --color-brand-border: #85b8ff;
+  --color-brand-muted: #cce0ff;
+  --color-brand-tint: #deebff;
   --color-brand-soft: #e9f2ff;
-  --color-danger: #c9372c;
+  --color-brand-wash: #f7faff;
+  --color-focus: #388bff;
+
+  /* Status */
   --color-success: #1f845a;
+  --color-success-strong: #216e4e;
+  --color-success-bright: #22a06b;
+  --color-success-border: #baf3db;
+  --color-success-soft: #dcfff1;
+  --color-danger: #c9372c;
+  --color-danger-strong: #ae2e24;
+  --color-danger-ink: #5d1f1a;
+  --color-danger-border: #f5c8c5;
+  --color-danger-soft: #fff1f0;
+  --color-warning: #b38700;
+  --color-warning-ink: #7f5f01;
+  --color-warning-bold: #e2b203;
+  --color-warning-border: #f5cd47;
+  --color-warning-tint: #fff0b3;
+  --color-warning-soft: #fff7d6;
+  --color-discovery-ink: #5243aa;
+  --color-discovery-soft: #eae6ff;
+
+  /* Translucent navy overlays */
+  --color-overlay-hover: #091e4208;
+  --color-overlay-pressed: #091e420f;
+  --color-overlay-light: #091e4226;
+  --color-overlay: #091e4240;
+  --color-overlay-strong: #091e424d;
+
+  --shadow-card: 0 1px 1px #091e4214;
+  --shadow-card-hover: 0 1px 5px #091e4226;
+  --shadow-tile-hover: 0 2px 6px #091e421a;
+  --shadow-raised: 0 1px 3px #091e421f;
+  --shadow-panel: 0 4px 12px #091e420d;
+  --shadow-popover: 0 8px 24px #091e4229, 0 1px 4px #091e421f;
+  --shadow-toast: 0 5px 20px #091e4226;
+  --shadow-modal: 0 10px 40px #091e4233;
+  --shadow-drawer: -10px 0 35px #091e4221;
+  --shadow-ring-brand: 0 0 0 1px var(--color-brand);
+  --shadow-ring-brand-muted: 0 0 0 2px var(--color-brand-muted);
+  --shadow-skeleton: 0 12px var(--color-neutral), 0 24px var(--color-neutral);
+
+  --text-micro: 9px;
+  --text-tiny: 10px;
+  --text-caption: 11px;
+  --text-body: 13px;
+  --text-lead: 15px;
+  --text-title-sm: 17px;
+  --text-title: 19px;
+  --text-heading-sm: 21px;
+  --text-heading: 22px;
+  --text-heading-lg: 23px;
+  --text-display-sm: 25px;
+  --text-display: 26px;
+  --text-display-lg: 28px;
+  --text-hero: 29px;
+
+  --radius-hairline: 1px;
+  --radius-chip: 3px;
+  --radius-card: 5px;
+  --radius-dialog: 7px;
+
+  /* Used as max-* variants: max-tablet means narrower than 760px. */
+  --breakpoint-phone: 520px;
+  --breakpoint-phablet: 620px;
+  --breakpoint-tablet: 760px;
+  --breakpoint-laptop: 1000px;
+  --breakpoint-desktop: 1200px;
 }
 
 @layer base {
   :root {
-    --text: #172b4d;
-    --subtle: #626f86;
-    --muted: #758195;
-    --line: #dfe1e6;
-    --surface: #fff;
-    --surface-subtle: #f7f8f9;
-    --blue: #0c66e4;
-    --blue-hover: #0055cc;
-    --blue-light: #e9f2ff;
-    --danger: #c9372c;
-    --green: #1f845a;
     --sidebar-width: 240px;
     --header-height: 56px;
+    @variant max-laptop {
+      --sidebar-width: 215px;
+    }
+    /* On phones the sidebar slides over the content at full width again. */
+    @variant max-tablet {
+      --sidebar-width: 240px;
+    }
   }
   html {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-synthesis: none;
   }
   body {
-    @apply m-0 bg-white text-sm text-ink;
+    @apply m-0 bg-surface text-sm text-ink;
   }
   button,
   input,
@@ -57,7 +143,7 @@
   a:focus-visible,
   input:focus-visible,
   textarea:focus-visible {
-    @apply outline-2 outline-offset-2 outline-[#388bff];
+    @apply outline-2 outline-offset-2 outline-focus;
   }
   svg {
     @apply shrink-0 align-middle;
@@ -66,18 +152,13 @@
     @apply m-0 min-w-0 border-0 p-0;
   }
   h1 {
-    @apply text-[25px] font-semibold tracking-[-.55px] leading-[34px] wrap-anywhere;
+    @apply text-display-sm font-semibold tracking-[-.55px] leading-8.5 wrap-anywhere;
   }
   kbd {
-    @apply inline-flex min-w-[19px] items-center justify-center rounded-[3px] border border-b-2 border-[#c8cdd6] bg-surface-soft px-1 py-px text-[11px] leading-4 whitespace-nowrap text-muted;
+    @apply inline-flex min-w-4.75 items-center justify-center rounded-chip border border-b-2 border-kbd-border bg-surface-soft px-1 py-px text-caption leading-4 whitespace-nowrap text-muted;
   }
 }
 
-@media (max-width: 1000px) {
-  :root {
-    --sidebar-width: 215px;
-  }
-}
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -86,24 +167,18 @@
 
 @layer base {
   form label:not(.sr-only):not(.checkbox-label):not(.sort-control) {
-    @apply flex flex-col gap-1.5 text-xs leading-[18px] font-medium text-[#44546f];
+    @apply flex flex-col gap-1.5 text-xs leading-4.5 font-medium text-ink-secondary;
   }
   input:not([type='checkbox']):not([type='file']),
   textarea {
-    @apply min-h-9 w-full rounded border border-[#b6beca] bg-white px-2.5 py-2 text-[13px] leading-5 font-normal text-ink;
+    @apply min-h-9 w-full rounded border border-input-border bg-surface px-2.5 py-2 text-body leading-5 font-normal text-ink;
   }
   input::placeholder,
   textarea::placeholder {
-    @apply text-[#8590a2];
+    @apply text-placeholder;
   }
   textarea {
-    @apply resize-y leading-[22px];
-  }
-}
-
-@media (max-width: 760px) {
-  :root {
-    --sidebar-width: 240px;
+    @apply resize-y leading-5.5;
   }
 }
 

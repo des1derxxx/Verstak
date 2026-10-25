@@ -113,14 +113,14 @@ export const ProfilePanel = ({
     <Modal inline={inline} title="Мой профиль" onClose={close.requestClose} pending={busy}>
       <form
         className={cn(
-          'editor-form flex flex-col gap-5 p-6 [&_h2]:text-[21px] [&_h2]:font-semibold [&_h3]:text-[15px]',
+          'editor-form flex flex-col gap-5 p-6 [&_h2]:text-heading-sm [&_h2]:font-semibold [&_h3]:text-lead',
           '[&_h3]:font-semibold',
-          '[&_.title-input]:text-[23px] [&_.title-input]:font-semibold [&_.title-input]:pt-[3px]',
+          '[&_.title-input]:text-heading-lg [&_.title-input]:font-semibold [&_.title-input]:pt-0.75',
           '[&_.title-input]:px-0 [&_.title-input]:pb-3 [&_.title-input]:border-0 [&_.title-input]:border-b',
           '[&_.title-input]:border-line [&_.title-input]:rounded-none [&_.note-textarea]:min-h-85',
-          '[&_.note-textarea]:font-mono [&_.note-textarea]:text-[13px] [&_.note-textarea]:leading-[23px]',
-          'max-[520px]:p-5 max-[520px]:gap-4.5 profile-form [&_h3]:text-sm [&_h3]:mb-1',
-          '[&_.draft-conflict]:m-0 max-[620px]:[&_.modal-footer]:items-end',
+          '[&_.note-textarea]:font-mono [&_.note-textarea]:text-body [&_.note-textarea]:leading-5.75',
+          'max-phone:p-5 max-phone:gap-4.5 profile-form [&_h3]:text-sm [&_h3]:mb-1',
+          '[&_.draft-conflict]:m-0 max-phablet:[&_.modal-footer]:items-end',
         )}
         onSubmit={async (event) => {
           event.preventDefault();
@@ -156,14 +156,14 @@ export const ProfilePanel = ({
       >
         <div
           className={cn(
-            'profile-avatar-row flex gap-5 items-center pt-[3px] px-0 pb-[15px] border-b border-line',
-            'max-[620px]:gap-3',
+            'profile-avatar-row flex gap-5 items-center pt-0.75 px-0 pb-3.75 border-b border-line',
+            'max-phablet:gap-3',
           )}
         >
           <Avatar user={preview} className={'profile-avatar'} />
           <div>
             <h3>Фото профиля</h3>
-            <p className={'field-hint text-[10px] font-normal text-muted'}>
+            <p className={'field-hint text-tiny font-normal text-muted'}>
               PNG, JPEG или WebP до 10 МБ.
               <br />
               Фото будет обрезано по центру.
@@ -251,7 +251,7 @@ export const ProfilePanel = ({
               value={password}
               onChange={(event) => setPassword(event.target.value)}
             />
-            <span className={'field-hint text-[10px] font-normal text-muted'}>
+            <span className={'field-hint text-tiny font-normal text-muted'}>
               Нужен для смены адреса входа. На остальных устройствах потребуется войти заново.
             </span>
           </label>
@@ -269,16 +269,14 @@ export const ProfilePanel = ({
               setNotice('');
             }}
           />
-          <span className={'field-hint text-[10px] font-normal text-muted'}>
-            {bio.length} / 500
-          </span>
+          <span className={'field-hint text-tiny font-normal text-muted'}>{bio.length} / 500</span>
         </label>
         {error && (
           <p
             role="alert"
             className={cn(
-              'error-text py-2.5 px-3 text-[#ae2e24] bg-[#fff1f0] border border-[#f5c8c5] rounded text-xs',
-              'leading-[19px]',
+              'error-text py-2.5 px-3 text-danger-strong bg-danger-soft border border-danger-border rounded text-xs',
+              'leading-4.75',
             )}
           >
             {error}
@@ -287,7 +285,7 @@ export const ProfilePanel = ({
         {conflict && (
           <div
             className={cn(
-              'draft-conflict my-4 mx-6 p-3 bg-[#fff7d6] border border-[#e2b203] rounded-[5px] [&_p]:my-2',
+              'draft-conflict my-4 mx-6 p-3 bg-warning-soft border border-warning-bold rounded-card [&_p]:my-2',
               '[&_p]:mx-0 [&_p]:text-xs [&_p]:leading-[1.5]',
             )}
           >
@@ -306,7 +304,7 @@ export const ProfilePanel = ({
         {notice && (
           <p
             role="status"
-            className={'profile-saved flex items-center gap-[7px] text-success text-[13px]'}
+            className={'profile-saved flex items-center gap-1.75 text-success text-body'}
           >
             <UserRound size={15} />
             {notice}
@@ -315,12 +313,12 @@ export const ProfilePanel = ({
         {close.confirmation}
         <div
           className={cn(
-            'modal-footer flex items-center justify-between gap-[15px] pt-4.5 border-t border-line',
-            'max-[520px]:gap-2.5 max-[520px]:flex-wrap max-[520px]:[&_.button]:text-xs',
-            'max-[520px]:[&_.button]:px-[11px]',
+            'modal-footer flex items-center justify-between gap-3.75 pt-4.5 border-t border-line',
+            'max-phone:gap-2.5 max-phone:flex-wrap max-phone:[&_.button]:text-xs',
+            'max-phone:[&_.button]:px-2.75',
           )}
         >
-          <span className={'body-muted text-[13px] text-muted leading-[21px]'}>
+          <span className={'body-muted text-body text-muted leading-5.25'}>
             {dirty ? 'Есть несохранённые изменения' : 'Данные аккаунта'}
           </span>
           <div className={'footer-actions flex items-center justify-end gap-2 ml-auto'}>

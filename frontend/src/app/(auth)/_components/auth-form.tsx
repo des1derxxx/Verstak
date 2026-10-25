@@ -31,21 +31,21 @@ export const AuthForm = ({
   return (
     <div
       className={cn(
-        'auth-page flex items-center justify-center min-h-dvh py-10 px-5 bg-[#f4f5f7]',
-        'max-[520px]:py-[25px] max-[520px]:px-4.5',
+        'auth-page flex items-center justify-center min-h-dvh py-10 px-5 bg-surface-muted',
+        'max-phone:py-6.25 max-phone:px-4.5',
       )}
     >
-      <div className={'auth-panel flex flex-col items-center gap-7 w-full max-[520px]:gap-6'}>
+      <div className={'auth-panel flex flex-col items-center gap-7 w-full max-phone:gap-6'}>
         <Logo />
         <form
           className={cn(
             'auth-form',
             'w-full max-w-105 p-8 border',
-            'border-[#dfe1e6] rounded-md bg-white shadow-[0_4px_12px_#091e420d] [&_h2]:text-[22px]',
+            'border-line rounded-md bg-surface shadow-panel [&_h2]:text-heading',
             '[&_h2]:leading-7.5 [&_h2]:font-semibold [&_h2]:text-center [&_h2]:mb-3 [&_h2]:tracking-[-.3px]',
-            '[&>p]:text-muted [&>p]:text-[13px] [&>p]:leading-[21px] [&>p]:text-center [&>p]:mb-[27px]',
+            '[&>p]:text-muted [&>p]:text-body [&>p]:leading-5.25 [&>p]:text-center [&>p]:mb-6.75',
             '[&_fieldset]:flex [&_fieldset]:flex-col [&_fieldset]:gap-5 [&_.button]:min-h-10',
-            '[&_.field-hint]:mt-0 max-[520px]:py-[27px] max-[520px]:px-[23px] max-[520px]:[&_h2]:text-[21px]',
+            '[&_.field-hint]:mt-0 max-phone:py-6.75 max-phone:px-5.75 max-phone:[&_h2]:text-heading-sm',
           )}
           onSubmit={async (event) => {
             event.preventDefault();
@@ -107,8 +107,8 @@ export const AuthForm = ({
               <label htmlFor="auth-password">Пароль</label>
               <div
                 className={cn(
-                  'password-field relative [&>input]:pr-[39px] [&>button]:absolute [&>button]:right-[5px]',
-                  '[&>button]:top-[5px]',
+                  'password-field relative [&>input]:pr-9.75 [&>button]:absolute [&>button]:right-1.25',
+                  '[&>button]:top-1.25',
                 )}
               >
                 <input
@@ -130,7 +130,7 @@ export const AuthForm = ({
                 </IconButton>
               </div>
               {mode === 'register' && (
-                <span className={'field-hint text-[10px] font-normal text-muted'}>
+                <span className={'field-hint text-tiny font-normal text-muted'}>
                   Не меньше 12 символов
                 </span>
               )}
@@ -138,8 +138,8 @@ export const AuthForm = ({
             {error && (
               <p
                 className={cn(
-                  'error-text py-2.5 px-3 text-[#ae2e24] bg-[#fff1f0] border border-[#f5c8c5] rounded text-xs',
-                  'leading-[19px]',
+                  'error-text py-2.5 px-3 text-danger-strong bg-danger-soft border border-danger-border rounded text-xs',
+                  'leading-4.75',
                 )}
                 role="alert"
               >
@@ -155,7 +155,7 @@ export const AuthForm = ({
             <button
               type="button"
               className={cn(
-                'text-button inline-flex items-center gap-[5px] py-1 px-0 text-[13px] text-muted',
+                'text-button inline-flex items-center gap-1.25 py-1 px-0 text-body text-muted',
                 '[&:hover]:text-brand [&.danger]:text-danger',
               )}
               disabled={pending}
@@ -166,7 +166,7 @@ export const AuthForm = ({
           )}
           <div
             className={cn(
-              'auth-switch pt-[25px] mt-[25px] border-t border-line text-center text-muted text-xs leading-5.5',
+              'auth-switch pt-6.25 mt-6.25 border-t border-line text-center text-muted text-xs leading-5.5',
               '[&_button]:text-brand [&_button]:text-xs [&_button]:py-0 [&_button]:px-0.5',
             )}
           >
@@ -189,7 +189,7 @@ export const AuthForm = ({
             </button>
           </div>
         </form>
-        <p className={'auth-footer max-w-95 text-center text-[11px] text-muted leading-4.5'}>
+        <p className={'auth-footer max-w-95 text-center text-caption text-muted leading-4.5'}>
           Проекты, задачи и документация команды
           <br />в одном рабочем пространстве.
         </p>

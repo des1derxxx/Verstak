@@ -14,8 +14,8 @@ export const TaskLinks = ({ model }: { model: TaskEditorModel }) => {
         <div
           className={cn(
             'task-link grid grid-cols-[112px_minmax(80px,_1fr)_22px_24px] gap-1.5 items-center mb-2',
-            '[&_input]:min-w-0 [&_.dropdown-trigger]:min-w-0 [&_a]:text-[#0c66e4] [&_a]:text-xl',
-            '[&_a]:text-center max-[620px]:grid-cols-[90px_minmax(70px,_1fr)_20px_22px]',
+            '[&_input]:min-w-0 [&_.dropdown-trigger]:min-w-0 [&_a]:text-brand [&_a]:text-xl',
+            '[&_a]:text-center max-phablet:grid-cols-[90px_minmax(70px,_1fr)_20px_22px]',
             '[&>.dropdown]:min-w-0',
           )}
           key={index}
@@ -79,7 +79,7 @@ export const TaskLinks = ({ model }: { model: TaskEditorModel }) => {
         <button
           type="button"
           className={cn(
-            'text-button inline-flex items-center gap-[5px] py-1 px-0 text-[13px] text-muted',
+            'text-button inline-flex items-center gap-1.25 py-1 px-0 text-body text-muted',
             '[&:hover]:text-brand [&.danger]:text-danger',
           )}
           disabled={(draft.links?.length ?? 0) >= 30}

@@ -11,9 +11,9 @@ export const NotificationBell = ({ onOpen }: { onOpen: () => void }) => {
     <IconButton
       className={cn(
         'notification-bell',
-        'relative [&>span]:absolute [&>span]:top-[-3px] [&>span]:right-[-4px] [&>span]:min-w-[15px]',
-        '[&>span]:py-px [&>span]:px-[3px] [&>span]:rounded-lg [&>span]:bg-[#c9372c] [&>span]:text-white',
-        '[&>span]:text-[9px] [&>span]:leading-[13px] [&>span]:font-bold',
+        'relative [&>span]:absolute [&>span]:-top-0.75 [&>span]:-right-1 [&>span]:min-w-3.75',
+        '[&>span]:py-px [&>span]:px-0.75 [&>span]:rounded-lg [&>span]:bg-danger [&>span]:text-white',
+        '[&>span]:text-micro [&>span]:leading-3.25 [&>span]:font-bold',
       )}
       aria-label={unread ? `Уведомления: ${unread} непрочитанных` : 'Уведомления'}
       onClick={onOpen}

@@ -12,15 +12,15 @@ export const PasswordRecovery = ({ token, onClose }: { token?: string; onClose: 
   return (
     <div
       className={cn(
-        'auth-page flex items-center justify-center min-h-dvh py-10 px-5 bg-[#f4f5f7]',
-        'max-[520px]:py-[25px] max-[520px]:px-4.5',
+        'auth-page flex items-center justify-center min-h-dvh py-10 px-5 bg-surface-muted',
+        'max-phone:py-6.25 max-phone:px-4.5',
       )}
     >
-      <div className={'auth-panel flex flex-col items-center gap-7 w-full max-[520px]:gap-6'}>
+      <div className={'auth-panel flex flex-col items-center gap-7 w-full max-phone:gap-6'}>
         <div
           className={cn(
-            'auth-logo flex items-center gap-[9px] text-[#253858] text-[29px] font-bold tracking-[-.8px]',
-            '[&_.brand-mark]:w-[31px] [&_.brand-mark]:h-[33px] [&_.brand-mark]:text-[25px]',
+            'auth-logo flex items-center gap-2.25 text-ink-strong text-hero font-bold tracking-[-.8px]',
+            '[&_.brand-mark]:w-7.75 [&_.brand-mark]:h-8.25 [&_.brand-mark]:text-display-sm',
             '[&_.brand-mark]:font-semibold [&_.brand-period]:hidden',
           )}
         >
@@ -30,11 +30,11 @@ export const PasswordRecovery = ({ token, onClose }: { token?: string; onClose: 
           className={cn(
             'auth-form',
             'w-full max-w-105 p-8 border',
-            'border-[#dfe1e6] rounded-md bg-white shadow-[0_4px_12px_#091e420d] [&_h2]:text-[22px]',
+            'border-line rounded-md bg-surface shadow-panel [&_h2]:text-heading',
             '[&_h2]:leading-7.5 [&_h2]:font-semibold [&_h2]:text-center [&_h2]:mb-3 [&_h2]:tracking-[-.3px]',
-            '[&>p]:text-muted [&>p]:text-[13px] [&>p]:leading-[21px] [&>p]:text-center [&>p]:mb-[27px]',
+            '[&>p]:text-muted [&>p]:text-body [&>p]:leading-5.25 [&>p]:text-center [&>p]:mb-6.75',
             '[&_fieldset]:flex [&_fieldset]:flex-col [&_fieldset]:gap-5 [&_.button]:min-h-10',
-            '[&_.field-hint]:mt-0 max-[520px]:py-[27px] max-[520px]:px-[23px] max-[520px]:[&_h2]:text-[21px]',
+            '[&_.field-hint]:mt-0 max-phone:py-6.75 max-phone:px-5.75 max-phone:[&_h2]:text-heading-sm',
           )}
           onSubmit={async (e) => {
             e.preventDefault();
@@ -127,8 +127,8 @@ export const PasswordRecovery = ({ token, onClose }: { token?: string; onClose: 
             <p
               role="alert"
               className={cn(
-                'error-text py-2.5 px-3 text-[#ae2e24] bg-[#fff1f0] border border-[#f5c8c5] rounded text-xs',
-                'leading-[19px]',
+                'error-text py-2.5 px-3 text-danger-strong bg-danger-soft border border-danger-border rounded text-xs',
+                'leading-4.75',
               )}
             >
               {error}
@@ -137,7 +137,7 @@ export const PasswordRecovery = ({ token, onClose }: { token?: string; onClose: 
           <button
             type="button"
             className={cn(
-              'text-button inline-flex items-center gap-[5px] py-1 px-0 text-[13px] text-muted',
+              'text-button inline-flex items-center gap-1.25 py-1 px-0 text-body text-muted',
               '[&:hover]:text-brand [&.danger]:text-danger',
             )}
             disabled={busy}

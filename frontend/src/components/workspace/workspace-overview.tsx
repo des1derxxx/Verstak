@@ -29,10 +29,10 @@ export const WorkspaceOverview = ({ children }: { children: ReactNode }) => {
       {view !== 'notes' && workspace.projects.length > 0 && (
         <div
           className={cn(
-            'workspace-status flex items-center justify-between pt-4 px-px pb-0 text-[10px] text-muted',
+            'workspace-status flex items-center justify-between pt-4 px-px pb-0 text-tiny text-muted',
             '[&>span]:inline-flex [&>span]:items-center [&>span]:gap-1.5 [&_button]:inline-flex',
-            '[&_button]:items-center [&_button]:gap-1.5 [&_button]:text-[10px] [&_button]:text-muted',
-            '[&_button:hover]:text-brand max-[760px]:text-[10px] max-[760px]:[&_button]:text-[10px]',
+            '[&_button]:items-center [&_button]:gap-1.5 [&_button]:text-tiny [&_button]:text-muted',
+            '[&_button:hover]:text-brand max-tablet:text-tiny max-tablet:[&_button]:text-tiny',
           )}
         >
           <span>

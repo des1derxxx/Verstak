@@ -52,52 +52,50 @@ export const TeamPanel = ({
     <Modal inline={inline} title="Участники пространства" onClose={onClose} wide pending={busy}>
       <div
         className={cn(
-          'editor-form flex flex-col gap-5 p-6 [&_h2]:text-[21px] [&_h2]:font-semibold [&_h3]:text-[15px]',
+          'editor-form flex flex-col gap-5 p-6 [&_h2]:text-heading-sm [&_h2]:font-semibold [&_h3]:text-lead',
           '[&_h3]:font-semibold',
-          '[&_.title-input]:text-[23px] [&_.title-input]:font-semibold [&_.title-input]:pt-[3px]',
+          '[&_.title-input]:text-heading-lg [&_.title-input]:font-semibold [&_.title-input]:pt-0.75',
           '[&_.title-input]:px-0 [&_.title-input]:pb-3 [&_.title-input]:border-0 [&_.title-input]:border-b',
           '[&_.title-input]:border-line [&_.title-input]:rounded-none [&_.note-textarea]:min-h-85',
-          '[&_.note-textarea]:font-mono [&_.note-textarea]:text-[13px] [&_.note-textarea]:leading-[23px]',
-          'max-[520px]:p-5 max-[520px]:gap-4.5',
+          '[&_.note-textarea]:font-mono [&_.note-textarea]:text-body [&_.note-textarea]:leading-5.75',
+          'max-phone:p-5 max-phone:gap-4.5',
         )}
       >
         <h2>{space.name}</h2>
-        <p className={'body-muted text-[13px] text-muted leading-[21px]'}>
+        <p className={'body-muted text-body text-muted leading-5.25'}>
           Проекты, задачи и заметки доступны всем участникам этого пространства.
         </p>
         {error && (
           <p
             role="alert"
             className={cn(
-              'error-text py-2.5 px-3 text-[#ae2e24] bg-[#fff1f0] border border-[#f5c8c5] rounded text-xs',
-              'leading-[19px]',
+              'error-text py-2.5 px-3 text-danger-strong bg-danger-soft border border-danger-border rounded text-xs',
+              'leading-4.75',
             )}
           >
             {error}
           </p>
         )}
         {!ready && !error && (
-          <p className={'body-muted text-[13px] text-muted leading-[21px]'}>
-            Загружаем участников…
-          </p>
+          <p className={'body-muted text-body text-muted leading-5.25'}>Загружаем участников…</p>
         )}
-        <div className={'member-list flex flex-col gap-[17px]'}>
+        <div className={'member-list flex flex-col gap-4.25'}>
           {members.map((member) => (
             <div
               className={cn(
                 'member-row',
                 'flex items-center gap-2.5',
-                'max-[520px]:gap-[7px] max-[520px]:[&_.dropdown-trigger]:w-25',
-                'max-[520px]:[&_.dropdown-trigger]:text-[10px] [&>.dropdown]:w-35 [&>.dropdown]:shrink-0',
+                'max-phone:gap-1.75 max-phone:[&_.dropdown-trigger]:w-25',
+                'max-phone:[&_.dropdown-trigger]:text-tiny [&>.dropdown]:w-35 [&>.dropdown]:shrink-0',
               )}
               key={member.user.id}
             >
               <Avatar user={member.user} />
               <span
                 className={cn(
-                  'member-info flex-1 min-w-0 [&_strong]:block [&_strong]:text-[13px] [&_strong]:font-medium',
-                  '[&_small]:block [&_small]:text-[11px] [&_small]:text-muted [&_small]:mt-[3px]',
-                  '[&_small]:wrap-anywhere max-[520px]:[&_strong]:text-xs max-[520px]:[&_small]:text-[10px]',
+                  'member-info flex-1 min-w-0 [&_strong]:block [&_strong]:text-body [&_strong]:font-medium',
+                  '[&_small]:block [&_small]:text-caption [&_small]:text-muted [&_small]:mt-0.75',
+                  '[&_small]:wrap-anywhere max-phone:[&_strong]:text-xs max-phone:[&_small]:text-tiny',
                 )}
               >
                 <strong>
@@ -134,7 +132,7 @@ export const TeamPanel = ({
                   </IconButton>
                 </>
               ) : (
-                <span className={'role-label text-[11px] text-muted'}>
+                <span className={'role-label text-caption text-muted'}>
                   {roleNames[member.role]}
                 </span>
               )}
@@ -144,8 +142,8 @@ export const TeamPanel = ({
         {removal && (
           <div
             className={cn(
-              'delete-confirm p-[15px] border border-[#f5c8c5] bg-[#fff1f0] rounded text-xs leading-5',
-              'text-[#5d1f1a] flex items-center flex-wrap gap-2.5 [&>span]:flex-1 [&>span]:min-w-42.5',
+              'delete-confirm p-3.75 border border-danger-border bg-danger-soft rounded text-xs leading-5',
+              'text-danger-ink flex items-center flex-wrap gap-2.5 [&>span]:flex-1 [&>span]:min-w-42.5',
             )}
           >
             <span>Участник потеряет доступ к пространству.</span>
@@ -171,16 +169,16 @@ export const TeamPanel = ({
         )}
         {space.role === 'owner' && (
           <>
-            <div className={'section-divider border-t border-line mt-[3px]'} />
+            <div className={'section-divider border-t border-line mt-0.75'} />
             <h3>Пригласить в команду</h3>
-            <p className={'body-muted text-[13px] text-muted leading-[21px]'}>
+            <p className={'body-muted text-body text-muted leading-5.25'}>
               Создай ссылку для конкретного email и отправь её участнику. Ссылка действует 7 дней.
             </p>
             <form
               className={cn(
                 'invite-form',
                 'grid grid-cols-[1fr_160px] gap-3.5 [&>.button]:col-[1/-1]',
-                '[&>.button]:[justify-self:start] max-[520px]:grid-cols-[1fr]',
+                '[&>.button]:[justify-self:start] max-phone:grid-cols-[1fr]',
               )}
               onSubmit={(event) => {
                 event.preventDefault();
@@ -227,8 +225,8 @@ export const TeamPanel = ({
               <div
                 className={cn(
                   'invite-link',
-                  'flex flex-col gap-3 p-3.5 bg-[#f7f8f9] border',
-                  'border-line rounded-[5px] [&>.button]:[align-self:flex-end]',
+                  'flex flex-col gap-3 p-3.5 bg-surface-soft border',
+                  'border-line rounded-card [&>.button]:[align-self:flex-end]',
                 )}
               >
                 <label>
@@ -267,7 +265,7 @@ export const TeamPanel = ({
                   <div
                     className={cn(
                       'pending-invite flex items-center justify-between py-2.5 px-0 border-b border-line text-xs',
-                      '[&_small]:block [&_small]:text-[10px] [&_small]:text-muted [&_small]:mt-[3px]',
+                      '[&_small]:block [&_small]:text-tiny [&_small]:text-muted [&_small]:mt-0.75',
                     )}
                     key={invite.id}
                   >

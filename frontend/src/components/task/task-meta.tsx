@@ -39,7 +39,7 @@ export const PriorityBadge = ({
   return (
     <span
       className={cn(
-        'priority inline-flex items-center gap-[5px] text-[#44546f] text-xs whitespace-nowrap',
+        'priority inline-flex items-center gap-1.25 text-ink-secondary text-xs whitespace-nowrap',
         priorityStyles[priority],
       )}
       title={`Приоритет: ${priorityNames[priority]}`}
@@ -60,10 +60,10 @@ export const TaskType = ({
   return (
     <span
       className={cn(
-        'issue-type w-3.5 h-3.5 inline-flex items-center justify-center bg-[#4b9ce8] text-white',
-        'rounded-[2px] shrink-0',
+        'issue-type w-3.5 h-3.5 inline-flex items-center justify-center bg-brand-light text-white',
+        'rounded-xs shrink-0',
         `issue-type-${type}`,
-        done ? 'issue-type-done bg-[#22a06b]' : '',
+        done ? 'issue-type-done bg-success-bright' : '',
       )}
       aria-label={done ? `Завершено · ${name}` : name}
       title={name}

@@ -10,10 +10,10 @@ export const TaskMetadata = ({ model }: { model: TaskEditorModel }) => {
   return (
     <div
       className={cn(
-        'issue-metadata-fields flex flex-col gap-4.5 [&_label]:text-[11px] [&_input]:text-xs',
-        '[&_input]:min-h-[33px] [&_input]:py-1.5 [&_input]:px-[7px] [&_input]:bg-white',
-        '[&_.dropdown-trigger]:text-xs [&_.dropdown-trigger]:min-h-[33px] [&_.dropdown-trigger]:py-1.5',
-        '[&_.dropdown-trigger]:px-[7px] [&_.dropdown-trigger]:bg-white',
+        'issue-metadata-fields flex flex-col gap-4.5 [&_label]:text-caption [&_input]:text-xs',
+        '[&_input]:min-h-8.25 [&_input]:py-1.5 [&_input]:px-1.75 [&_input]:bg-surface',
+        '[&_.dropdown-trigger]:text-xs [&_.dropdown-trigger]:min-h-8.25 [&_.dropdown-trigger]:py-1.5',
+        '[&_.dropdown-trigger]:px-1.75 [&_.dropdown-trigger]:bg-surface',
       )}
     >
       <label>
@@ -21,7 +21,7 @@ export const TaskMetadata = ({ model }: { model: TaskEditorModel }) => {
         <Dropdown
           aria-label="Статус задачи"
           className={cn(
-            'status-select border-0 rounded-[3px] text-[10px] font-semibold uppercase py-1 px-[5px]',
+            'status-select border-0 rounded-chip text-tiny font-semibold uppercase py-1 px-1.25',
             'cursor-pointer max-w-32.5',
             statusStyles[draft.status],
           )}
@@ -77,8 +77,8 @@ export const TaskMetadata = ({ model }: { model: TaskEditorModel }) => {
       {membersError && (
         <p
           className={cn(
-            'error-text py-2.5 px-3 text-[#ae2e24] bg-[#fff1f0] border border-[#f5c8c5] rounded text-xs',
-            'leading-[19px]',
+            'error-text py-2.5 px-3 text-danger-strong bg-danger-soft border border-danger-border rounded text-xs',
+            'leading-4.75',
           )}
           role="alert"
         >
@@ -137,7 +137,7 @@ export const TaskMetadata = ({ model }: { model: TaskEditorModel }) => {
           value={draft.labels.join(',')}
           onChange={(event) => update('labels', event.target.value.split(','))}
         />
-        <span className={'field-hint text-[10px] font-normal text-muted'}>
+        <span className={'field-hint text-tiny font-normal text-muted'}>
           Например: дизайн, backend
         </span>
       </label>

@@ -21,7 +21,7 @@ export const ListPanel = () => {
   const { setFilters } = useTaskFilters();
   const { openTask, saveTask, newTask } = useTaskActions();
   return (
-    <div className={'list-view border border-line rounded-[5px] overflow-hidden'}>
+    <div className={'list-view border border-line rounded-card overflow-hidden'}>
       {filtered.length > 0 ? (
         <TaskTable
           tasks={filtered}
@@ -33,11 +33,11 @@ export const ListPanel = () => {
       ) : (
         <div
           className={cn(
-            'empty-state flex flex-col items-center justify-center gap-[15px] text-center min-h-65 py-12.5',
-            'px-6 text-muted col-[1/-1] [&>svg]:text-[#8590a2] [&_h2]:text-[19px] [&_h2]:font-semibold',
-            '[&_h2]:leading-7 [&_h2]:text-ink [&_p]:text-[13px] [&_p]:leading-[21px] [&_p]:max-w-102.5',
-            '[&_p]:text-muted max-[520px]:py-9.5 max-[520px]:px-[15px] max-[520px]:[&_h2]:text-[17px]',
-            'max-[520px]:[&_p]:text-xs',
+            'empty-state flex flex-col items-center justify-center gap-3.75 text-center min-h-65 py-12.5',
+            'px-6 text-muted col-[1/-1] [&>svg]:text-placeholder [&_h2]:text-title [&_h2]:font-semibold',
+            '[&_h2]:leading-7 [&_h2]:text-ink [&_p]:text-body [&_p]:leading-5.25 [&_p]:max-w-102.5',
+            '[&_p]:text-muted max-phone:py-9.5 max-phone:px-3.75 max-phone:[&_h2]:text-title-sm',
+            'max-phone:[&_p]:text-xs',
           )}
         >
           <Search size={30} strokeWidth={1.5} />
@@ -62,7 +62,7 @@ export const ListPanel = () => {
           )}
         </div>
       )}
-      <div className={'list-quick-create py-[15px] px-2.5'}>
+      <div className={'list-quick-create py-3.75 px-2.5'}>
         <Button disabled={readOnly} onClick={() => newTask()} variant="secondary" size="compact">
           <Plus size={16} />
           Создать задачу

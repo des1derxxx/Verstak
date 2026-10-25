@@ -8,14 +8,14 @@ export const TaskRelationships = ({ model }: { model: TaskEditorModel }) => {
   const { task, children, mutation, onSubtask, dirty, parent, onOpenTask } = model;
   return (
     <div
-      className={'task-relationships py-0 px-6 [&:empty]:hidden max-[620px]:py-0 max-[620px]:px-4'}
+      className={'task-relationships py-0 px-6 [&:empty]:hidden max-phablet:py-0 max-phablet:px-4'}
     >
       {task && (
         <section className={'issue-section flex flex-col gap-2.5 [&>textarea]:min-h-28'}>
           <div
             className={cn(
               'issue-section-heading [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-ink flex items-center',
-              'gap-2.5 [&>span]:text-[11px] [&>span]:text-muted [&_.segmented]:ml-auto',
+              'gap-2.5 [&>span]:text-caption [&>span]:text-muted [&_.segmented]:ml-auto',
             )}
           >
             <h3>
@@ -29,7 +29,7 @@ export const TaskRelationships = ({ model }: { model: TaskEditorModel }) => {
                 disabled={dirty}
                 title={dirty ? 'Сначала сохрани изменения' : undefined}
                 className={cn(
-                  'text-button inline-flex items-center gap-[5px] py-1 px-0 text-[13px] text-muted',
+                  'text-button inline-flex items-center gap-1.25 py-1 px-0 text-body text-muted',
                   '[&:hover]:text-brand [&.danger]:text-danger',
                 )}
                 onClick={() => onSubtask(task)}
@@ -40,12 +40,12 @@ export const TaskRelationships = ({ model }: { model: TaskEditorModel }) => {
             )}
           </div>
           {parent && (
-            <p className={'body-muted text-[13px] text-muted leading-[21px]'}>
+            <p className={'body-muted text-body text-muted leading-5.25'}>
               Родитель:{' '}
               <button
                 type="button"
                 className={cn(
-                  'text-button inline-flex items-center gap-[5px] py-1 px-0 text-[13px] text-muted',
+                  'text-button inline-flex items-center gap-1.25 py-1 px-0 text-body text-muted',
                   '[&:hover]:text-brand [&.danger]:text-danger',
                 )}
                 disabled={dirty}
@@ -59,15 +59,15 @@ export const TaskRelationships = ({ model }: { model: TaskEditorModel }) => {
             <button
               type="button"
               className={cn(
-                'subtask-row flex gap-2.5 w-full items-center py-2.5 px-0.5 border-b border-[#ebecf0]',
+                'subtask-row flex gap-2.5 w-full items-center py-2.5 px-0.5 border-b border-line-soft',
                 'bg-transparent text-left [&>:nth-child(2)]:flex-1 [&>:nth-child(2)]:wrap-anywhere',
-                '[&_.issue-key]:shrink-0 [&:hover]:bg-[#f7f8f9]',
+                '[&_.issue-key]:shrink-0 [&:hover]:bg-surface-soft',
               )}
               disabled={dirty}
               key={child.id}
               onClick={() => onOpenTask?.(child)}
             >
-              <span className={'issue-key text-[11px] text-muted font-medium'}>
+              <span className={'issue-key text-caption text-muted font-medium'}>
                 {taskKey(child)}
               </span>
               <span>{child.title}</span>
@@ -77,7 +77,7 @@ export const TaskRelationships = ({ model }: { model: TaskEditorModel }) => {
             </button>
           ))}
           {!children.length && (
-            <p className={'body-muted text-[13px] text-muted leading-[21px]'}>Подзадач пока нет</p>
+            <p className={'body-muted text-body text-muted leading-5.25'}>Подзадач пока нет</p>
           )}
         </section>
       )}
