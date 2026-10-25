@@ -1,6 +1,6 @@
 'use client';
 
-import { NotificationPanel } from '@/components/notification/notifications';
+import { NotificationPanel } from '@/app/(workspace)/workspaces/[workspaceId]/notifications/_components/notification-panel';
 import { useNavigation } from '@/lib/navigation-guard';
 import { taskPath } from '@/lib/routes';
 import { useBackToWorkspace } from '@/lib/workspace/use-workspace-actions';

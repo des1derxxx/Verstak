@@ -1,20 +1,16 @@
 import { Button, IconButton } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { Dropdown } from '@/components/ui/dropdown';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Copy, KeyRound, Trash2 } from 'lucide-react';
-import { api } from '@/lib/api/client';
+import {
+  useApiTokens,
+  useCreateApiToken,
+  useRevokeApiToken,
+} from '@/app/(workspace)/workspaces/[workspaceId]/settings/tokens/_queries/api-tokens';
 import type { Space } from '@/lib/api/types';
 import { Modal, useDiscardConfirmation } from '@/components/ui/modal';
 import { formatTime } from '@/lib/dates';
-type Token = {
-  id: string;
-  name: string;
-  workspaceId: string;
-  scopes: string[];
-  last4: string;
-  expiresAt: string;
-};
 export const TokenPanel = ({
   space,
   onClose,
@@ -24,37 +20,19 @@ export const TokenPanel = ({
   onClose: () => void;
   inline?: boolean;
 }) => {
-  const [tokens, setTokens] = useState<Token[]>([]);
   const [name, setName] = useState('');
   const [write, setWrite] = useState(false);
   const [days, setDays] = useState(90);
   const [secret, setSecret] = useState('');
   const [savedSecret, setSavedSecret] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [ready, setReady] = useState(false);
-  const [error, setError] = useState('');
+  const [copyError, setCopyError] = useState('');
+  const { data: tokens = [], isSuccess: ready, error: loadError } = useApiTokens();
+  const create = useCreateApiToken();
+  const revoke = useRevokeApiToken();
+  const busy = create.isPending || revoke.isPending;
+  const error = copyError || ((loadError ?? create.error ?? revoke.error)?.message ?? '');
   const close = useDiscardConfirmation(Boolean(secret && !savedSecret), onClose);
-  const load = async () => {
-    setTokens(await api<Token[]>('/api-tokens'));
-    setReady(true);
-  };
-  useEffect(() => {
-    void load().catch((e) => setError(e.message));
-  }, []);
-  const perform = async (action: () => Promise<void>) => {
-    if (busy) return;
-    setBusy(true);
-    setError('');
-    try {
-      await action();
-      await load();
-    } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      setBusy(false);
-    }
-  };
   return (
     <Modal inline={inline} title="API-токены" onClose={close.requestClose} pending={busy}>
       <div
@@ -108,7 +86,7 @@ export const TokenPanel = ({
                   await navigator.clipboard.writeText(secret);
                   setCopied(true);
                 } catch {
-                  setError('Выдели токен и скопируй вручную.');
+                  setCopyError('Выдели токен и скопируй вручную.');
                 }
               }}
               variant="secondary"
@@ -142,22 +120,24 @@ export const TokenPanel = ({
             className={'token-form grid gap-3.5'}
             onSubmit={(e) => {
               e.preventDefault();
-              void perform(async () => {
-                const result = await api<
-                  Token & {
-                    token: string;
-                  }
-                >('/api-tokens', 'POST', {
+              if (busy) return;
+              revoke.reset();
+              create.mutate(
+                {
                   workspaceId: space.id,
                   name: name.trim(),
                   scopes: write ? ['tasks:read', 'tasks:write'] : ['tasks:read'],
                   expiresInDays: days,
-                });
-                setSecret(result.token);
-                setSavedSecret(false);
-                setCopied(false);
-                setName('');
-              });
+                },
+                {
+                  onSuccess: (result) => {
+                    setSecret(result.token);
+                    setSavedSecret(false);
+                    setCopied(false);
+                    setName('');
+                  },
+                },
+              );
             }}
           >
             <label>
@@ -227,9 +207,8 @@ export const TokenPanel = ({
                   aria-label={`Отозвать токен ${t.name}`}
                   disabled={busy}
                   onClick={() => {
-                    void perform(async () => {
-                      await api(`/api-tokens/${t.id}`, 'DELETE', {});
-                    });
+                    create.reset();
+                    revoke.mutate(t.id);
                   }}
                   tone="danger"
                 >

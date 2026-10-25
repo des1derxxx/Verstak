@@ -1,31 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { formatTime } from '@/lib/dates';
-import { useEffect, useState } from 'react';
-import { api } from '@/lib/api/client';
+import { useState } from 'react';
+import { useAddComment, useTaskActivity } from '@/queries/task-activity';
 import { statusNames } from '@/lib/model/workspace';
 import type { Status } from '@/lib/model/workspace';
 import { Markdown } from '@/components/ui/markdown';
-type Comment = {
-  id: string;
-  authorName: string;
-  body: string;
-  kind: string;
-  createdAt: string;
-};
-type Entry = {
-  id: string;
-  actorName: string;
-  event: string;
-  changes: Record<
-    string,
-    {
-      from: unknown;
-      to: unknown;
-    }
-  >;
-  createdAt: string;
-};
 const events: Record<string, string> = {
   created: 'создал задачу',
   updated: 'изменил задачу',
@@ -63,48 +43,23 @@ export const TaskActivity = ({
   onActivity: () => Promise<void>;
 }) => {
   const [tab, setTab] = useState<'comments' | 'history'>('comments');
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [history, setHistory] = useState<Entry[]>([]);
   const [body, setBody] = useState('');
-  const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [ready, setReady] = useState(false);
-  const base = `/tasks/${encodeURIComponent(taskId)}`;
-  const query = `?workspaceId=${encodeURIComponent(workspaceId)}`;
-  const load = async () => {
-    const [comments, history] = await Promise.all([
-      api<Comment[]>(`${base}/comments${query}`),
-      api<Entry[]>(`${base}/history${query}`),
-    ]);
-    setComments(comments);
-    setHistory(history);
-    setReady(true);
-  };
-  useEffect(() => {
-    let live = true;
-    void load().catch((e) => {
-      if (live) setError(e.message);
-    });
-    return () => {
-      live = false;
-    };
-  }, [taskId, workspaceId]);
+  const activity = useTaskActivity(workspaceId, taskId);
+  const addComment = useAddComment(workspaceId, taskId);
+  const { comments, history, ready } = activity;
+  const busy = addComment.isPending;
+  const error = activity.error || (addComment.error?.message ?? '');
   const send = async () => {
     if (!body.trim() || busy || readOnly) return;
-    setBusy(true);
     onBusy(true);
-    setError('');
     try {
-      const item = await api<Comment>(`${base}/comments${query}`, 'POST', { body: body.trim() });
-      setComments((old) => [...old, item]);
+      await addComment.mutateAsync(body.trim());
       setBody('');
       onDirty(false);
       await onActivity();
-      await load();
-    } catch (e) {
-      setError((e as Error).message);
+    } catch {
+      /* The mutation error is shown above the composer and the draft stays. */
     } finally {
-      setBusy(false);
       onBusy(false);
     }
   };
@@ -149,8 +104,8 @@ export const TaskActivity = ({
               '[&:hover]:text-brand [&.danger]:text-danger',
             )}
             onClick={() => {
-              setError('');
-              void load().catch((e) => setError(e.message));
+              addComment.reset();
+              void activity.retry();
             }}
           >
             Повторить

@@ -1,21 +1,9 @@
-import { IconButton } from '@/components/ui/button';
+'use client';
+
 import { cn } from '@/lib/cn';
-import { useEffect, useRef, useState } from 'react';
-import { Bell } from 'lucide-react';
-import { api } from '@/lib/api/client';
 import { Modal } from '@/components/ui/modal';
 import { formatTime } from '@/lib/dates';
-type Notification = {
-  id: string;
-  workspaceId: string;
-  taskId: string;
-  taskKey: string;
-  taskTitle: string;
-  actorName: string;
-  event: string;
-  createdAt: string;
-  readAt: string | null;
-};
+import { useMarkNotificationRead, useNotifications } from '@/queries/notifications';
 const eventNames: Record<string, string> = {
   created: 'создал задачу',
   updated: 'изменил задачу',
@@ -23,47 +11,6 @@ const eventNames: Record<string, string> = {
   commented: 'прокомментировал',
   resolution: 'добавил итог работы',
   deleted: 'удалил задачу',
-};
-export const NotificationBell = ({ onOpen }: { onOpen: () => void }) => {
-  const [unread, setUnread] = useState(0);
-  useEffect(() => {
-    let live = true;
-    const update = () => {
-      if (document.visibilityState === 'hidden') return;
-      void api<Notification[]>('/notifications')
-        .then((items) => {
-          if (live) setUnread(items.filter((n) => !n.readAt).length);
-        })
-        .catch(() => {
-          /* The panel reports request errors. */
-        });
-    };
-    update();
-    const timer = setInterval(update, 30000);
-    window.addEventListener('focus', update);
-    window.addEventListener('verstak:notifications', update);
-    return () => {
-      live = false;
-      clearInterval(timer);
-      window.removeEventListener('focus', update);
-      window.removeEventListener('verstak:notifications', update);
-    };
-  }, []);
-  return (
-    <IconButton
-      className={cn(
-        'notification-bell',
-        'relative [&>span]:absolute [&>span]:top-[-3px] [&>span]:right-[-4px] [&>span]:min-w-[15px]',
-        '[&>span]:py-px [&>span]:px-[3px] [&>span]:rounded-lg [&>span]:bg-[#c9372c] [&>span]:text-white',
-        '[&>span]:text-[9px] [&>span]:leading-[13px] [&>span]:font-bold',
-      )}
-      aria-label={unread ? `Уведомления: ${unread} непрочитанных` : 'Уведомления'}
-      onClick={onOpen}
-    >
-      <Bell size={19} />
-      {unread > 0 && <span>{unread > 99 ? '99+' : unread}</span>}
-    </IconButton>
-  );
 };
 export const NotificationPanel = ({
   onClose,
@@ -74,18 +21,9 @@ export const NotificationPanel = ({
   inline?: boolean;
   onOpen: (workspaceId: string, taskId: string) => void;
 }) => {
-  const [items, setItems] = useState<Notification[]>([]);
-  const [error, setError] = useState('');
-  const [ready, setReady] = useState(false);
-  const busy = useRef(false);
-  useEffect(() => {
-    void api<Notification[]>('/notifications')
-      .then((items) => {
-        setItems(items);
-        setReady(true);
-      })
-      .catch((e) => setError(e.message));
-  }, []);
+  const { data: items = [], error: loadError, isSuccess: ready } = useNotifications();
+  const markRead = useMarkNotificationRead();
+  const error = (loadError ?? markRead.error)?.message ?? '';
   return (
     <Modal inline={inline} title="Уведомления" onClose={onClose}>
       <div
@@ -128,21 +66,12 @@ export const NotificationPanel = ({
             )}
             key={item.id}
             onClick={async () => {
-              if (busy.current) return;
-              busy.current = true;
+              if (markRead.isPending) return;
               try {
-                await api(`/notifications/${item.id}/read`, 'PATCH', {});
-                setItems((old) =>
-                  old.map((n) =>
-                    n.id === item.id ? { ...n, readAt: new Date().toISOString() } : n,
-                  ),
-                );
-                window.dispatchEvent(new Event('verstak:notifications'));
+                await markRead.mutateAsync(item.id);
                 onOpen(item.workspaceId, item.taskId);
-              } catch (e) {
-                setError((e as Error).message);
-              } finally {
-                busy.current = false;
+              } catch {
+                /* The mutation error is shown above the list. */
               }
             }}
           >

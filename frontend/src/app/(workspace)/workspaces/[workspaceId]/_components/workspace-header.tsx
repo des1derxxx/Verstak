@@ -4,7 +4,7 @@ import { IconButton, Button } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { Avatar } from '@/components/ui/avatar';
 import { Keyboard, Menu, Plus, Search, X } from 'lucide-react';
-import { NotificationBell } from '@/components/notification/notifications';
+import { NotificationBell } from '@/app/(workspace)/workspaces/[workspaceId]/_components/notification-bell';
 import { useNavigation } from '@/lib/navigation-guard';
 import { notificationsPath, settingsPath, viewPath } from '@/lib/routes';
 import { useWorkspace } from '@/lib/workspace/workspace-context';

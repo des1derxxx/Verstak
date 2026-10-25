@@ -34,9 +34,21 @@ dom.window.HTMLDialogElement.prototype.close = function () {
 };
 
 const { createElement: h } = await import('react');
-const { cleanup, fireEvent, render, screen, waitFor, within } = await import(
-  '@testing-library/react'
-);
+const testingLibrary = await import('@testing-library/react');
+const { cleanup, fireEvent, screen, waitFor, within } = testingLibrary;
+const { QueryClient, QueryClientProvider } = await import('@tanstack/react-query');
+// Every render gets its own query cache; gcTime Infinity schedules no timers that keep node alive.
+const render = (element) => {
+  const client = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false, gcTime: Infinity },
+      mutations: { gcTime: Infinity },
+    },
+  });
+  return testingLibrary.render(element, {
+    wrapper: ({ children }) => h(QueryClientProvider, { client }, children),
+  });
+};
 const { QuickCreate } = await import('../src/components/task/quick-create.tsx');
 const { TaskEditor } = await import('../src/components/task/task-editor/task-editor.tsx');
 const { MutationContext } = await import('../src/components/ui/modal.tsx');

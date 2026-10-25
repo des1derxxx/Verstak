@@ -1,9 +1,12 @@
 import { IconButton, Button } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Check, Copy, Plus, Trash2, X } from 'lucide-react';
-import { api } from '@/lib/api/client';
-import type { Invitation, Member, Role, Session, Space } from '@/lib/api/types';
+import type { Role, Session, Space } from '@/lib/api/types';
+import {
+  useTeam,
+  useTeamActions,
+} from '@/app/(workspace)/workspaces/[workspaceId]/settings/members/_queries/team';
 import { Modal } from '@/components/ui/modal';
 import { Dropdown } from '@/components/ui/dropdown';
 import { Avatar } from '@/components/ui/avatar';
@@ -25,42 +28,25 @@ export const TeamPanel = ({
   inline?: boolean;
   onAccessChanged: () => Promise<void>;
 }) => {
-  const [members, setMembers] = useState<Member[]>([]);
-  const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<'editor' | 'viewer'>('editor');
   const [link, setLink] = useState('');
   const [copied, setCopied] = useState(false);
-  const [error, setError] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [ready, setReady] = useState(false);
+  const [copyError, setCopyError] = useState('');
   const [removal, setRemoval] = useState('');
-  const load = async () => {
-    const [people, invites] = await Promise.all([
-      api<Member[]>(`/workspaces/${space.id}/members`),
-      space.role === 'owner'
-        ? api<Invitation[]>(`/workspaces/${space.id}/invitations`)
-        : Promise.resolve([]),
-    ]);
-    setMembers(people);
-    setInvitations(invites);
-    setReady(true);
-  };
-  useEffect(() => {
-    void load().catch((error) => setError(error.message));
-  }, []);
-  const perform = async (action: () => Promise<unknown>) => {
-    if (busy) return;
-    setBusy(true);
-    setError('');
-    try {
-      await action();
-      await load();
-    } catch (error) {
-      setError((error as Error).message);
-    } finally {
-      setBusy(false);
-    }
+  const team = useTeam(space);
+  const { members, invitations, ready } = team;
+  const actions = useTeamActions(space.id);
+  const all = Object.values(actions);
+  const busy = all.some((action) => action.isPending);
+  const error =
+    copyError || team.error || (all.find((action) => action.error)?.error?.message ?? '');
+  // One action at a time; starting a new one clears the previous error.
+  const start = () => {
+    if (busy) return false;
+    setCopyError('');
+    for (const action of all) action.reset();
+    return true;
   };
   return (
     <Modal inline={inline} title="Участники пространства" onClose={onClose} wide pending={busy}>
@@ -127,13 +113,11 @@ export const TeamPanel = ({
                     disabled={busy}
                     value={member.role}
                     onValueChange={(value) => {
-                      const next = value;
-                      void perform(async () => {
-                        await api(`/workspaces/${space.id}/members/${member.user.id}`, 'PATCH', {
-                          role: next,
-                        });
-                        await onAccessChanged();
-                      });
+                      if (start())
+                        actions.changeRole.mutate(
+                          { userId: member.user.id, role: value as Role },
+                          { onSuccess: onAccessChanged },
+                        );
                     }}
                     options={[
                       { value: 'editor', label: 'Редактор' },
@@ -171,11 +155,13 @@ export const TeamPanel = ({
             <Button
               disabled={busy}
               onClick={() => {
-                void perform(async () => {
-                  await api(`/workspaces/${space.id}/members/${removal}`, 'DELETE', {});
-                  setRemoval('');
-                  await onAccessChanged();
-                });
+                if (start())
+                  actions.removeMember.mutate(removal, {
+                    onSuccess: async () => {
+                      setRemoval('');
+                      await onAccessChanged();
+                    },
+                  });
               }}
               variant="danger"
             >
@@ -198,14 +184,17 @@ export const TeamPanel = ({
               )}
               onSubmit={(event) => {
                 event.preventDefault();
-                void perform(async () => {
-                  const result = await api<{
-                    url: string;
-                  }>(`/workspaces/${space.id}/invitations`, 'POST', { email, role });
-                  setLink(result.url);
-                  setCopied(false);
-                  setEmail('');
-                });
+                if (start())
+                  actions.invite.mutate(
+                    { email, role },
+                    {
+                      onSuccess: (result) => {
+                        setLink(result.url);
+                        setCopied(false);
+                        setEmail('');
+                      },
+                    },
+                  );
               }}
             >
               <label>
@@ -257,7 +246,7 @@ export const TeamPanel = ({
                       await navigator.clipboard.writeText(link);
                       setCopied(true);
                     } catch {
-                      setError('Выдели и скопируй ссылку вручную.');
+                      setCopyError('Выдели и скопируй ссылку вручную.');
                     }
                   }}
                   variant="secondary"
@@ -290,9 +279,7 @@ export const TeamPanel = ({
                       disabled={busy}
                       aria-label={`Отозвать приглашение ${invite.email}`}
                       onClick={() => {
-                        void perform(() =>
-                          api(`/workspaces/${space.id}/invitations/${invite.id}`, 'DELETE', {}),
-                        );
+                        if (start()) actions.revokeInvitation.mutate(invite.id);
                       }}
                       tone="danger"
                     >
