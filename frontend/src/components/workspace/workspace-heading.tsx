@@ -8,7 +8,7 @@ import { useNavigation } from '@/lib/navigation-guard';
 import { settingsPath, viewPath } from '@/lib/routes';
 import { useWorkspace } from '@/lib/workspace/workspace-context';
 import { useWorkspaceUi } from '@/lib/workspace/workspace-ui';
-import { useTaskView } from '@/lib/workspace/use-workspace-location';
+import { useTaskView } from '@/lib/workspace/workspace-location';
 import {
   useClearSaveError,
   useRefreshWorkspace,

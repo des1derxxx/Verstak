@@ -10,7 +10,7 @@ import { notificationsPath, settingsPath, viewPath } from '@/lib/routes';
 import { useWorkspace } from '@/lib/workspace/workspace-context';
 import { useWorkspaceUi } from '@/lib/workspace/workspace-ui';
 import { useTaskActions } from '@/lib/workspace/use-workspace-actions';
-import { useTaskFilters, useWorkspaceLocation } from '@/lib/workspace/use-workspace-location';
+import { useTaskFilters, useWorkspaceLocation } from '@/lib/workspace/workspace-location';
 import { useWorkspaceSaveState } from '@/queries/workspace';
 export const WorkspaceHeader = () => {
   const { info, session, readOnly } = useWorkspace();

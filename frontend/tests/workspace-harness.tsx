@@ -46,6 +46,17 @@ const page = (segments: string[]): ReactNode => {
 };
 const tree = (segments: string[]): unknown =>
   segments.length ? [segments[0], { children: tree(segments.slice(1)) }] : ['__PAGE__', {}];
+// Next.js narrows the layout context at every segment, so a page only sees the tree below itself.
+const PageSegment = ({ segment, children }: { segment: string; children: ReactNode }) => (
+  <LayoutRouterContext.Provider
+    value={{
+      parentTree: [segment, { children: ['__PAGE__', {}] }],
+      parentRenderTree: { data: { bfcacheId: 0 } },
+    }}
+  >
+    {children}
+  </LayoutRouterContext.Provider>
+);
 const base = 'http://localhost';
 const nativeReplaceState = window.history.replaceState.bind(window.history);
 export const WorkspaceApp = ({
@@ -131,8 +142,14 @@ export const WorkspaceApp = ({
                 info={space}
                 calendar={{ today: localDate(), timeZone: 'UTC' }}
               >
-                <WorkspaceShell>{page(segments)}</WorkspaceShell>
-                {location.modal && <TaskPage reference={location.modal} modal />}
+                <WorkspaceShell>
+                  <PageSegment segment={segments.at(-1) ?? space.id}>{page(segments)}</PageSegment>
+                </WorkspaceShell>
+                {location.modal && (
+                  <PageSegment segment={location.modal}>
+                    <TaskPage reference={location.modal} modal />
+                  </PageSegment>
+                )}
               </WorkspaceProviders>
             </SearchParamsContext.Provider>
           </PathnameContext.Provider>

@@ -950,3 +950,34 @@ test('an intercepted task keeps the project and filters behind it and guards dra
   fireEvent.click(screen.getByRole('link', { name: /Все задачи/ }));
   assert.deepEqual(pushes.at(-1), '/workspaces/space/board');
 });
+
+test('view tabs and project scope follow the current route', async (context) => {
+  mockApi(context, async () => Response.json([]));
+  const other = { ...project, id: 'other', name: 'Other project' };
+  render(
+    h(WorkspaceApp, {
+      session,
+      space,
+      snapshot: {
+        revision: 1,
+        data: {
+          version: 1,
+          projects: [project, other],
+          tasks: [task, { ...task, id: 'other-task', projectId: other.id, title: 'Elsewhere' }],
+          notes: [],
+        },
+      },
+      path: '/workspaces/space/projects/project/board',
+    }),
+  );
+  assert.ok(screen.getByRole('heading', { name: project.name }));
+  assert.ok(screen.getByText(task.title));
+  assert.equal(screen.queryByText('Elsewhere'), null);
+  assert.equal(screen.getByRole('tab', { name: 'Доска' }).getAttribute('aria-selected'), 'true');
+  fireEvent.click(screen.getByRole('tab', { name: /Бэклог/ }));
+  await waitFor(() =>
+    assert.equal(screen.getByRole('tab', { name: /Бэклог/ }).getAttribute('aria-selected'), 'true'),
+  );
+  assert.equal(screen.getByRole('tab', { name: 'Доска' }).getAttribute('aria-selected'), 'false');
+  assert.ok(screen.getByRole('heading', { name: project.name }));
+});

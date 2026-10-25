@@ -11,7 +11,7 @@ import {
   useProjectActions,
   useTaskActions,
 } from '@/lib/workspace/use-workspace-actions';
-import { useTaskView } from '@/lib/workspace/use-workspace-location';
+import { useTaskView } from '@/lib/workspace/workspace-location';
 import { useMembers } from '@/queries/members';
 import { useRefreshWorkspace } from '@/queries/workspace';
 const EditorLoading = () => {

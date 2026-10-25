@@ -9,7 +9,7 @@ import { useNavigation } from '@/lib/navigation-guard';
 import { notePath } from '@/lib/routes';
 import { useWorkspace } from '@/lib/workspace/workspace-context';
 import { useNoteActions } from '@/lib/workspace/use-workspace-actions';
-import { useTaskFilters, useTaskView } from '@/lib/workspace/use-workspace-location';
+import { useTaskFilters, useTaskView } from '@/lib/workspace/workspace-location';
 export const NotesPanel = () => {
   const { timeZone } = useCalendar();
   const { info, readOnly } = useWorkspace();

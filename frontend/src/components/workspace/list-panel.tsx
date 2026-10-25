@@ -8,7 +8,7 @@ import { TaskTable } from '@/components/task/task-table';
 import { useMembers } from '@/queries/members';
 import { useWorkspace } from '@/lib/workspace/workspace-context';
 import { useTaskActions } from '@/lib/workspace/use-workspace-actions';
-import { useTaskFilters, useTaskView } from '@/lib/workspace/use-workspace-location';
+import { useTaskFilters, useTaskView } from '@/lib/workspace/workspace-location';
 export const ListPanel = () => {
   const { readOnly } = useWorkspace();
   const { members } = useMembers();

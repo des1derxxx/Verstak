@@ -12,7 +12,7 @@ import { useNavigation } from '@/lib/navigation-guard';
 import { viewPath } from '@/lib/routes';
 import { useWorkspace } from '@/lib/workspace/workspace-context';
 import { useNoteActions } from '@/lib/workspace/use-workspace-actions';
-import { useTaskFilters, useTaskView } from '@/lib/workspace/use-workspace-location';
+import { useTaskFilters, useTaskView } from '@/lib/workspace/workspace-location';
 const views = [
   { id: 'board', label: 'Доска', icon: LayoutGrid },
   { id: 'backlog', label: 'Бэклог', icon: ListTodo },

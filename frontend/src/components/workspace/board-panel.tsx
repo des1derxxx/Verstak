@@ -6,7 +6,7 @@ import { useNavigation } from '@/lib/navigation-guard';
 import { viewPath } from '@/lib/routes';
 import { useWorkspace } from '@/lib/workspace/workspace-context';
 import { useTaskActions } from '@/lib/workspace/use-workspace-actions';
-import { useTaskView } from '@/lib/workspace/use-workspace-location';
+import { useTaskView } from '@/lib/workspace/workspace-location';
 export const BoardPanel = () => {
   const { info } = useWorkspace();
   const { navigate } = useNavigation();

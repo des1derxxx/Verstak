@@ -9,6 +9,7 @@ import type { Calendar } from '@/lib/calendar';
 import { NavigationGuardProvider } from '@/lib/navigation-guard';
 import { useWorkspace, WorkspaceProvider } from '@/lib/workspace/workspace-context';
 import { useWorkspaceUi, WorkspaceUiProvider } from '@/lib/workspace/workspace-ui';
+import { WorkspaceLocationProvider } from '@/lib/workspace/workspace-location';
 import { useClearSaveError, useWorkspaceSaveState } from '@/queries/workspace';
 // Lets forms and modals disable themselves while the workspace saves.
 const SaveStateProvider = ({ children }: { children: ReactNode }) => {
@@ -36,9 +37,11 @@ export const WorkspaceProviders = ({
   <CalendarProvider initial={calendar}>
     <NavigationGuardProvider>
       <WorkspaceProvider info={info} spaces={spaces} session={session}>
-        <WorkspaceUiProvider>
-          <SaveStateProvider>{children}</SaveStateProvider>
-        </WorkspaceUiProvider>
+        <WorkspaceLocationProvider>
+          <WorkspaceUiProvider>
+            <SaveStateProvider>{children}</SaveStateProvider>
+          </WorkspaceUiProvider>
+        </WorkspaceLocationProvider>
       </WorkspaceProvider>
     </NavigationGuardProvider>
   </CalendarProvider>

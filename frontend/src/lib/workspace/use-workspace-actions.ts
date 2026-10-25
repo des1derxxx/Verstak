@@ -6,7 +6,7 @@ import type { Note, Project, Status, Task } from '@/lib/model/workspace';
 import { taskPath, viewPath } from '@/lib/routes';
 import { useWorkspace } from '@/lib/workspace/workspace-context';
 import { useWorkspaceUi } from '@/lib/workspace/workspace-ui';
-import { useTaskFilters, useWorkspaceLocation } from '@/lib/workspace/use-workspace-location';
+import { useTaskFilters, useWorkspaceLocation } from '@/lib/workspace/workspace-location';
 import { useCommitWorkspace, useWorkspaceData } from '@/queries/workspace';
 const upsert = <T extends { id: string }>(items: T[], item: T) =>
   items.some((current) => current.id === item.id)

@@ -8,7 +8,7 @@ import { NoProjects } from '@/components/workspace/no-projects';
 import { cn } from '@/lib/cn';
 import { useWorkspace } from '@/lib/workspace/workspace-context';
 import { useWorkspaceUi } from '@/lib/workspace/workspace-ui';
-import { useTaskView } from '@/lib/workspace/use-workspace-location';
+import { useTaskView } from '@/lib/workspace/workspace-location';
 import { useWorkspaceData } from '@/queries/workspace';
 export const WorkspaceOverview = ({ children }: { children: ReactNode }) => {
   const { readOnly } = useWorkspace();
