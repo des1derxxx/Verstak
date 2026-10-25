@@ -1,31 +1,33 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  readWorkspaceRoute,
+  locationFromSegments,
+  parseFilters,
   viewPath,
   taskPath,
   filterSearch,
   safeReturnPath,
 } from '../src/lib/routes.ts';
-test('project, task and today links preserve their scope on a fresh URL', () => {
+const segments = (path) => path.split('/').slice(3);
+test('project, task and today links round trip through App Router segments', () => {
   const path = viewPath('team', 'project', 'notes');
   assert.equal(path, '/workspaces/team/projects/project/pages');
-  assert.deepEqual(readWorkspaceRoute(path, new URLSearchParams()), {
-    selected: 'project',
-    view: 'notes',
-    filters: { query: '', priority: 'all', status: 'all', sort: 'created' },
-  });
-  const today = new URL(viewPath('team', 'today', 'backlog'), 'http://localhost');
-  assert.equal(readWorkspaceRoute(today.pathname, today.searchParams).view, 'backlog');
-  assert.equal(readWorkspaceRoute(today.pathname, today.searchParams).selected, 'today');
+  assert.deepEqual(locationFromSegments(segments(path)), { scope: 'project', view: 'notes' });
+  assert.equal(viewPath('team', 'today', 'list'), '/workspaces/team/today');
+  assert.equal(viewPath('team', 'today', 'backlog'), '/workspaces/team/today/backlog');
+  for (const view of ['list', 'board', 'backlog'])
+    assert.deepEqual(locationFromSegments(segments(viewPath('team', 'today', view))), {
+      scope: 'today',
+      view,
+    });
+  assert.deepEqual(locationFromSegments(['pages', 'note-id']), { scope: 'all', view: 'notes' });
+  assert.deepEqual(locationFromSegments(['settings', 'members']), { scope: 'all', view: 'board' });
   assert.equal(taskPath('team', 'OM-52'), '/workspaces/team/tasks/OM-52');
 });
-test('URL filters round trip search and reset without losing the today view', () => {
+test('URL filters round trip search and reset without losing other parameters', () => {
   const filters = { query: 'release & API', priority: 'high', status: 'progress', sort: 'due' };
-  const query = filterSearch(new URLSearchParams('view=backlog'), filters);
-  const route = readWorkspaceRoute('/workspaces/team/today', new URLSearchParams(query));
-  assert.deepEqual(route.filters, filters);
-  assert.equal(route.view, 'backlog');
+  const query = filterSearch(new URLSearchParams('tab=1'), filters);
+  assert.deepEqual(parseFilters(new URLSearchParams(query)), filters);
   assert.equal(
     filterSearch(new URLSearchParams(query), {
       query: '',
@@ -33,15 +35,14 @@ test('URL filters round trip search and reset without losing the today view', ()
       status: 'all',
       sort: 'created',
     }),
-    'view=backlog',
+    'tab=1',
   );
-  assert.deepEqual(
-    readWorkspaceRoute(
-      '/workspaces/team/list',
-      new URLSearchParams('priority=admin&status=unknown&sort=wrong'),
-    ).filters,
-    { query: '', priority: 'all', status: 'all', sort: 'created' },
-  );
+  assert.deepEqual(parseFilters(new URLSearchParams('priority=admin&status=unknown&sort=wrong')), {
+    query: '',
+    priority: 'all',
+    status: 'all',
+    sort: 'created',
+  });
 });
 test('login return URLs cannot send users to another origin', () => {
   for (const input of [

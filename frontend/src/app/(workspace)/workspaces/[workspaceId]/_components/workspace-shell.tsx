@@ -1,36 +1,28 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { useWorkspace } from '@/lib/workspace/workspace-context';
-import { cn } from '@/lib/cn';
 import { Check } from 'lucide-react';
+import { PageLoading } from '@/components/ui/page-loading';
+import { cn } from '@/lib/cn';
+import { useNavigation } from '@/lib/navigation-guard';
+import { useWorkspaceUi } from '@/lib/workspace/workspace-ui';
+import { useWorkspaceData, useWorkspaceSync } from '@/queries/workspace';
+import { useWorkspaceHotkeys } from '@/app/(workspace)/workspaces/[workspaceId]/_components/use-workspace-hotkeys';
 import { WorkspaceHeader } from '@/app/(workspace)/workspaces/[workspaceId]/_components/workspace-header';
 import { WorkspaceSidebar } from '@/app/(workspace)/workspaces/[workspaceId]/_components/workspace-sidebar';
 import { WorkspaceDialogs } from '@/app/(workspace)/workspaces/[workspaceId]/_components/workspace-dialogs';
 export const WorkspaceShell = ({ children }: { children: ReactNode }) => {
-  const model = useWorkspace();
-  if (model.loading)
-    return (
-      <div
-        className={cn(
-          'loading-page flex flex-col items-center justify-center gap-5 min-h-dvh text-[13px] text-muted',
-          'bg-white',
-        )}
-      >
-        <span
-          className={cn(
-            'loading-spinner w-[25px] h-[25px] border-2 border-[#deebff] [border-top-color:var(--blue)]',
-            'rounded-full [animation:spin_1s_linear_infinite]',
-          )}
-        />
-        <p>Загружаем пространство…</p>
-      </div>
-    );
+  const { dialog, toast } = useWorkspaceUi();
+  const { hasDraft } = useNavigation();
+  const { loading } = useWorkspaceData();
+  useWorkspaceSync(Boolean(dialog) || hasDraft);
+  useWorkspaceHotkeys();
+  if (loading) return <PageLoading label="Загружаем пространство…" />;
   return (
     <>
       <div className={'app-shell min-h-dvh'}>
-        <WorkspaceHeader model={model} />
-        <WorkspaceSidebar model={model} />
+        <WorkspaceHeader />
+        <WorkspaceSidebar />
         <main
           className={cn(
             'main-area ml-[var(--sidebar-width)] pt-[var(--header-height)] min-h-dvh min-w-0',
@@ -47,7 +39,7 @@ export const WorkspaceShell = ({ children }: { children: ReactNode }) => {
           </div>
         </main>
       </div>
-      <WorkspaceDialogs model={model} />
+      <WorkspaceDialogs />
       <div
         className={cn(
           'toast flex items-center gap-2 fixed bottom-6 left-[calc(50%_+_120px)]',
@@ -56,15 +48,15 @@ export const WorkspaceShell = ({ children }: { children: ReactNode }) => {
           'z-50 max-w-[calc(100vw_-_30px)] [transition:opacity_.16s,transform_.16s]',
           '[&.visible]:opacity-[1] [&.visible]:[transform:translate(-50%,0)]',
           'max-[1000px]:left-[calc(50%_+_107px)] max-[760px]:left-[50%] max-[760px]:text-xs',
-          model.toast ? 'visible' : '',
+          toast ? 'visible' : '',
         )}
         role="status"
         aria-live="polite"
       >
-        {model.toast && (
+        {toast && (
           <>
             <Check size={17} />
-            {model.toast}
+            {toast}
           </>
         )}
       </div>

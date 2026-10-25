@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
-import { getWorkspace } from '@/lib/api/server';
-import { WorkspaceRouter } from '@/app/(workspace)/workspaces/[workspaceId]/_components/workspace-router';
+import { HydrationBoundary } from '@tanstack/react-query';
+import { getWorkspace, workspaceState } from '@/lib/api/server';
+import { WorkspaceProviders } from '@/app/(workspace)/workspaces/[workspaceId]/_components/workspace-providers';
 import { WorkspaceShell } from '@/app/(workspace)/workspaces/[workspaceId]/_components/workspace-shell';
 const WorkspaceLayout = async ({
   children,
@@ -12,12 +13,20 @@ const WorkspaceLayout = async ({
   params: Promise<{ workspaceId: string }>;
 }) => {
   const { workspaceId } = await params;
-  const seed = await getWorkspace(workspaceId);
+  const { session, spaces, info, calendar } = await getWorkspace(workspaceId);
   return (
-    <WorkspaceRouter key={workspaceId} {...seed}>
-      <WorkspaceShell>{children}</WorkspaceShell>
-      {modal}
-    </WorkspaceRouter>
+    <HydrationBoundary state={await workspaceState(workspaceId)}>
+      <WorkspaceProviders
+        key={workspaceId}
+        session={session}
+        spaces={spaces}
+        info={info}
+        calendar={calendar}
+      >
+        <WorkspaceShell>{children}</WorkspaceShell>
+        {modal}
+      </WorkspaceProviders>
+    </HydrationBoundary>
   );
 };
 export default WorkspaceLayout;

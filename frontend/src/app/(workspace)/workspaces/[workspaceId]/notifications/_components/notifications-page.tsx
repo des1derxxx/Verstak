@@ -1,15 +1,16 @@
 'use client';
 
 import { NotificationPanel } from '@/components/notification/notifications';
+import { useNavigation } from '@/lib/navigation-guard';
 import { taskPath } from '@/lib/routes';
-import { useSettingsPage } from '@/lib/workspace/use-settings-page';
+import { useBackToWorkspace } from '@/lib/workspace/use-workspace-actions';
 export const NotificationsPage = () => {
-  const { model, close } = useSettingsPage();
+  const { navigate } = useNavigation();
   return (
     <NotificationPanel
       inline
-      onClose={close}
-      onOpen={(workspaceId, taskId) => model.navigate(taskPath(workspaceId, taskId))}
+      onClose={useBackToWorkspace()}
+      onOpen={(workspaceId, taskId) => navigate(taskPath(workspaceId, taskId))}
     />
   );
 };

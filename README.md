@@ -58,20 +58,20 @@ Verstak/
 
 Страницы объявлены папками и `page.tsx` в App Router. Скобки `(auth)` и `(workspace)` группируют код и не входят в URL.
 
-| URL                                                                                                     | Страница                                                                          |
-| ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `/login`, `/register`                                                                                   | Вход и регистрация                                                                |
-| `/forgot-password`, `/reset-password`                                                                   | Восстановление доступа                                                            |
-| `/invite`                                                                                               | Принятие приглашения                                                              |
-| `/workspaces/new`                                                                                       | Создание пространства                                                             |
-| `/workspaces/[workspaceId]/board`, `/backlog`, `/list`, `/pages`, `/today`                              | Представления пространства (последние сегменты относительно того же пространства) |
-| `/workspaces/[workspaceId]/projects/[projectId]/board`                                                  | Проект; также доступны `backlog`, `list`, `pages`                                 |
-| `/workspaces/[workspaceId]/tasks/[id_or_key]`                                                           | Карточка задачи, например `OM-52`                                                 |
-| `/workspaces/[workspaceId]/pages/[noteId]`                                                              | Страница документации                                                             |
-| `/workspaces/[workspaceId]/settings/profile`, `/settings/members`, `/settings/tokens`, `/settings/data` | Настройки относительно пространства                                               |
-| `/workspaces/[workspaceId]/notifications`                                                               | Уведомления                                                                       |
+| URL                                                                                                          | Страница                                                                          |
+| ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| `/login`, `/register`                                                                                        | Вход и регистрация                                                                |
+| `/forgot-password`, `/reset-password`                                                                        | Восстановление доступа                                                            |
+| `/invite`                                                                                                    | Принятие приглашения                                                              |
+| `/workspaces/new`                                                                                            | Создание пространства                                                             |
+| `/workspaces/[workspaceId]/board`, `/backlog`, `/list`, `/pages`, `/today`, `/today/board`, `/today/backlog` | Представления пространства (последние сегменты относительно того же пространства) |
+| `/workspaces/[workspaceId]/projects/[projectId]/board`                                                       | Проект; также доступны `backlog`, `list`, `pages`                                 |
+| `/workspaces/[workspaceId]/tasks/[id_or_key]`                                                                | Карточка задачи, например `OM-52`                                                 |
+| `/workspaces/[workspaceId]/pages/[noteId]`                                                                   | Страница документации                                                             |
+| `/workspaces/[workspaceId]/settings/profile`, `/settings/members`, `/settings/tokens`, `/settings/data`      | Настройки относительно пространства                                               |
+| `/workspaces/[workspaceId]/notifications`                                                                    | Уведомления                                                                       |
 
-Layout пространства проверяет сессию и членство на сервере, параллельно загружает снимок и участников и передаёт начальные данные клиентским компонентам. Шапка, меню и состояние пространства сохраняются между страницами. Сервер обращается к Python API через отдельный Axios-клиент с cookie текущего запроса. `API_INTERNAL_ORIGIN` по умолчанию равен `http://127.0.0.1:8000`; Compose задаёт `http://api:8000`. Секреты и адрес внутреннего API не передаются в браузер.
+Layout пространства проверяет сессию и членство на сервере, параллельно загружает снимок и участников и кладёт их в кэш TanStack Query через `HydrationBoundary`, поэтому страница приходит уже с данными. Шапка, меню и состояние пространства сохраняются между страницами. Сервер обращается к Python API через отдельный Axios-клиент с cookie текущего запроса. `API_INTERNAL_ORIGIN` по умолчанию равен `http://127.0.0.1:8000`; Compose задаёт `http://api:8000`. Секреты и адрес внутреннего API не передаются в браузер.
 
 Используются серверные компоненты, `Link`, предварительная загрузка основных разделов, отдельные компоненты представлений, загрузка редакторов через `next/dynamic`, `loading.tsx`, `error.tsx`, `not-found.tsx` и метаданные страниц. Карточка задачи использует parallel/intercepting routes: переход с доски открывает drawer поверх текущего экрана, прямое открытие или обновление ссылки — отдельную страницу. Массовая предварительная загрузка всех карточек отключена.
 
@@ -202,13 +202,13 @@ URI держи в окружении или локальном файле сек
 
 ## Соглашения фронтенда
 
-- Компоненты, хуки и утилиты — типизированные стрелочные функции.
-- Стили — Tailwind в компонентах. В `app/globals.css` находятся только токены, базовые стили элементов и настройки доступности.
-- Общие кнопки и иконки-кнопки — `shared/ui/Button.tsx`; цвета статусов — `shared/ui/variants.ts`.
-- `shared/api/client.ts` создаёт Axios instance с CSRF, cookie и таймаутом 15 секунд. Компоненты используют этот клиент; типы DTO находятся в `shared/api/types.ts`, синхронизация пространства — в `shared/api/workspaces.ts`.
-- `features/workspaces/WorkspaceView.tsx` собирает секции экрана. Загрузка, права, изменения и конфликты находятся в `hooks/useWorkspaceController.ts`.
-- Редактор задачи разделён на секции в `features/tasks/task-editor/`, состояние — в `useTaskEditor.ts`.
-- `application/useApplication.ts` управляет сессией и пространствами. Чтение URL и localStorage выполняется с учётом серверного рендера; начальное состояние приложения можно отрендерить без browser API.
+- Файлы и папки — kebab-case, импорты — только через `@/`.
+- `app/` — маршруты. Страница — тонкий `page.tsx`; компоненты, нужные только ей, лежат рядом в `_components/`.
+- `components/<домен>/` (`task`, `project`, `note`, `workspace`, `notification`) — компоненты, которые нужны нескольким страницам. `components/ui/` — общий UI, который ничего не знает о задачах и проектах.
+- `queries/` — запросы TanStack Query; все ключи в `queries/keys.ts`. Серверные данные хранятся только в кэше Query, без копий в состоянии компонентов.
+- `lib/` — API-клиент (`lib/api/`), модель данных (`lib/model/`), маршруты (`lib/routes.ts`), защита черновиков (`lib/navigation-guard.tsx`) и состояние пространства (`lib/workspace/`).
+- Раздел и представление определяются сегментами App Router (`useSelectedLayoutSegments`), фильтры — параметрами URL. Ручного разбора адреса нет.
+- Компоненты, хуки и утилиты — типизированные стрелочные функции. Стили — Tailwind в компонентах; в `app/globals.css` только токены и базовые стили.
 - Форматирование: `pnpm format`; проверка: `pnpm format:check`. Зависимости фронтенда устанавливаются внутри `frontend/`.
 
 Production-сборка: `pnpm build`, standalone-артефакт — `.next/standalone`, запуск проверенного контейнера использует `node server.js`. Для локальной проверки production-сборки — `pnpm start`. Next.js генерирует отдельный nonce для script-src в CSP и динамически рендерит страницу; внешние шрифты и CDN не требуются. Схема развёртывания следует [standalone output Next.js](https://nextjs.org/docs/app/api-reference/config/next-config-js/output), подключение Tailwind — [официальному руководству](https://tailwindcss.com/docs/installation/framework-guides/nextjs).

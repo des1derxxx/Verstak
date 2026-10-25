@@ -1,4 +1,5 @@
-import { getWorkspace, requireTask } from '@/lib/api/server';
+import { HydrationBoundary } from '@tanstack/react-query';
+import { requireTask, workspaceState } from '@/lib/api/server';
 import { TaskPage } from '@/components/task/task-page';
 type Props = { params: Promise<{ workspaceId: string; taskId: string }> };
 export const generateMetadata = async ({ params }: Props) => {
@@ -9,7 +10,10 @@ export const generateMetadata = async ({ params }: Props) => {
 const Page = async ({ params }: Props) => {
   const p = await params;
   await requireTask(p.workspaceId, p.taskId);
-  const seed = await getWorkspace(p.workspaceId);
-  return <TaskPage reference={p.taskId} snapshot={seed.snapshot} modal={true} />;
+  return (
+    <HydrationBoundary state={await workspaceState(p.workspaceId)}>
+      <TaskPage reference={p.taskId} modal={true} />
+    </HydrationBoundary>
+  );
 };
 export default Page;

@@ -1,34 +1,22 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import type { Snapshot } from '@/lib/api/types';
-import { useWorkspace } from '@/lib/workspace/workspace-context';
 import { TaskEditor } from '@/components/task/task-editor/task-editor';
-import { createTask } from '@/lib/model/task';
-import { viewPath } from '@/lib/routes';
-export const TaskPage = ({
-  reference,
-  snapshot,
-  modal = false,
-}: {
-  reference: string;
-  snapshot: Snapshot;
-  modal?: boolean;
-}) => {
-  const model = useWorkspace();
-  const router = useRouter();
-  useEffect(() => {
-    model.receive(snapshot);
-  }, [snapshot]);
-  const workspace = snapshot.revision > model.revision ? snapshot.data : model.workspace;
+import { sortProjects } from '@/lib/model/task';
+import { useNavigation } from '@/lib/navigation-guard';
+import { useWorkspace } from '@/lib/workspace/workspace-context';
+import { useBackToWorkspace, useTaskActions } from '@/lib/workspace/use-workspace-actions';
+import { useMembers } from '@/queries/members';
+import { useRefreshWorkspace, useWorkspaceData } from '@/queries/workspace';
+export const TaskPage = ({ reference, modal = false }: { reference: string; modal?: boolean }) => {
+  const { info } = useWorkspace();
+  const { workspace } = useWorkspaceData();
+  const { members } = useMembers();
+  const { back } = useNavigation();
+  const backToWorkspace = useBackToWorkspace();
+  const refresh = useRefreshWorkspace();
+  const { openTask, saveTask, deleteTask, newSubtask } = useTaskActions();
   const task = workspace.tasks.find((item) => item.id === reference || item.key === reference);
-  const close = () =>
-    modal
-      ? model.back
-        ? model.back()
-        : router.back()
-      : model.navigate(viewPath(model.info.id), { discard: true });
+  const close = modal ? back : backToWorkspace;
   if (!task)
     return (
       <div className="p-8">
@@ -44,26 +32,16 @@ export const TaskPage = ({
       inline={!modal}
       task={task}
       tasks={workspace.tasks}
-      members={model.members}
-      projects={model.sortedProjects}
+      members={members}
+      projects={sortProjects(workspace.projects)}
       projectId={task.projectId}
-      workspaceId={model.info.id}
-      onActivity={() => model.refresh()}
-      onOpenTask={model.openTask}
+      workspaceId={info.id}
+      onActivity={refresh}
+      onOpenTask={openTask}
       onClose={close}
-      onSave={model.saveTask}
-      onSubtask={(parent) =>
-        model.setModal({
-          kind: 'task',
-          seed: { ...createTask(parent.projectId), parentId: parent.id },
-        })
-      }
-      onDelete={(id) =>
-        model.commit(
-          { ...model.workspace, tasks: model.workspace.tasks.filter((item) => item.id !== id) },
-          'Задача удалена',
-        )
-      }
+      onSave={saveTask}
+      onSubtask={newSubtask}
+      onDelete={deleteTask}
     />
   );
 };

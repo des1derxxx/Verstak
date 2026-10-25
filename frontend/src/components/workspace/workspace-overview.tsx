@@ -1,22 +1,27 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { useWorkspace } from '@/lib/workspace/workspace-context';
+import { CalendarDays, Check, Keyboard } from 'lucide-react';
 import { WorkspaceHeading } from '@/components/workspace/workspace-heading';
 import { WorkspaceToolbar } from '@/components/workspace/workspace-toolbar';
 import { NoProjects } from '@/components/workspace/no-projects';
-import { CalendarDays, Check, Keyboard } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { useWorkspace } from '@/lib/workspace/workspace-context';
+import { useWorkspaceUi } from '@/lib/workspace/workspace-ui';
+import { useTaskView } from '@/lib/workspace/use-workspace-location';
+import { useWorkspaceData } from '@/queries/workspace';
 export const WorkspaceOverview = ({ children }: { children: ReactNode }) => {
-  const model = useWorkspace();
-  const { view, workspace, storageError, readOnly, setModal, selected, scoped, done } = model;
+  const { readOnly } = useWorkspace();
+  const { openDialog } = useWorkspaceUi();
+  const { error: storageError } = useWorkspaceData();
+  const { view, workspace, scope: selected, scoped, counts } = useTaskView();
   return (
     <>
-      <WorkspaceHeading model={model} />
-      <WorkspaceToolbar model={model} />
+      <WorkspaceHeading />
+      <WorkspaceToolbar />
       <div id="view-panel" role="tabpanel" aria-labelledby={`tab-${view}`}>
         {!workspace.projects.length && !storageError ? (
-          <NoProjects readOnly={readOnly} onCreate={() => setModal({ kind: 'project' })} />
+          <NoProjects readOnly={readOnly} onCreate={() => openDialog({ kind: 'project' })} />
         ) : (
           children
         )}
@@ -39,11 +44,11 @@ export const WorkspaceOverview = ({ children }: { children: ReactNode }) => {
             ) : (
               <>
                 <Check size={13} />
-                Готово {done} из {scoped.length}
+                Готово {counts.done} из {scoped.length}
               </>
             )}
           </span>
-          <button onClick={() => setModal({ kind: 'shortcuts' })}>
+          <button onClick={() => openDialog({ kind: 'shortcuts' })}>
             <Keyboard size={13} />
             Сочетания клавиш
           </button>

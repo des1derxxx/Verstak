@@ -1,25 +1,25 @@
 'use client';
 
-import { useWorkspace } from '@/lib/workspace/workspace-context';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { Plus, Search } from 'lucide-react';
 import { emptyFilters } from '@/lib/model/task';
 import { TaskTable } from '@/components/task/task-table';
+import { useMembers } from '@/queries/members';
+import { useWorkspace } from '@/lib/workspace/workspace-context';
+import { useTaskActions } from '@/lib/workspace/use-workspace-actions';
+import { useTaskFilters, useTaskView } from '@/lib/workspace/use-workspace-location';
 export const ListPanel = () => {
-  const model = useWorkspace();
+  const { readOnly } = useWorkspace();
+  const { members } = useMembers();
   const {
-    readOnly,
-    selected,
-    members,
+    scope: selected,
     filtered,
-    sortedProjects,
-    activeFilters,
-    openTask,
-    saveTask,
-    setFilters,
-    newTask,
-  } = model;
+    projects: sortedProjects,
+    filtersActive: activeFilters,
+  } = useTaskView();
+  const { setFilters } = useTaskFilters();
+  const { openTask, saveTask, newTask } = useTaskActions();
   return (
     <div className={'list-view border border-line rounded-[5px] overflow-hidden'}>
       {filtered.length > 0 ? (

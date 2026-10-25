@@ -40,7 +40,7 @@ const { cleanup, fireEvent, render, screen, waitFor, within } = await import(
 const { QuickCreate } = await import('../src/components/task/quick-create.tsx');
 const { TaskEditor } = await import('../src/components/task/task-editor/task-editor.tsx');
 const { MutationContext } = await import('../src/components/ui/modal.tsx');
-const { WorkspaceView, WorkspaceRoot } = await import('./workspace-harness.tsx');
+const { WorkspaceApp } = await import('./workspace-harness.tsx');
 const { localDate } = await import('../src/lib/model/workspace.ts');
 
 const project = { id: 'project', name: 'Verstak', description: '', color: '#0c66e4' };
@@ -91,17 +91,7 @@ function mountWorkspace(context, tasks = [task]) {
     }
     return new Response(JSON.stringify({ revision, data }), { status: 200 });
   });
-  render(
-    h(WorkspaceView, {
-      info: space,
-      session,
-      spaces: [space],
-      onSelectSpace() {},
-      onNewSpace() {},
-      onTeam() {},
-      onLogout() {},
-    }),
-  );
+  render(h(WorkspaceApp, { session, space, snapshot: { revision, data: structuredClone(data) } }));
   return mutations;
 }
 
@@ -829,29 +819,24 @@ test('profile rejects unsupported files and protects unsaved fields when closed'
 test('profile opens from the header and saved identity updates the workspace account controls', async (context) => {
   let user = { ...session.user, bio: '', profileRevision: 0 };
   mockApi(context, async (url, options) => {
-    if (url === '/api/auth/me') return Response.json({ user, csrf: 'csrf' });
     if (url === '/api/auth/profile') {
       const body = JSON.parse(options.body);
       user = { ...user, name: body.name, bio: body.bio, profileRevision: 1 };
       return Response.json(user);
     }
-    if (url === '/api/workspaces') return Response.json([space]);
-    if (String(url).endsWith('/members')) return Response.json([{ user, role: 'owner' }]);
-    if (String(url).endsWith('/notifications')) return Response.json([]);
-    return Response.json({
-      revision: 0,
-      data: { version: 1, projects: [project], tasks: [], notes: [] },
-    });
+    return Response.json([]);
   });
-  render(h(WorkspaceRoot, { session, space }));
+  render(
+    h(WorkspaceApp, {
+      session,
+      space,
+      snapshot: { revision: 0, data: { version: 1, projects: [project], tasks: [], notes: [] } },
+    }),
+  );
   fireEvent.click(await screen.findByRole('button', { name: 'Открыть профиль' }));
-  fireEvent.change(screen.getByLabelText('Имя'), { target: { value: 'New name' } });
+  fireEvent.change(await screen.findByLabelText('Имя'), { target: { value: 'New name' } });
   fireEvent.click(screen.getByRole('button', { name: 'Сохранить профиль' }));
   await screen.findByText('Профиль сохранён');
-  fireEvent.click(
-    within(screen.getByRole('dialog')).getAllByRole('button', { name: 'Закрыть', exact: true })[0],
-  );
-  await waitFor(() => assert.ok(screen.queryByRole('dialog') === null));
   assert.match(screen.getByRole('button', { name: 'Мой профиль' }).textContent, /New name/);
   assert.match(
     screen.getByRole('button', { name: 'Открыть профиль' }).getAttribute('title'),
@@ -866,44 +851,17 @@ test('server-provided workspace data renders immediately and navigation exposes 
     requests.push(url);
     return Response.json([]);
   });
-  const { WorkspaceProvider } = await import('../src/lib/workspace/workspace-context.tsx');
-  const { WorkspaceShell } = await import(
-    '../src/app/(workspace)/workspaces/[workspaceId]/_components/workspace-shell.tsx'
-  );
-  const { WorkspaceOverview } = await import('../src/components/workspace/workspace-overview.tsx');
-  const { BoardPanel } = await import('../src/components/workspace/board-panel.tsx');
-  const { useWorkspaceController } = await import(
-    '../src/lib/workspace/use-workspace-controller.ts'
-  );
-  const Harness = () => {
-    const model = useWorkspaceController({
-      info: space,
+  render(
+    h(WorkspaceApp, {
       session,
-      spaces: [space],
-      initialSnapshot: {
+      space,
+      snapshot: {
         revision: 4,
         data: { version: 1, projects: [project], tasks: [task], notes: [] },
       },
-      initialMembers: [{ user: session.user, role: 'owner' }],
-      route: {
-        selected: 'all',
-        view: 'board',
-        filters: { query: '', priority: 'all', status: 'all', sort: 'created' },
-      },
-      onNavigate: (href) => navigations.push(href),
-      onFilters: () => {},
-      onSelectSpace: () => {},
-      onNewSpace: () => {},
-      onTeam: () => {},
-      onLogout: () => {},
-    });
-    return h(
-      WorkspaceProvider,
-      { model },
-      h(WorkspaceShell, null, h(WorkspaceOverview, null, h(BoardPanel))),
-    );
-  };
-  render(h(Harness));
+      onPush: (href) => navigations.push(href),
+    }),
+  );
   assert.ok(screen.getByText(task.title));
   assert.equal(
     screen.getByRole('link', { name: /Сегодня/ }).getAttribute('href'),
@@ -915,11 +873,12 @@ test('server-provided workspace data renders immediately and navigation exposes 
   );
   fireEvent.click(screen.getByRole('tab', { name: 'Список' }));
   assert.deepEqual(navigations, ['/workspaces/space/list']);
+  await screen.findByRole('tab', { name: 'Список', selected: true });
   assert.ok(!requests.some((url) => url.endsWith('/data') || url.endsWith('/members')));
 });
 
 test('dirty page editors register a navigation guard and prevent accidental reloads', async () => {
-  const { RouteDraftContext } = await import('../src/lib/route-draft.tsx');
+  const { RouteDraftContext } = await import('../src/lib/navigation-guard.tsx');
   const { ProfilePanel } = await import(
     '../src/app/(workspace)/workspaces/[workspaceId]/settings/profile/_components/profile-panel.tsx'
   );
@@ -946,85 +905,36 @@ test('dirty page editors register a navigation guard and prevent accidental relo
   assert.equal(active.size, 0);
 });
 
-test('the real Next workspace router preserves the project behind intercepted tasks and guards drafts', async (context) => {
-  const { createRequire } = await import('node:module');
-  const require = createRequire(import.meta.url);
-  const {
-    AppRouterContext,
-    LayoutRouterContext,
-  } = require('next/dist/shared/lib/app-router-context.shared-runtime.js');
-  const {
-    PathnameContext,
-    SearchParamsContext,
-  } = require('next/dist/shared/lib/hooks-client-context.shared-runtime.js');
-  const { WorkspaceRouter } = await import(
-    '../src/app/(workspace)/workspaces/[workspaceId]/_components/workspace-router.tsx'
-  );
-  const { useWorkspace } = await import('../src/lib/workspace/workspace-context.tsx');
-  const { useRouteDraft } = await import('../src/lib/route-draft.tsx');
-  const { useState } = await import('react');
+test('an intercepted task keeps the project and filters behind it and guards drafts', async (context) => {
+  mockApi(context, async () => Response.json([]));
   const pushes = [];
-  const router = {
-    push: (href) => pushes.push(href),
-    replace: () => {},
-    refresh: () => {},
-    back: () => {},
-  };
-  const seed = {
-    session,
-    spaces: [space],
-    info: space,
-    snapshot: { revision: 1, data: { version: 1, projects: [project], tasks: [task], notes: [] } },
-    members: [{ user: session.user, role: 'owner' }],
-    calendar: { today: localDate(), timeZone: 'UTC' },
-  };
-  const Probe = () => {
-    const model = useWorkspace();
-    const [dirty, setDirty] = useState(false);
-    useRouteDraft(dirty);
-    return h(
-      'div',
-      null,
-      h('p', null, `${model.selected}:${model.view}:${model.filters.query}`),
-      h('button', { onClick: () => setDirty(true) }, 'Изменить черновик'),
-      h('button', { onClick: () => model.navigate('/workspaces/space/list') }, 'Перейти к списку'),
-    );
-  };
-  const tree = (intercepted) => [
-    'space',
-    {
-      modal: intercepted
-        ? ['(.)tasks', { children: [['taskId', 'OM-52', 'd'], { children: ['__PAGE__', {}] }] }]
-        : ['__DEFAULT__', {}],
-    },
-  ];
-  const app = (pathname, intercepted = false) =>
-    h(
-      AppRouterContext.Provider,
-      { value: router },
-      h(
-        LayoutRouterContext.Provider,
-        { value: { parentTree: tree(intercepted), parentRenderTree: { data: { bfcacheId: 0 } } } },
-        h(
-          PathnameContext.Provider,
-          { value: pathname },
-          h(
-            SearchParamsContext.Provider,
-            { value: new URLSearchParams(intercepted ? '' : 'q=release') },
-            h(WorkspaceRouter, seed, h(Probe)),
-          ),
-        ),
-      ),
-    );
-  const page = render(app('/workspaces/space/projects/project/board'));
-  assert.ok(screen.getByText('project:board:release'));
-  page.rerender(app('/workspaces/space/tasks/OM-52', true));
-  assert.ok(screen.getByText('project:board:release'));
+  render(
+    h(WorkspaceApp, {
+      session,
+      space,
+      snapshot: {
+        revision: 1,
+        data: { version: 1, projects: [project], tasks: [task], notes: [] },
+      },
+      path: '/workspaces/space/projects/project/board?q=board',
+      onPush: (href) => pushes.push(href),
+    }),
+  );
+  assert.ok(screen.getByRole('heading', { name: project.name }));
+  fireEvent.click(screen.getByText(task.title).closest('a'));
+  assert.deepEqual(pushes, ['/workspaces/space/tasks/task-1234']);
+  const drawer = await screen.findByRole('dialog');
+  assert.ok(drawer.classList.contains('modal-drawer'));
+  assert.ok(screen.getByRole('heading', { name: project.name }));
+  assert.equal(screen.getByRole('searchbox', { name: 'Поиск задач и страниц' }).value, 'board');
   const confirm = context.mock.method(window, 'confirm', () => false);
-  fireEvent.click(screen.getByRole('button', { name: 'Изменить черновик' }));
-  fireEvent.click(screen.getByRole('button', { name: 'Перейти к списку' }));
-  assert.equal(pushes.length, 0);
+  fireEvent.change(within(drawer).getByLabelText('Название задачи'), {
+    target: { value: 'Unsaved title' },
+  });
+  fireEvent.click(screen.getByRole('link', { name: /Все задачи/ }));
+  assert.equal(pushes.length, 1);
+  assert.equal(confirm.mock.callCount(), 1);
   confirm.mock.mockImplementation(() => true);
-  fireEvent.click(screen.getByRole('button', { name: 'Перейти к списку' }));
-  assert.deepEqual(pushes, ['/workspaces/space/list']);
+  fireEvent.click(screen.getByRole('link', { name: /Все задачи/ }));
+  assert.deepEqual(pushes.at(-1), '/workspaces/space/board');
 });

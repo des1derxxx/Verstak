@@ -1,27 +1,25 @@
-import { workspacePath } from '@/lib/routes';
+'use client';
+
 import { IconButton, Button } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { Avatar } from '@/components/ui/avatar';
 import { Keyboard, Menu, Plus, Search, X } from 'lucide-react';
 import { NotificationBell } from '@/components/notification/notifications';
-import type { WorkspaceController } from '@/lib/workspace/use-workspace-controller';
-export const WorkspaceHeader = ({ model }: { model: WorkspaceController }) => {
-  const {
-    setSidebarOpen,
-    select,
-    navigate,
-    info,
-    searchRef,
-    view,
-    filters,
-    setFilters,
-    readOnly,
-    saving,
-    newTask,
-    setModal,
-    session,
-    onProfile,
-  } = model;
+import { useNavigation } from '@/lib/navigation-guard';
+import { notificationsPath, settingsPath, viewPath } from '@/lib/routes';
+import { useWorkspace } from '@/lib/workspace/workspace-context';
+import { useWorkspaceUi } from '@/lib/workspace/workspace-ui';
+import { useTaskActions } from '@/lib/workspace/use-workspace-actions';
+import { useTaskFilters, useWorkspaceLocation } from '@/lib/workspace/use-workspace-location';
+import { useWorkspaceSaveState } from '@/queries/workspace';
+export const WorkspaceHeader = () => {
+  const { info, session, readOnly } = useWorkspace();
+  const { setSidebarOpen, openDialog, searchRef } = useWorkspaceUi();
+  const { navigate } = useNavigation();
+  const { view } = useWorkspaceLocation();
+  const { filters, setFilters } = useTaskFilters();
+  const { newTask } = useTaskActions();
+  const { saving } = useWorkspaceSaveState();
   return (
     <>
       <header
@@ -46,7 +44,7 @@ export const WorkspaceHeader = ({ model }: { model: WorkspaceController }) => {
             'max-[760px]:[&_.brand-mark]:h-6.5 max-[760px]:[&_.brand-mark_svg]:w-[23px]',
             'max-[760px]:[&_.brand-mark_svg]:h-[23px] max-[520px]:[&>span:last-child]:hidden',
           )}
-          onClick={() => select('all')}
+          onClick={() => navigate(viewPath(info.id))}
           aria-label="Verstak — все задачи"
         >
           <span
@@ -132,11 +130,11 @@ export const WorkspaceHeader = ({ model }: { model: WorkspaceController }) => {
         <IconButton
           className={cn('shortcuts-button', 'max-[760px]:hidden')}
           aria-label="Сочетания клавиш"
-          onClick={() => setModal({ kind: 'shortcuts' })}
+          onClick={() => openDialog({ kind: 'shortcuts' })}
         >
           <Keyboard size={19} />
         </IconButton>
-        <NotificationBell onOpen={() => navigate(`${workspacePath(info.id)}/notifications`)} />
+        <NotificationBell onOpen={() => navigate(notificationsPath(info.id))} />
         <button
           className={
             'profile-trigger inline-flex rounded-full p-0.5 shrink-0 [&:hover]:shadow-[0_0_0_2px_#cce0ff]'
@@ -144,7 +142,7 @@ export const WorkspaceHeader = ({ model }: { model: WorkspaceController }) => {
           aria-label="Открыть профиль"
           aria-haspopup="dialog"
           title={`${session.user.name} · ${session.user.email}`}
-          onClick={onProfile}
+          onClick={() => navigate(settingsPath(info.id, 'profile'))}
         >
           <Avatar
             user={session.user}

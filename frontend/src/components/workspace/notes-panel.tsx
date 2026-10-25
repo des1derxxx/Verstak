@@ -1,17 +1,22 @@
 'use client';
 
 import { useCalendar } from '@/lib/calendar';
-
 import { RouteLink } from '@/components/ui/route-link';
-import { useWorkspace } from '@/lib/workspace/workspace-context';
-import { workspacePath } from '@/lib/routes';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { FileText, Plus } from 'lucide-react';
+import { useNavigation } from '@/lib/navigation-guard';
+import { notePath } from '@/lib/routes';
+import { useWorkspace } from '@/lib/workspace/workspace-context';
+import { useNoteActions } from '@/lib/workspace/use-workspace-actions';
+import { useTaskFilters, useTaskView } from '@/lib/workspace/use-workspace-location';
 export const NotesPanel = () => {
   const { timeZone } = useCalendar();
-  const model = useWorkspace();
-  const { workspace, readOnly, notes, filters, openPage } = model;
+  const { info, readOnly } = useWorkspace();
+  const { navigate } = useNavigation();
+  const { workspace, notes } = useTaskView();
+  const { filters } = useTaskFilters();
+  const { newNote: openPage } = useNoteActions();
   return (
     <div
       className={cn(
@@ -21,8 +26,8 @@ export const NotesPanel = () => {
     >
       {notes.map((note) => (
         <RouteLink
-          href={`${workspacePath(model.info.id)}/pages/${encodeURIComponent(note.id)}`}
-          navigate={model.navigate}
+          href={notePath(info.id, note.id)}
+          navigate={navigate}
           className={cn(
             'note-card text-left p-[21px] border border-line rounded-[5px] bg-white min-h-55 flex flex-col',
             '[&:hover]:border-[#85b8ff] [&:hover]:shadow-[0_2px_6px_#091e421a] [&_h2]:text-[15px]',

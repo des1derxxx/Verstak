@@ -1,28 +1,32 @@
+'use client';
+
 import { RouteLink } from '@/components/ui/route-link';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { Dropdown } from '@/components/ui/dropdown';
-import { ArrowDownWideNarrow, Plus, X } from 'lucide-react';
+import { ArrowDownWideNarrow, FileText, LayoutGrid, List, ListTodo, Plus, X } from 'lucide-react';
 import { priorityNames, statuses, statusNames } from '@/lib/model/workspace';
 import { emptyFilters } from '@/lib/model/task';
 import type { Sort } from '@/lib/model/task';
-import type { WorkspaceController } from '@/lib/workspace/use-workspace-controller';
-export const WorkspaceToolbar = ({ model }: { model: WorkspaceController }) => {
-  const {
-    navigationViews,
-    navigate,
-    hrefFor,
-    view,
-    setView,
-    backlog,
-    filters,
-    setFilters,
-    activeFilters,
-    readOnly,
-    openPage,
-    filtered,
-    scoped,
-  } = model;
+import { useNavigation } from '@/lib/navigation-guard';
+import { viewPath } from '@/lib/routes';
+import { useWorkspace } from '@/lib/workspace/workspace-context';
+import { useNoteActions } from '@/lib/workspace/use-workspace-actions';
+import { useTaskFilters, useTaskView } from '@/lib/workspace/use-workspace-location';
+const views = [
+  { id: 'board', label: 'Доска', icon: LayoutGrid },
+  { id: 'backlog', label: 'Бэклог', icon: ListTodo },
+  { id: 'list', label: 'Список', icon: List },
+  { id: 'notes', label: 'Страницы', icon: FileText },
+] as const;
+export const WorkspaceToolbar = () => {
+  const { info, readOnly } = useWorkspace();
+  const { navigate } = useNavigation();
+  const { view, scope, filtered, scoped, counts, filtersActive: activeFilters } = useTaskView();
+  const { filters, setFilters } = useTaskFilters();
+  const { newNote: openPage } = useNoteActions();
+  const navigationViews = scope === 'today' ? views.filter((item) => item.id !== 'notes') : views;
+  const hrefFor = (mode: (typeof views)[number]['id']) => viewPath(info.id, scope, mode);
   return (
     <>
       <div
@@ -51,13 +55,13 @@ export const WorkspaceToolbar = ({ model }: { model: WorkspaceController }) => {
           else if (event.key === 'End') next = navigationViews.length - 1;
           else return;
           event.preventDefault();
-          setView(navigationViews[next].id);
+          navigate(hrefFor(navigationViews[next].id));
           document.getElementById(`tab-${navigationViews[next].id}`)?.focus();
         }}
       >
         {navigationViews.map((tab) => (
           <RouteLink
-            href={hrefFor(undefined, tab.id)}
+            href={hrefFor(tab.id)}
             navigate={navigate}
             key={tab.id}
             id={`tab-${tab.id}`}
@@ -73,14 +77,14 @@ export const WorkspaceToolbar = ({ model }: { model: WorkspaceController }) => {
           >
             <tab.icon size={16} />
             {tab.label}
-            {tab.id === 'backlog' && backlog > 0 && (
+            {tab.id === 'backlog' && counts.backlog > 0 && (
               <span
                 className={cn(
                   'tab-count min-w-4.5 py-px px-[5px] text-center rounded-[3px] text-[10px] leading-4 bg-[#dfe1e6]',
                   'text-[#44546f]',
                 )}
               >
-                {backlog}
+                {counts.backlog}
               </span>
             )}
           </RouteLink>

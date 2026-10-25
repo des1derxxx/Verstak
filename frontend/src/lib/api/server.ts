@@ -5,7 +5,10 @@ import { cookies, headers } from 'next/headers';
 import { notFound, redirect } from 'next/navigation';
 import { safeReturnPath } from '@/lib/routes';
 import type { Member, Session, Snapshot, Space } from '@/lib/api/types';
+import { dehydrate } from '@tanstack/react-query';
 import { parseWorkspace } from '@/lib/model/workspace';
+import { makeQueryClient } from '@/lib/query-client';
+import { queryKeys } from '@/queries/keys';
 export class ServerApiError extends Error {
   constructor(public readonly status: number) {
     super('Не удалось загрузить данные с сервера');
@@ -85,4 +88,12 @@ export const requireTask = async (workspaceId: string, ref: string) => {
   const task = seed.snapshot.data.tasks.find((item) => item.id === ref || item.key === ref);
   if (!task) notFound();
   return task;
+};
+// Seeds the client query cache with data the server already loaded for this request.
+export const workspaceState = async (id: string) => {
+  const seed = await getWorkspace(id);
+  const client = makeQueryClient();
+  client.setQueryData(queryKeys.workspaceData(id), seed.snapshot);
+  client.setQueryData(queryKeys.members(id), seed.members);
+  return dehydrate(client);
 };

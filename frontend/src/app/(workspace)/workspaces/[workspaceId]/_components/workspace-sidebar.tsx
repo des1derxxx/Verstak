@@ -1,5 +1,6 @@
+'use client';
+
 import { useCalendar } from '@/lib/calendar';
-import { workspacePath } from '@/lib/routes';
 import { RouteLink } from '@/components/ui/route-link';
 import { IconButton } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
@@ -17,28 +18,46 @@ import {
   Users,
 } from 'lucide-react';
 import { scopeTasks } from '@/lib/model/task';
-import type { WorkspaceController } from '@/lib/workspace/use-workspace-controller';
-export const WorkspaceSidebar = ({ model }: { model: WorkspaceController }) => {
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { api, ApiError, setCsrf } from '@/lib/api/client';
+import { useNavigation } from '@/lib/navigation-guard';
+import { settingsPath, viewPath } from '@/lib/routes';
+import { useWorkspace } from '@/lib/workspace/workspace-context';
+import { useWorkspaceUi } from '@/lib/workspace/workspace-ui';
+import { useTaskView } from '@/lib/workspace/use-workspace-location';
+const useLogout = () => {
+  const router = useRouter();
+  const { confirmLeave } = useNavigation();
+  const [error, setError] = useState('');
+  const leave = () => {
+    setCsrf('');
+    router.replace('/login');
+    router.refresh();
+  };
+  const logout = () => {
+    if (!confirmLeave('Есть несохранённые изменения. Выйти из аккаунта?')) return;
+    setError('');
+    void api('/auth/logout', 'POST', {})
+      .then(leave)
+      .catch((error: Error) => {
+        if (error instanceof ApiError && error.status === 401) leave();
+        else setError(error.message);
+      });
+  };
+  return { logout, error };
+};
+export const WorkspaceSidebar = () => {
   const { today } = useCalendar();
-  const {
-    sidebarOpen,
-    setSidebarOpen,
-    info,
-    onSelectSpace,
-    spaces,
-    onNewSpace,
-    selected,
-    navigate,
-    hrefFor,
-    workspace,
-    readOnly,
-    setModal,
-    sortedProjects,
-    onTeam,
-    onProfile,
-    session,
-    onLogout,
-  } = model;
+  const { info, spaces, session, readOnly } = useWorkspace();
+  const { sidebarOpen, setSidebarOpen, openDialog } = useWorkspaceUi();
+  const { navigate: go } = useNavigation();
+  const { workspace, projects: sortedProjects, scope: selected } = useTaskView();
+  const { logout, error } = useLogout();
+  const navigate = (href: string) => {
+    setSidebarOpen(false);
+    go(href);
+  };
   return (
     <>
       {sidebarOpen && (
@@ -87,11 +106,11 @@ export const WorkspaceSidebar = ({ model }: { model: WorkspaceController }) => {
             <Dropdown
               id="workspace-switcher"
               value={info.id}
-              onValueChange={(value) => onSelectSpace(value)}
+              onValueChange={(value) => navigate(viewPath(value))}
               options={[...spaces.map((space) => ({ value: space.id, label: space.name }))]}
             />
           </div>
-          <IconButton aria-label="Создать пространство" onClick={onNewSpace}>
+          <IconButton aria-label="Создать пространство" onClick={() => navigate('/workspaces/new')}>
             <Plus size={16} />
           </IconButton>
         </div>
@@ -109,7 +128,7 @@ export const WorkspaceSidebar = ({ model }: { model: WorkspaceController }) => {
           aria-label="Задачи"
         >
           <RouteLink
-            href={hrefFor('all', 'board')}
+            href={viewPath(info.id)}
             navigate={navigate}
             className={
               selected === 'all'
@@ -130,7 +149,7 @@ export const WorkspaceSidebar = ({ model }: { model: WorkspaceController }) => {
             </span>
           </RouteLink>
           <RouteLink
-            href={hrefFor('today', 'list')}
+            href={viewPath(info.id, 'today', 'list')}
             navigate={navigate}
             className={
               selected === 'today'
@@ -163,7 +182,7 @@ export const WorkspaceSidebar = ({ model }: { model: WorkspaceController }) => {
           <IconButton
             aria-label="Создать проект"
             disabled={readOnly}
-            onClick={() => setModal({ kind: 'project' })}
+            onClick={() => openDialog({ kind: 'project' })}
           >
             <Plus size={16} />
           </IconButton>
@@ -184,7 +203,7 @@ export const WorkspaceSidebar = ({ model }: { model: WorkspaceController }) => {
         >
           {sortedProjects.map((item) => (
             <RouteLink
-              href={hrefFor(item.id, 'board')}
+              href={viewPath(info.id, item.id)}
               navigate={navigate}
               key={item.id}
               className={
@@ -217,7 +236,7 @@ export const WorkspaceSidebar = ({ model }: { model: WorkspaceController }) => {
             <p className={'sidebar-empty py-2 px-3 text-xs text-subtle'}>Проекты появятся здесь</p>
           )}
           {!readOnly && (
-            <button className={'add-project'} onClick={() => setModal({ kind: 'project' })}>
+            <button className={'add-project'} onClick={() => openDialog({ kind: 'project' })}>
               <Plus size={16} />
               Создать проект
             </button>
@@ -229,7 +248,7 @@ export const WorkspaceSidebar = ({ model }: { model: WorkspaceController }) => {
               'data-link w-full flex items-center gap-2.5 py-2.5 px-3 rounded text-left text-xs text-muted',
               '[&:hover]:bg-[#091e4208] [&:hover]:text-ink',
             )}
-            onClick={onTeam}
+            onClick={() => navigate(settingsPath(info.id, 'members'))}
           >
             <Users size={17} />
             Участники
@@ -239,7 +258,7 @@ export const WorkspaceSidebar = ({ model }: { model: WorkspaceController }) => {
               'data-link w-full flex items-center gap-2.5 py-2.5 px-3 rounded text-left text-xs text-muted',
               '[&:hover]:bg-[#091e4208] [&:hover]:text-ink',
             )}
-            onClick={() => navigate(`${workspacePath(info.id)}/settings/tokens`)}
+            onClick={() => navigate(settingsPath(info.id, 'tokens'))}
           >
             <Settings2 size={17} />
             API-токены
@@ -249,7 +268,7 @@ export const WorkspaceSidebar = ({ model }: { model: WorkspaceController }) => {
               'data-link w-full flex items-center gap-2.5 py-2.5 px-3 rounded text-left text-xs text-muted',
               '[&:hover]:bg-[#091e4208] [&:hover]:text-ink',
             )}
-            onClick={() => navigate(`${workspacePath(info.id)}/settings/data`)}
+            onClick={() => navigate(settingsPath(info.id, 'data'))}
           >
             <Database size={17} />
             Данные пространства
@@ -270,7 +289,7 @@ export const WorkspaceSidebar = ({ model }: { model: WorkspaceController }) => {
               )}
               aria-label="Мой профиль"
               aria-haspopup="dialog"
-              onClick={onProfile}
+              onClick={() => navigate(settingsPath(info.id, 'profile'))}
             >
               <Avatar user={session.user} />
               <span
@@ -289,10 +308,15 @@ export const WorkspaceSidebar = ({ model }: { model: WorkspaceController }) => {
                 </span>
               </span>
             </button>
-            <IconButton aria-label="Выйти из аккаунта" title="Выйти" onClick={onLogout}>
+            <IconButton aria-label="Выйти из аккаунта" title="Выйти" onClick={logout}>
               <LogOut size={17} />
             </IconButton>
           </div>
+          {error && (
+            <p role="alert" className="px-1 pt-2 text-xs text-danger">
+              {error}
+            </p>
+          )}
         </div>
       </aside>
     </>

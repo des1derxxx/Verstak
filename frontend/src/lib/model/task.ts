@@ -1,6 +1,8 @@
 import { isDue, localDate } from '@/lib/model/workspace.ts';
-import type { Priority, Status, Task, Workspace } from '@/lib/model/workspace.ts';
+import type { Note, Priority, Project, Status, Task, Workspace } from '@/lib/model/workspace.ts';
 export type View = 'board' | 'backlog' | 'list' | 'notes';
+// 'all', 'today' or a project ID.
+export type Scope = string;
 export type Sort = 'created' | 'priority' | 'due';
 export type Filters = {
   query: string;
@@ -9,6 +11,8 @@ export type Filters = {
   sort: Sort;
 };
 export const emptyFilters: Filters = { query: '', priority: 'all', status: 'all', sort: 'created' };
+export const hasActiveFilters = (filters: Filters): boolean =>
+  Boolean(filters.query.trim() || filters.priority !== 'all' || filters.status !== 'all');
 const priorityOrder: Record<Priority, number> = { high: 0, medium: 1, low: 2 };
 export const taskKey = (task: Task): string => {
   return task.key || `#${task.id.replaceAll('-', '').slice(0, 8).toUpperCase()}`;
@@ -32,10 +36,10 @@ export const createTask = (
     createdAt: new Date().toISOString(),
   };
 };
-export const scopeTasks = (workspace: Workspace, selected: string, today = localDate()): Task[] => {
-  if (selected === 'today') return workspace.tasks.filter((task) => isDue(task, today));
-  if (selected === 'all') return workspace.tasks;
-  return workspace.tasks.filter((task) => task.projectId === selected);
+export const scopeTasks = (workspace: Workspace, scope: Scope, today = localDate()): Task[] => {
+  if (scope === 'today') return workspace.tasks.filter((task) => isDue(task, today));
+  if (scope === 'all') return workspace.tasks;
+  return workspace.tasks.filter((task) => task.projectId === scope);
 };
 export const filterTasks = (workspace: Workspace, tasks: Task[], filters: Filters): Task[] => {
   const query = filters.query.trim().toLocaleLowerCase('ru');
@@ -70,6 +74,22 @@ export const filterTasks = (workspace: Workspace, tasks: Task[], filters: Filter
       }
       return Date.parse(a.createdAt) - Date.parse(b.createdAt) || a.id.localeCompare(b.id);
     });
+};
+export const sortProjects = (projects: Project[]): Project[] =>
+  [...projects].sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+export const filterNotes = (
+  notes: Note[],
+  projectId: string | undefined,
+  query: string,
+): Note[] => {
+  const needle = query.trim().toLocaleLowerCase('ru');
+  return notes
+    .filter(
+      (note) =>
+        (!projectId || note.projectId === projectId) &&
+        (!needle || `${note.title} ${note.body}`.toLocaleLowerCase('ru').includes(needle)),
+    )
+    .sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt));
 };
 export const isTypingTarget = (target: EventTarget | null): boolean => {
   return (

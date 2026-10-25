@@ -1,14 +1,23 @@
-import { createTask } from '@/lib/model/task';
-import type { WorkspaceController } from '@/lib/workspace/use-workspace-controller';
-import { useWorkspace } from '@/lib/workspace/workspace-context';
+'use client';
+
 import dynamic from 'next/dynamic';
 import { PageLoading } from '@/components/ui/page-loading';
 import { cn } from '@/lib/cn';
 import { Modal } from '@/components/ui/modal';
+import { useWorkspace } from '@/lib/workspace/workspace-context';
+import { useWorkspaceUi } from '@/lib/workspace/workspace-ui';
+import {
+  useNoteActions,
+  useProjectActions,
+  useTaskActions,
+} from '@/lib/workspace/use-workspace-actions';
+import { useTaskView } from '@/lib/workspace/use-workspace-location';
+import { useMembers } from '@/queries/members';
+import { useRefreshWorkspace } from '@/queries/workspace';
 const EditorLoading = () => {
-  const model = useWorkspace();
+  const { closeDialog } = useWorkspaceUi();
   return (
-    <Modal title="Открываем редактор" onClose={() => model.setModal(null)}>
+    <Modal title="Открываем редактор" onClose={closeDialog}>
       <PageLoading label="Загружаем…" />
     </Modal>
   );
@@ -19,135 +28,67 @@ const TaskEditor = dynamic(
 );
 const NoteForm = dynamic(
   () => import('@/components/note/note-form').then((module) => module.NoteForm),
-  {
-    loading: EditorLoading,
-  },
+  { loading: EditorLoading },
 );
 const ProjectForm = dynamic(
   () => import('@/components/project/project-form').then((module) => module.ProjectForm),
   { loading: EditorLoading },
 );
-export const WorkspaceDialogs = ({ model }: { model: WorkspaceController }) => {
-  const {
-    modal,
-    sortedProjects,
-    workspace,
-    members,
-    membersError,
-    info,
-    refresh,
-    openTask,
-    setModal,
-    selected,
-    saveTask,
-    commit,
-    select,
-  } = model;
+export const WorkspaceDialogs = () => {
+  const { info } = useWorkspace();
+  const { dialog, closeDialog } = useWorkspaceUi();
+  const { workspace, projects, scope } = useTaskView();
+  const { members, error: membersError } = useMembers();
+  const refresh = useRefreshWorkspace();
+  const tasks = useTaskActions();
+  const projectActions = useProjectActions();
+  const notes = useNoteActions();
+  const closeOn = (done: boolean) => {
+    if (done) closeDialog();
+  };
   return (
     <>
-      {modal?.kind === 'task' && sortedProjects.length > 0 && (
+      {dialog?.kind === 'task' && projects.length > 0 && (
         <TaskEditor
-          key={modal.task?.id ?? modal.seed?.id ?? 'new'}
-          seed={modal.seed}
+          key={dialog.task?.id ?? dialog.seed?.id ?? 'new'}
+          seed={dialog.seed}
           tasks={workspace.tasks}
           members={members}
           membersError={membersError}
           workspaceId={info.id}
-          onActivity={() => refresh()}
-          onOpenTask={openTask}
-          onSubtask={(parent) =>
-            setModal({
-              kind: 'task',
-              seed: { ...createTask(parent.projectId), parentId: parent.id },
-            })
-          }
-          task={modal.task}
-          status={modal.status}
-          projects={sortedProjects}
-          projectId={selected}
-          today={selected === 'today'}
-          onClose={() => setModal(null)}
-          onSave={saveTask}
-          onDelete={(id) =>
-            commit(
-              { ...workspace, tasks: workspace.tasks.filter((task) => task.id !== id) },
-              'Задача удалена',
-            )
-          }
+          onActivity={refresh}
+          onOpenTask={tasks.openTask}
+          onSubtask={tasks.newSubtask}
+          task={dialog.task}
+          status={dialog.status}
+          projects={projects}
+          projectId={scope}
+          today={scope === 'today'}
+          onClose={closeDialog}
+          onSave={tasks.saveTask}
+          onDelete={tasks.deleteTask}
         />
       )}
-      {modal?.kind === 'project' && (
+      {dialog?.kind === 'project' && (
         <ProjectForm
-          project={modal.project}
-          onClose={() => setModal(null)}
-          onSave={async (item) => {
-            const exists = workspace.projects.some((project) => project.id === item.id);
-            if (
-              await commit(
-                {
-                  ...workspace,
-                  projects: exists
-                    ? workspace.projects.map((project) => (project.id === item.id ? item : project))
-                    : [...workspace.projects, item],
-                },
-                exists ? 'Проект обновлён' : 'Проект создан',
-              )
-            ) {
-              select(item.id);
-              setModal(null);
-            }
-          }}
-          onDelete={async (id) => {
-            if (
-              await commit(
-                {
-                  ...workspace,
-                  projects: workspace.projects.filter((project) => project.id !== id),
-                  tasks: workspace.tasks.filter((task) => task.projectId !== id),
-                  notes: workspace.notes.filter((note) => note.projectId !== id),
-                },
-                'Проект удалён',
-              )
-            ) {
-              select('all');
-              setModal(null);
-            }
-          }}
+          project={dialog.project}
+          onClose={closeDialog}
+          onSave={async (project) => closeOn(await projectActions.saveProject(project))}
+          onDelete={async (id) => closeOn(await projectActions.deleteProject(id))}
         />
       )}
-      {modal?.kind === 'note' && sortedProjects.length > 0 && (
+      {dialog?.kind === 'note' && projects.length > 0 && (
         <NoteForm
-          note={modal.note}
-          projects={sortedProjects}
-          projectId={selected}
-          onClose={() => setModal(null)}
-          onSave={async (note) => {
-            if (
-              await commit(
-                {
-                  ...workspace,
-                  notes: workspace.notes.some((item) => item.id === note.id)
-                    ? workspace.notes.map((item) => (item.id === note.id ? note : item))
-                    : [...workspace.notes, note],
-                },
-                'Страница сохранена',
-              )
-            )
-              setModal(null);
-          }}
-          onDelete={async (id) => {
-            if (
-              await commit(
-                { ...workspace, notes: workspace.notes.filter((note) => note.id !== id) },
-                'Страница удалена',
-              )
-            )
-              setModal(null);
-          }}
+          note={dialog.note}
+          projects={projects}
+          projectId={scope}
+          onClose={closeDialog}
+          onSave={async (note) => closeOn(await notes.saveNote(note))}
+          onDelete={async (id) => closeOn(await notes.deleteNote(id))}
         />
       )}
-      {modal?.kind === 'shortcuts' && (
-        <Modal title="Сочетания клавиш" onClose={() => setModal(null)}>
+      {dialog?.kind === 'shortcuts' && (
+        <Modal title="Сочетания клавиш" onClose={closeDialog}>
           <div
             className={cn(
               'shortcuts-list py-5 px-6 [&>p]:text-xs [&>p]:leading-5 [&>p]:text-muted [&>p]:mb-[15px]',

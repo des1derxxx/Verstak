@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import '@/app/globals.css';
+import { Providers } from '@/app/providers';
 // The CSP nonce must be generated for every page, including error pages.
 export const dynamic = 'force-dynamic';
 
@@ -16,7 +17,9 @@ const RootLayout = ({
   children: ReactNode;
 }>) => (
   <html lang="ru">
-    <body>{children}</body>
+    <body>
+      <Providers>{children}</Providers>
+    </body>
   </html>
 );
 export default RootLayout;

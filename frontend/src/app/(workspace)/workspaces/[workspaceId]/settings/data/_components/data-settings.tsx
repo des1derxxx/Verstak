@@ -1,17 +1,27 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { DataPanel } from '@/app/(workspace)/workspaces/[workspaceId]/settings/data/_components/data-panel';
-import { useSettingsPage } from '@/lib/workspace/use-settings-page';
+import { useWorkspace } from '@/lib/workspace/workspace-context';
+import { useWorkspaceUi } from '@/lib/workspace/workspace-ui';
+import { useBackToWorkspace } from '@/lib/workspace/use-workspace-actions';
+import { useCommitWorkspace, useWorkspaceData } from '@/queries/workspace';
 export const DataSettings = () => {
-  const { model, close, router } = useSettingsPage();
+  const { info } = useWorkspace();
+  const { notify } = useWorkspaceUi();
+  const { workspace } = useWorkspaceData();
+  const commit = useCommitWorkspace();
+  const close = useBackToWorkspace();
+  const router = useRouter();
   return (
     <DataPanel
       inline
-      workspace={model.workspace}
-      canImport={model.info.role === 'owner'}
+      workspace={workspace}
+      canImport={info.role === 'owner'}
       onClose={close}
       onImport={async (next) => {
-        if (await model.commit(next, 'Данные импортированы', true)) {
+        if (await commit(() => next, true)) {
+          notify('Данные импортированы');
           close();
           router.refresh();
         }

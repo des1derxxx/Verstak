@@ -1,22 +1,37 @@
+'use client';
+
+import { useState } from 'react';
 import { Button, IconButton } from '@/components/ui/button';
 import { cn } from '@/lib/cn';
 import { ChevronRight, FolderKanban, RefreshCw, Settings2, Users } from 'lucide-react';
-import type { WorkspaceController } from '@/lib/workspace/use-workspace-controller';
-export const WorkspaceHeading = ({ model }: { model: WorkspaceController }) => {
-  const {
-    storageError,
-    saving,
-    refreshing,
-    refresh,
-    select,
-    project,
-    info,
-    title,
-    selected,
-    onTeam,
-    readOnly,
-    setModal,
-  } = model;
+import { useNavigation } from '@/lib/navigation-guard';
+import { settingsPath, viewPath } from '@/lib/routes';
+import { useWorkspace } from '@/lib/workspace/workspace-context';
+import { useWorkspaceUi } from '@/lib/workspace/workspace-ui';
+import { useTaskView } from '@/lib/workspace/use-workspace-location';
+import {
+  useClearSaveError,
+  useRefreshWorkspace,
+  useWorkspaceData,
+  useWorkspaceSaveState,
+} from '@/queries/workspace';
+export const WorkspaceHeading = () => {
+  const { info, readOnly } = useWorkspace();
+  const { openDialog } = useWorkspaceUi();
+  const { navigate } = useNavigation();
+  const { project, title, scope: selected } = useTaskView();
+  const { saving, error: saveError } = useWorkspaceSaveState();
+  const { error: loadError } = useWorkspaceData();
+  const storageError = saveError || loadError;
+  const reload = useRefreshWorkspace();
+  const clearSaveError = useClearSaveError();
+  const [refreshing, setRefreshing] = useState(false);
+  const refresh = async () => {
+    setRefreshing(true);
+    clearSaveError();
+    await reload();
+    setRefreshing(false);
+  };
   return (
     <>
       {storageError && (
@@ -32,7 +47,7 @@ export const WorkspaceHeading = ({ model }: { model: WorkspaceController }) => {
           <Button
             disabled={saving || refreshing}
             onClick={() => {
-              void refresh(true);
+              void refresh();
             }}
             variant="secondary"
             size="compact"
@@ -51,7 +66,7 @@ export const WorkspaceHeading = ({ model }: { model: WorkspaceController }) => {
           'max-[520px]:[&>span]:max-w-32.5',
         )}
       >
-        <button onClick={() => select('all')}>Пространство</button>
+        <button onClick={() => navigate(viewPath(info.id))}>Пространство</button>
         <ChevronRight size={12} />
         <span>{project ? 'Проекты' : info.name}</span>
         {project && (
@@ -121,14 +136,14 @@ export const WorkspaceHeading = ({ model }: { model: WorkspaceController }) => {
             title="Обновить"
             disabled={saving || refreshing}
             onClick={() => {
-              void refresh(true);
+              void refresh();
             }}
           >
             <RefreshCw size={17} />
           </IconButton>
           <Button
             className={'team-button max-[1000px]:hidden'}
-            onClick={onTeam}
+            onClick={() => navigate(settingsPath(info.id, 'members'))}
             variant="secondary"
             size="compact"
           >
@@ -139,7 +154,7 @@ export const WorkspaceHeading = ({ model }: { model: WorkspaceController }) => {
             <IconButton
               title="Настройки проекта"
               aria-label="Настройки проекта"
-              onClick={() => setModal({ kind: 'project', project })}
+              onClick={() => openDialog({ kind: 'project', project })}
             >
               <Settings2 size={18} />
             </IconButton>

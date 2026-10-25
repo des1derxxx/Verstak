@@ -1,19 +1,23 @@
 'use client';
 
-import { useWorkspace } from '@/lib/workspace/workspace-context';
 import { Board } from '@/components/task/board';
+import { useMembers } from '@/queries/members';
+import { useNavigation } from '@/lib/navigation-guard';
+import { viewPath } from '@/lib/routes';
+import { useWorkspace } from '@/lib/workspace/workspace-context';
+import { useTaskActions } from '@/lib/workspace/use-workspace-actions';
+import { useTaskView } from '@/lib/workspace/use-workspace-location';
 export const BoardPanel = () => {
-  const model = useWorkspace();
+  const { info } = useWorkspace();
+  const { navigate } = useNavigation();
+  const { members } = useMembers();
   const {
-    selected,
-    members,
+    scope: selected,
     filtered,
-    sortedProjects,
-    activeFilters,
-    openTask,
-    saveTask,
-    setView,
-  } = model;
+    projects: sortedProjects,
+    filtersActive: activeFilters,
+  } = useTaskView();
+  const { openTask, saveTask } = useTaskActions();
   return (
     <Board
       key={selected}
@@ -27,7 +31,7 @@ export const BoardPanel = () => {
       onOpen={openTask}
       onCreate={saveTask}
       onChange={saveTask}
-      onBacklog={() => setView('backlog')}
+      onBacklog={() => navigate(viewPath(info.id, selected, 'backlog'))}
     />
   );
 };

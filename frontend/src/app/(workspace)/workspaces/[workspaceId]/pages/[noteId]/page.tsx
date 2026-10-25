@@ -1,17 +1,23 @@
 import { notFound } from 'next/navigation';
-import { getWorkspace } from '@/lib/api/server';
+import { HydrationBoundary } from '@tanstack/react-query';
+import { getWorkspace, workspaceState } from '@/lib/api/server';
 import { NotePage } from '@/app/(workspace)/workspaces/[workspaceId]/pages/[noteId]/_components/note-page';
 type Props = { params: Promise<{ workspaceId: string; noteId: string }> };
-export const generateMetadata = async ({ params }: Props) => {
+const findNote = async ({ params }: Props) => {
   const p = await params;
   const seed = await getWorkspace(p.workspaceId);
-  const note = seed.snapshot.data.notes.find((item) => item.id === p.noteId);
-  return { title: note?.title ?? 'Страница не найдена' };
+  return seed.snapshot.data.notes.find((item) => item.id === p.noteId);
 };
-const Page = async ({ params }: Props) => {
-  const p = await params;
-  const seed = await getWorkspace(p.workspaceId);
-  if (!seed.snapshot.data.notes.some((item) => item.id === p.noteId)) notFound();
-  return <NotePage noteId={p.noteId} snapshot={seed.snapshot} />;
+export const generateMetadata = async (props: Props) => ({
+  title: (await findNote(props))?.title ?? 'Страница не найдена',
+});
+const Page = async (props: Props) => {
+  const p = await props.params;
+  if (!(await findNote(props))) notFound();
+  return (
+    <HydrationBoundary state={await workspaceState(p.workspaceId)}>
+      <NotePage noteId={p.noteId} />
+    </HydrationBoundary>
+  );
 };
 export default Page;

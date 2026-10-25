@@ -1,12 +1,18 @@
 'use client';
 
-import { useWorkspace } from '@/lib/workspace/workspace-context';
 import { cn } from '@/lib/cn';
 import { ListTodo } from 'lucide-react';
 import { BacklogSection } from '@/components/task/board';
+import { useNavigation } from '@/lib/navigation-guard';
+import { viewPath } from '@/lib/routes';
+import { useWorkspace } from '@/lib/workspace/workspace-context';
+import { useTaskActions } from '@/lib/workspace/use-workspace-actions';
+import { useTaskView } from '@/lib/workspace/use-workspace-location';
 export const BacklogPanel = () => {
-  const model = useWorkspace();
-  const { selected, filtered, sortedProjects, openTask, saveTask, setView, inProgress } = model;
+  const { info } = useWorkspace();
+  const { navigate } = useNavigation();
+  const { scope: selected, filtered, projects: sortedProjects, counts } = useTaskView();
+  const { openTask, saveTask } = useTaskActions();
   return (
     <div className={'backlog-view'}>
       <div
@@ -31,15 +37,17 @@ export const BacklogPanel = () => {
           onChange={saveTask}
         />
       ))}
-      {inProgress > 0 && (
+      {counts.progress > 0 && (
         <p
           className={cn(
             'backlog-footnote text-muted text-xs [&_button]:text-brand [&_button]:py-0 [&_button]:px-[3px]',
             '[&_button]:text-xs',
           )}
         >
-          Сейчас в работе: {inProgress}.{' '}
-          <button onClick={() => setView('board')}>Открыть доску</button>
+          Сейчас в работе: {counts.progress}.{' '}
+          <button onClick={() => navigate(viewPath(info.id, selected, 'board'))}>
+            Открыть доску
+          </button>
         </p>
       )}
     </div>
