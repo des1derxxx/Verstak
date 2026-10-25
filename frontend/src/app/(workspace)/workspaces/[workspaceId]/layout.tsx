@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import { getWorkspace } from '@/shared/api/server';
-import { WorkspaceRouter } from '@/application/WorkspaceRouter';
-import { WorkspaceShell } from '@/features/workspaces/WorkspaceShell';
+import { getWorkspace } from '@/lib/api/server';
+import { WorkspaceRouter } from '@/app/(workspace)/workspaces/[workspaceId]/_components/workspace-router';
+import { WorkspaceShell } from '@/app/(workspace)/workspaces/[workspaceId]/_components/workspace-shell';
 const WorkspaceLayout = async ({
   children,
   modal,

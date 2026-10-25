@@ -1,5 +1,5 @@
-import { WorkspaceOverview } from '@/features/workspaces/WorkspaceOverview';
-import { ListPanel } from '@/features/workspaces/components/ListPanel';
+import { WorkspaceOverview } from '@/components/workspace/workspace-overview';
+import { ListPanel } from '@/components/workspace/list-panel';
 export const metadata = { title: 'Список задач' };
 const Page = () => (
   <WorkspaceOverview>

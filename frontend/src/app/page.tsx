@@ -1,6 +1,6 @@
-import { getSession, getSpaces } from '@/shared/api/server';
-import { EntryRedirect } from '@/application/EntryRedirect';
-import { viewPath } from '@/shared/lib/routes';
+import { getSession, getSpaces } from '@/lib/api/server';
+import { EntryRedirect } from '@/app/_components/entry-redirect';
+import { viewPath } from '@/lib/routes';
 const Home = async () => {
   const session = await getSession();
   const spaces = session ? await getSpaces() : [];

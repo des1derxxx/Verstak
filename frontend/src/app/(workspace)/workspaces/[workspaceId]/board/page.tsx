@@ -1,5 +1,5 @@
-import { WorkspaceOverview } from '@/features/workspaces/WorkspaceOverview';
-import { BoardPanel } from '@/features/workspaces/components/BoardPanel';
+import { WorkspaceOverview } from '@/components/workspace/workspace-overview';
+import { BoardPanel } from '@/components/workspace/board-panel';
 export const metadata = { title: 'Доска' };
 const Page = () => (
   <WorkspaceOverview>

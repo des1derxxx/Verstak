@@ -1,2 +1,2 @@
-import { PageLoading } from '@/shared/ui/PageLoading';
+import { PageLoading } from '@/components/ui/page-loading';
 export default PageLoading;

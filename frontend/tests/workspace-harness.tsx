@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import type { WorkspaceControllerProps } from '../src/features/workspaces/types';
-import { WorkspaceProvider } from '../src/features/workspaces/WorkspaceContext';
-import { WorkspaceShell } from '../src/features/workspaces/WorkspaceShell';
-import { WorkspaceOverview } from '../src/features/workspaces/WorkspaceOverview';
-import { BoardPanel } from '../src/features/workspaces/components/BoardPanel';
-import { BacklogPanel } from '../src/features/workspaces/components/BacklogPanel';
-import { ListPanel } from '../src/features/workspaces/components/ListPanel';
-import { NotesPanel } from '../src/features/workspaces/components/NotesPanel';
-import { useWorkspaceController } from '../src/features/workspaces/hooks/useWorkspaceController';
-import { readWorkspaceRoute, viewPath } from '../src/shared/lib/routes';
-import { ProfilePanel } from '../src/features/account/ProfilePanel';
+import type { WorkspaceControllerProps } from '../src/lib/workspace/types';
+import { WorkspaceProvider } from '../src/lib/workspace/workspace-context';
+import { WorkspaceShell } from '../src/app/(workspace)/workspaces/[workspaceId]/_components/workspace-shell';
+import { WorkspaceOverview } from '../src/components/workspace/workspace-overview';
+import { BoardPanel } from '../src/components/workspace/board-panel';
+import { BacklogPanel } from '../src/components/workspace/backlog-panel';
+import { ListPanel } from '../src/components/workspace/list-panel';
+import { NotesPanel } from '../src/components/workspace/notes-panel';
+import { useWorkspaceController } from '../src/lib/workspace/use-workspace-controller';
+import { readWorkspaceRoute, viewPath } from '../src/lib/routes';
+import { ProfilePanel } from '../src/app/(workspace)/workspaces/[workspaceId]/settings/profile/_components/profile-panel';
 export const WorkspaceView = (
   props: Omit<WorkspaceControllerProps, 'route' | 'onNavigate' | 'onFilters'>,
 ) => {

@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { viewPath } from '@/shared/lib/routes';
+import { viewPath } from '@/lib/routes';
 const ProjectIndex = async ({
   params,
 }: {

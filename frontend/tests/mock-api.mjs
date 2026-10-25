@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { http } from '../src/shared/api/client.ts';
+import { http } from '../src/lib/api/client.ts';
 
 // Exercise the actual Axios interceptors and JSON transforms without network access.
 export const mockApi = (context, handler) => {

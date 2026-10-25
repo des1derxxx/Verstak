@@ -1,6 +1,6 @@
-import { WorkspaceOverview } from '@/features/workspaces/WorkspaceOverview';
-import { BoardPanel } from '@/features/workspaces/components/BoardPanel';
-import { requireProject } from '@/shared/api/server';
+import { WorkspaceOverview } from '@/components/workspace/workspace-overview';
+import { BoardPanel } from '@/components/workspace/board-panel';
+import { requireProject } from '@/lib/api/server';
 type Props = { params: Promise<{ workspaceId: string; projectId: string }> };
 export const generateMetadata = async ({ params }: Props) => {
   const p = await params;

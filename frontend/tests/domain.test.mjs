@@ -1,9 +1,9 @@
-import { diffWorkspace } from '../src/shared/api/workspaces.ts';
+import { diffWorkspace } from '../src/lib/api/workspace-data.ts';
 import { mockApi } from './mock-api.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { isDue, moveTask, parseWorkspace } from '../src/shared/model/workspace.ts';
-import { api, ApiError, setCsrf } from '../src/shared/api/client.ts';
+import { isDue, moveTask, parseWorkspace } from '../src/lib/model/workspace.ts';
+import { api, ApiError, setCsrf } from '../src/lib/api/client.ts';
 
 const empty = () => ({ version: 1, projects: [], tasks: [], notes: [] });
 const project = { id: 'p', name: 'Verstak', description: '', color: '#bb684a' };

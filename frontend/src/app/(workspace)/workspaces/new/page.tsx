@@ -1,8 +1,8 @@
-import { requireSession } from '@/shared/api/server';
-import { NewWorkspace } from '@/features/workspaces/NewWorkspace';
+import { requireSession } from '@/lib/api/server';
+import { NewWorkspaceForm } from '@/app/(workspace)/workspaces/new/_components/new-workspace-form';
 export const metadata = { title: 'Новое пространство' };
 const Page = async () => {
   const session = await requireSession();
-  return <NewWorkspace csrf={session.csrf} />;
+  return <NewWorkspaceForm csrf={session.csrf} />;
 };
 export default Page;

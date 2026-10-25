@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
-import { getWorkspace } from '@/shared/api/server';
-import { NoteRoute } from '@/features/notes/NoteRoute';
+import { getWorkspace } from '@/lib/api/server';
+import { NotePage } from '@/app/(workspace)/workspaces/[workspaceId]/pages/[noteId]/_components/note-page';
 type Props = { params: Promise<{ workspaceId: string; noteId: string }> };
 export const generateMetadata = async ({ params }: Props) => {
   const p = await params;
@@ -12,6 +12,6 @@ const Page = async ({ params }: Props) => {
   const p = await params;
   const seed = await getWorkspace(p.workspaceId);
   if (!seed.snapshot.data.notes.some((item) => item.id === p.noteId)) notFound();
-  return <NoteRoute noteId={p.noteId} snapshot={seed.snapshot} />;
+  return <NotePage noteId={p.noteId} snapshot={seed.snapshot} />;
 };
 export default Page;

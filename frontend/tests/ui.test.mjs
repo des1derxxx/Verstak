@@ -37,11 +37,11 @@ const { createElement: h } = await import('react');
 const { cleanup, fireEvent, render, screen, waitFor, within } = await import(
   '@testing-library/react'
 );
-const { QuickCreate } = await import('../src/features/tasks/QuickCreate.tsx');
-const { TaskEditor } = await import('../src/features/tasks/task-editor/TaskEditor.tsx');
-const { MutationContext } = await import('../src/shared/ui/Modal.tsx');
+const { QuickCreate } = await import('../src/components/task/quick-create.tsx');
+const { TaskEditor } = await import('../src/components/task/task-editor/task-editor.tsx');
+const { MutationContext } = await import('../src/components/ui/modal.tsx');
 const { WorkspaceView, WorkspaceRoot } = await import('./workspace-harness.tsx');
-const { localDate } = await import('../src/shared/model/workspace.ts');
+const { localDate } = await import('../src/lib/model/workspace.ts');
 
 const project = { id: 'project', name: 'Verstak', description: '', color: '#0c66e4' };
 const task = {
@@ -285,7 +285,7 @@ test('the login screen exposes password visibility and clear registration requir
     context,
     async () => new Response(JSON.stringify({ detail: 'Sign in' }), { status: 401 }),
   );
-  const { AuthForm } = await import('../src/features/account/AuthForm.tsx');
+  const { AuthForm } = await import('../src/app/(auth)/_components/auth-form.tsx');
   render(h(AuthForm, { invitation: '', onSession: () => {} }));
   await screen.findByRole('heading', { name: 'Войти в Verstak' });
   const password = screen.getByLabelText('Пароль');
@@ -350,7 +350,7 @@ test('today keeps backlog navigation available for scheduled backlog tasks', asy
 });
 
 test('closing a page preserves its draft until the user explicitly discards it', async () => {
-  const { NoteForm } = await import('../src/features/notes/NoteForm.tsx');
+  const { NoteForm } = await import('../src/components/note/note-form.tsx');
   let closed = 0;
   let saved = 0;
   const note = {
@@ -445,7 +445,7 @@ test('task metadata and real subtask navigation are separate from checklist item
 });
 
 test('Markdown renders code and tables and never inserts raw HTML or executable links', async () => {
-  const { Markdown } = await import('../src/shared/ui/Markdown.tsx');
+  const { Markdown } = await import('../src/components/ui/markdown.tsx');
   render(
     h(Markdown, {
       text: '# Heading\n\n**Bold** and [unsafe](javascript:alert(1))\n\n<script>alert(1)</script>\n\n```python\nprint(52)\n```\n\n| A | B |\n| - | - |\n| 1 | 2 |',
@@ -490,7 +490,9 @@ test('failed comment posting retains the draft and close protects it', async (co
 });
 
 test('API tokens expose secrets once and revocation sends the token ID', async (context) => {
-  const { TokenPanel } = await import('../src/features/account/TokenPanel.tsx');
+  const { TokenPanel } = await import(
+    '../src/app/(workspace)/workspaces/[workspaceId]/settings/tokens/_components/token-panel.tsx'
+  );
   const calls = [];
   let token = null;
   mockApi(context, async (url, options) => {
@@ -537,7 +539,7 @@ test('API tokens expose secrets once and revocation sends the token ID', async (
 });
 
 test('password recovery checks confirmation and submits the reset token', async (context) => {
-  const { PasswordRecovery } = await import('../src/features/account/PasswordRecovery.tsx');
+  const { PasswordRecovery } = await import('../src/app/(auth)/_components/password-recovery.tsx');
   const calls = [];
   mockApi(context, async (url, options) => {
     calls.push([url, JSON.parse(options.body)]);
@@ -596,7 +598,7 @@ test('a stale task draft cannot overwrite a newer task and can explicitly load t
 });
 
 test('the shared dropdown supports keyboard selection, skips disabled options and never submits a form', async () => {
-  const { Dropdown } = await import('../src/shared/ui/Dropdown.tsx');
+  const { Dropdown } = await import('../src/components/ui/dropdown.tsx');
   const changed = [];
   let submitted = 0;
   render(
@@ -632,7 +634,7 @@ test('the shared dropdown supports keyboard selection, skips disabled options an
 });
 
 test('dropdown search filters long lists, supports empty results and Escape closes only the list', async () => {
-  const { Dropdown } = await import('../src/shared/ui/Dropdown.tsx');
+  const { Dropdown } = await import('../src/components/ui/dropdown.tsx');
   const changed = [];
   let bubbled = 0;
   render(
@@ -664,7 +666,7 @@ test('dropdown search filters long lists, supports empty results and Escape clos
 });
 
 test('dropdown respects inherited disabled fields, closes on outside clicks and keeps one list open', async () => {
-  const { Dropdown } = await import('../src/shared/ui/Dropdown.tsx');
+  const { Dropdown } = await import('../src/components/ui/dropdown.tsx');
   const options = [
     { value: 'a', label: 'Первый' },
     { value: 'b', label: 'Второй' },
@@ -714,7 +716,9 @@ test('typing in a workspace dropdown does not open the global task creation shor
 });
 
 test('profile saves account fields, displays the avatar and requires a password only when changing email', async (context) => {
-  const { ProfilePanel } = await import('../src/features/account/ProfilePanel.tsx');
+  const { ProfilePanel } = await import(
+    '../src/app/(workspace)/workspaces/[workspaceId]/settings/profile/_components/profile-panel.tsx'
+  );
   const user = {
     ...session.user,
     bio: '',
@@ -757,7 +761,9 @@ test('profile saves account fields, displays the avatar and requires a password 
 });
 
 test('profile upload prepares an avatar, previews it and sends it only on save', async (context) => {
-  const { ProfilePanel } = await import('../src/features/account/ProfilePanel.tsx');
+  const { ProfilePanel } = await import(
+    '../src/app/(workspace)/workspaces/[workspaceId]/settings/profile/_components/profile-panel.tsx'
+  );
   const calls = [];
   let bitmapClosed = false;
   const bitmap = {
@@ -802,7 +808,9 @@ test('profile upload prepares an avatar, previews it and sends it only on save',
 });
 
 test('profile rejects unsupported files and protects unsaved fields when closed', async () => {
-  const { ProfilePanel } = await import('../src/features/account/ProfilePanel.tsx');
+  const { ProfilePanel } = await import(
+    '../src/app/(workspace)/workspaces/[workspaceId]/settings/profile/_components/profile-panel.tsx'
+  );
   let closed = 0;
   render(h(ProfilePanel, { user: session.user, onUser() {}, onClose: () => closed++ }));
   fireEvent.change(screen.getByLabelText('Файл аватарки'), {
@@ -858,12 +866,14 @@ test('server-provided workspace data renders immediately and navigation exposes 
     requests.push(url);
     return Response.json([]);
   });
-  const { WorkspaceProvider } = await import('../src/features/workspaces/WorkspaceContext.tsx');
-  const { WorkspaceShell } = await import('../src/features/workspaces/WorkspaceShell.tsx');
-  const { WorkspaceOverview } = await import('../src/features/workspaces/WorkspaceOverview.tsx');
-  const { BoardPanel } = await import('../src/features/workspaces/components/BoardPanel.tsx');
+  const { WorkspaceProvider } = await import('../src/lib/workspace/workspace-context.tsx');
+  const { WorkspaceShell } = await import(
+    '../src/app/(workspace)/workspaces/[workspaceId]/_components/workspace-shell.tsx'
+  );
+  const { WorkspaceOverview } = await import('../src/components/workspace/workspace-overview.tsx');
+  const { BoardPanel } = await import('../src/components/workspace/board-panel.tsx');
   const { useWorkspaceController } = await import(
-    '../src/features/workspaces/hooks/useWorkspaceController.ts'
+    '../src/lib/workspace/use-workspace-controller.ts'
   );
   const Harness = () => {
     const model = useWorkspaceController({
@@ -909,8 +919,10 @@ test('server-provided workspace data renders immediately and navigation exposes 
 });
 
 test('dirty page editors register a navigation guard and prevent accidental reloads', async () => {
-  const { RouteDraftContext } = await import('../src/shared/ui/RouteDraft.tsx');
-  const { ProfilePanel } = await import('../src/features/account/ProfilePanel.tsx');
+  const { RouteDraftContext } = await import('../src/lib/route-draft.tsx');
+  const { ProfilePanel } = await import(
+    '../src/app/(workspace)/workspaces/[workspaceId]/settings/profile/_components/profile-panel.tsx'
+  );
   const active = new Set();
   const register = (id) => {
     active.add(id);
@@ -945,9 +957,11 @@ test('the real Next workspace router preserves the project behind intercepted ta
     PathnameContext,
     SearchParamsContext,
   } = require('next/dist/shared/lib/hooks-client-context.shared-runtime.js');
-  const { WorkspaceRouter } = await import('../src/application/WorkspaceRouter.tsx');
-  const { useWorkspace } = await import('../src/features/workspaces/WorkspaceContext.tsx');
-  const { useRouteDraft } = await import('../src/shared/ui/RouteDraft.tsx');
+  const { WorkspaceRouter } = await import(
+    '../src/app/(workspace)/workspaces/[workspaceId]/_components/workspace-router.tsx'
+  );
+  const { useWorkspace } = await import('../src/lib/workspace/workspace-context.tsx');
+  const { useRouteDraft } = await import('../src/lib/route-draft.tsx');
   const { useState } = await import('react');
   const pushes = [];
   const router = {

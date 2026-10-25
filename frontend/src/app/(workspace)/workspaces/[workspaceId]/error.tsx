@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/shared/ui/Button';
+import { Button } from '@/components/ui/button';
 const WorkspaceError = ({ reset }: { reset: () => void }) => (
   <div role="alert" className="flex min-h-60 flex-col items-center justify-center gap-4 p-8">
     <h1>Не удалось загрузить страницу</h1>

@@ -1,5 +1,5 @@
-import { WorkspaceOverview } from '@/features/workspaces/WorkspaceOverview';
-import { NotesPanel } from '@/features/workspaces/components/NotesPanel';
+import { WorkspaceOverview } from '@/components/workspace/workspace-overview';
+import { NotesPanel } from '@/components/workspace/notes-panel';
 export const metadata = { title: 'Страницы' };
 const Page = () => (
   <WorkspaceOverview>

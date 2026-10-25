@@ -6,7 +6,7 @@ import {
   taskPath,
   filterSearch,
   safeReturnPath,
-} from '../src/shared/lib/routes.ts';
+} from '../src/lib/routes.ts';
 test('project, task and today links preserve their scope on a fresh URL', () => {
   const path = viewPath('team', 'project', 'notes');
   assert.equal(path, '/workspaces/team/projects/project/pages');

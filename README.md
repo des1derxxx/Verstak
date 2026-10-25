@@ -16,10 +16,11 @@
 Verstak/
 ├── frontend/
 │   ├── src/
-│   │   ├── app/             # App Router: страницы, layout, loading/error/404, @modal
-│   │   ├── application/     # WorkspaceRouter: навигация, состояние пространства и защита черновиков
-│   │   ├── features/        # Аккаунт, задачи, проекты, заметки, участники, уведомления
-│   │   ├── shared/          # Общие UI-компоненты, API-клиент, модель данных
+│   │   ├── app/             # App Router: маршруты; _components — компоненты одной страницы
+│   │   ├── components/
+│   │   │   ├── ui/          # Общие UI-компоненты без знания о домене
+│   │   │   └── task/ project/ note/ workspace/ notification/  # Компоненты, нужные нескольким страницам
+│   │   ├── lib/             # API-клиент, модель данных, маршруты, состояние пространства
 │   │   └── proxy.ts         # CSP с nonce для страниц Next.js
 │   ├── tests/
 │   ├── public/
@@ -57,18 +58,18 @@ Verstak/
 
 Страницы объявлены папками и `page.tsx` в App Router. Скобки `(auth)` и `(workspace)` группируют код и не входят в URL.
 
-| URL | Страница |
-| --- | --- |
-| `/login`, `/register` | Вход и регистрация |
-| `/forgot-password`, `/reset-password` | Восстановление доступа |
-| `/invite` | Принятие приглашения |
-| `/workspaces/new` | Создание пространства |
-| `/workspaces/[workspaceId]/board`, `/backlog`, `/list`, `/pages`, `/today` | Представления пространства (последние сегменты относительно того же пространства) |
-| `/workspaces/[workspaceId]/projects/[projectId]/board` | Проект; также доступны `backlog`, `list`, `pages` |
-| `/workspaces/[workspaceId]/tasks/[id_or_key]` | Карточка задачи, например `OM-52` |
-| `/workspaces/[workspaceId]/pages/[noteId]` | Страница документации |
-| `/workspaces/[workspaceId]/settings/profile`, `/settings/members`, `/settings/tokens`, `/settings/data` | Настройки относительно пространства |
-| `/workspaces/[workspaceId]/notifications` | Уведомления |
+| URL                                                                                                     | Страница                                                                          |
+| ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `/login`, `/register`                                                                                   | Вход и регистрация                                                                |
+| `/forgot-password`, `/reset-password`                                                                   | Восстановление доступа                                                            |
+| `/invite`                                                                                               | Принятие приглашения                                                              |
+| `/workspaces/new`                                                                                       | Создание пространства                                                             |
+| `/workspaces/[workspaceId]/board`, `/backlog`, `/list`, `/pages`, `/today`                              | Представления пространства (последние сегменты относительно того же пространства) |
+| `/workspaces/[workspaceId]/projects/[projectId]/board`                                                  | Проект; также доступны `backlog`, `list`, `pages`                                 |
+| `/workspaces/[workspaceId]/tasks/[id_or_key]`                                                           | Карточка задачи, например `OM-52`                                                 |
+| `/workspaces/[workspaceId]/pages/[noteId]`                                                              | Страница документации                                                             |
+| `/workspaces/[workspaceId]/settings/profile`, `/settings/members`, `/settings/tokens`, `/settings/data` | Настройки относительно пространства                                               |
+| `/workspaces/[workspaceId]/notifications`                                                               | Уведомления                                                                       |
 
 Layout пространства проверяет сессию и членство на сервере, параллельно загружает снимок и участников и передаёт начальные данные клиентским компонентам. Шапка, меню и состояние пространства сохраняются между страницами. Сервер обращается к Python API через отдельный Axios-клиент с cookie текущего запроса. `API_INTERNAL_ORIGIN` по умолчанию равен `http://127.0.0.1:8000`; Compose задаёт `http://api:8000`. Секреты и адрес внутреннего API не передаются в браузер.
 
@@ -242,16 +243,16 @@ curl -X PATCH "$VERSTAK_URL/api/tasks/OM-52" \
   -d '{"revision":1,"status":"done","resolutionComment":"Исправлено в PR #52, вход проверен"}'
 ```
 
-| Метод и путь | Назначение |
-| --- | --- |
-| `GET /api/projects` | Проекты с UUID и ключами |
-| `GET /api/tasks` | `{items,total,limit,offset}`, фильтры `projectId`, `parentId`, `status`, лимит до 200 |
-| `POST /api/tasks` | Создать; ответ — задача с серверными `id`, `key`, `revision` |
-| `GET /api/tasks/{id_or_key}` | Прочитать по UUID или `OM-52` |
-| `PATCH /api/tasks/{id_or_key}` | Частичная правка, обязательная `revision`; `null` очищает parentId/assigneeId |
-| `DELETE /api/tasks/{id_or_key}?revision=…` | Удалить с проверкой версии |
-| `GET/POST /api/tasks/{id_or_key}/comments` | Обсуждение; POST `{body: "Markdown"}` |
-| `GET /api/tasks/{id_or_key}/history` | Автор, время, событие и изменённые поля |
+| Метод и путь                               | Назначение                                                                            |
+| ------------------------------------------ | ------------------------------------------------------------------------------------- |
+| `GET /api/projects`                        | Проекты с UUID и ключами                                                              |
+| `GET /api/tasks`                           | `{items,total,limit,offset}`, фильтры `projectId`, `parentId`, `status`, лимит до 200 |
+| `POST /api/tasks`                          | Создать; ответ — задача с серверными `id`, `key`, `revision`                          |
+| `GET /api/tasks/{id_or_key}`               | Прочитать по UUID или `OM-52`                                                         |
+| `PATCH /api/tasks/{id_or_key}`             | Частичная правка, обязательная `revision`; `null` очищает parentId/assigneeId         |
+| `DELETE /api/tasks/{id_or_key}?revision=…` | Удалить с проверкой версии                                                            |
+| `GET/POST /api/tasks/{id_or_key}/comments` | Обсуждение; POST `{body: "Markdown"}`                                                 |
+| `GET /api/tasks/{id_or_key}/history`       | Автор, время, событие и изменённые поля                                               |
 
 Bearer-запросам не нужны cookie, CSRF или `X-Verstak-Client`. Остальные маршруты управления аккаунтом, пространством и токенами требуют браузерную сессию с CSRF. Для cookie-доступа к REST указывай `workspaceId` в query, а при `POST /tasks` — в JSON; bearer определяет пространство сам. Документация API доступна через `/api/docs`, схема OpenAPI — через `/api/openapi.json`. Повторный POST создаёт новую задачу: автоматическую повторную отправку после неопределённого сетевого результата пока нужно обрабатывать на стороне интеграции.
 
@@ -299,22 +300,22 @@ GitHub Actions собирает фронтенд, запускает тесты,
 
 ## Модель данных
 
-| Коллекция | Содержимое |
-| --- | --- |
-| `users` | Имя, нормализованный email, описание, версия профиля/аватара, Argon2id-хеш пароля |
-| `avatars` | Нормализованные WebP-изображения, отдельно от документов аккаунтов |
-| `workspaces` | Название и номер версии данных |
-| `members` | Связь пользователя с пространством и роль |
-| `projects` | Проекты с `workspace_id` |
-| `tasks` | UUID, постоянный key, revision, parentId, assigneeId, type, links, Markdown и чеклист |
-| `project_keys`, `issue_keys` | Счётчики и постоянные резервации номеров, включая удалённые задачи |
-| `comments`, `history` | Обсуждение и аудит с автором и серверным временем |
-| `notifications` | Уведомления участников и отметки прочтения |
-| `api_tokens`, `password_resets` | Хеши токенов, права/пользователь, срок действия |
-| `notes` | Заметки с `workspace_id` и `projectId` |
-| `sessions` | Хеш токена сессии, CSRF-токен, срок действия |
-| `invitations` | Хеш одноразового токена, email, роль, пространство и срок |
-| `rate_limits` | Счётчики ограничений регистрации, входа и приглашений |
+| Коллекция                       | Содержимое                                                                            |
+| ------------------------------- | ------------------------------------------------------------------------------------- |
+| `users`                         | Имя, нормализованный email, описание, версия профиля/аватара, Argon2id-хеш пароля     |
+| `avatars`                       | Нормализованные WebP-изображения, отдельно от документов аккаунтов                    |
+| `workspaces`                    | Название и номер версии данных                                                        |
+| `members`                       | Связь пользователя с пространством и роль                                             |
+| `projects`                      | Проекты с `workspace_id`                                                              |
+| `tasks`                         | UUID, постоянный key, revision, parentId, assigneeId, type, links, Markdown и чеклист |
+| `project_keys`, `issue_keys`    | Счётчики и постоянные резервации номеров, включая удалённые задачи                    |
+| `comments`, `history`           | Обсуждение и аудит с автором и серверным временем                                     |
+| `notifications`                 | Уведомления участников и отметки прочтения                                            |
+| `api_tokens`, `password_resets` | Хеши токенов, права/пользователь, срок действия                                       |
+| `notes`                         | Заметки с `workspace_id` и `projectId`                                                |
+| `sessions`                      | Хеш токена сессии, CSRF-токен, срок действия                                          |
+| `invitations`                   | Хеш одноразового токена, email, роль, пространство и срок                             |
+| `rate_limits`                   | Счётчики ограничений регистрации, входа и приглашений                                 |
 
 API проверяет членство в пространстве на каждом запросе. Изменения нескольких документов выполняются в MongoDB-транзакциях. Удаление проекта удаляет его задачи и заметки в той же транзакции. Секреты сессий и приглашений хранятся как SHA-256-хеши; пароли — в формате Argon2id PHC с индивидуальной случайной солью.
 

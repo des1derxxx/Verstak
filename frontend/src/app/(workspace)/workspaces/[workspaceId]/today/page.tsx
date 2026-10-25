@@ -1,7 +1,7 @@
-import { WorkspaceOverview } from '@/features/workspaces/WorkspaceOverview';
-import { BoardPanel } from '@/features/workspaces/components/BoardPanel';
-import { BacklogPanel } from '@/features/workspaces/components/BacklogPanel';
-import { ListPanel } from '@/features/workspaces/components/ListPanel';
+import { WorkspaceOverview } from '@/components/workspace/workspace-overview';
+import { BoardPanel } from '@/components/workspace/board-panel';
+import { BacklogPanel } from '@/components/workspace/backlog-panel';
+import { ListPanel } from '@/components/workspace/list-panel';
 export const metadata = { title: 'Сегодня' };
 const Page = async ({ searchParams }: { searchParams: Promise<{ view?: string }> }) => {
   const { view } = await searchParams;
