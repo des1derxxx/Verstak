@@ -17,7 +17,7 @@ def create_token(store, user, body):
     rate_limit(store.db, f"tokens:{user['_id']}", limit=30, seconds=3600)
     raw = "vsk_" + secrets.token_urlsafe(32)
     def operation(session):
-        services.membership(store.db, body.workspaceId, user["_id"], session, {"owner", "editor"} if "tasks:write" in body.scopes else None)
+        services.membership(store.db, body.workspaceId, user["_id"], session, {"owner", "editor"} if {"tasks:write", "notes:write"} & set(body.scopes) else None)
         scopes = list(set(body.scopes) | {"tasks:read"})
         document = {"_id": new_id(), "user_id": user["_id"], "workspace_id": body.workspaceId,
             "name": body.name, "scopes": scopes, "token_hash": digest(raw), "last4": raw[-4:],
