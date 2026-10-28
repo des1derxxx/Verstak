@@ -80,6 +80,8 @@ services:
     cpus: 1
     environment:
       API_INTERNAL_ORIGIN: http://api:8000
+      # Pinned: Coolify passes the whole .env to every service, and PORT there is the gateway's.
+      PORT: "3000"
     networks: [frontend]
     restart: unless-stopped
     healthcheck:
