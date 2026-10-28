@@ -131,6 +131,7 @@ export const TokenPanel = ({
                     'tasks:read',
                     ...(write ? ['tasks:write'] : []),
                     ...(pages ? ['notes:read'] : []),
+                    ...(pages && write ? ['notes:write'] : []),
                   ],
                   expiresInDays: days,
                 },
@@ -162,16 +163,16 @@ export const TokenPanel = ({
                 value={write ? 'write' : 'read'}
                 onValueChange={(value) => setWrite(value === 'write')}
                 options={[
-                  { value: 'read', label: 'Чтение задач' },
+                  { value: 'read', label: 'Только чтение' },
                   ...(space.role !== 'viewer'
-                    ? [{ value: 'write', label: 'Чтение и изменение задач' }]
+                    ? [{ value: 'write', label: 'Чтение и изменение' }]
                     : []),
                 ]}
               />
             </label>
             <label className={'flex items-center gap-2 [&_input]:w-auto'}>
               <input type="checkbox" checked={pages} onChange={(e) => setPages(e.target.checked)} />
-              Чтение страниц
+              Доступ к страницам
             </label>
             <label>
               Срок
