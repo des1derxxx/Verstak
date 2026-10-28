@@ -22,6 +22,7 @@ export const TokenPanel = ({
 }) => {
   const [name, setName] = useState('');
   const [write, setWrite] = useState(false);
+  const [pages, setPages] = useState(false);
   const [days, setDays] = useState(90);
   const [secret, setSecret] = useState('');
   const [savedSecret, setSavedSecret] = useState(false);
@@ -126,7 +127,11 @@ export const TokenPanel = ({
                 {
                   workspaceId: space.id,
                   name: name.trim(),
-                  scopes: write ? ['tasks:read', 'tasks:write'] : ['tasks:read'],
+                  scopes: [
+                    'tasks:read',
+                    ...(write ? ['tasks:write'] : []),
+                    ...(pages ? ['notes:read'] : []),
+                  ],
                   expiresInDays: days,
                 },
                 {
@@ -164,6 +169,10 @@ export const TokenPanel = ({
                 ]}
               />
             </label>
+            <label className={'flex items-center gap-2 [&_input]:w-auto'}>
+              <input type="checkbox" checked={pages} onChange={(e) => setPages(e.target.checked)} />
+              Чтение страниц
+            </label>
             <label>
               Срок
               <Dropdown
@@ -198,6 +207,7 @@ export const TokenPanel = ({
                   <small>
                     ••••{t.last4} ·{' '}
                     {t.scopes.includes('tasks:write') ? 'Чтение и запись' : 'Чтение'}
+                    {t.scopes.includes('notes:read') && ' · страницы'}
                     <br />
                     Истекает {formatTime(t.expiresAt)}
                   </small>
@@ -219,7 +229,7 @@ export const TokenPanel = ({
         </div>
         {close.confirmation}
         <p className={'small-print text-caption text-muted leading-4.5 text-center'}>
-          REST: /api/tasks · Authorization: Bearer …<br />
+          REST: /api/tasks · MCP: /api/mcp · Authorization: Bearer …<br />
           Примеры запросов — в README проекта.
         </p>
       </div>
