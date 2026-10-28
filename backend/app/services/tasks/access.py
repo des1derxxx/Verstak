@@ -4,7 +4,7 @@ from ..workspaces import membership
 from ..activity import public
 
 
-def access(db, auth, workspace_id, session, write=False):
+def access(db, auth, workspace_id, session, write=False, scope=None):
     if auth["token_id"]:
         token = db.api_tokens.find_one({"_id": auth["token_id"], "expires_at": {"$gt": now()}}, session=session)
         if not token:
@@ -13,7 +13,7 @@ def access(db, auth, workspace_id, session, write=False):
             raise HTTPException(404, "Пространство не найдено")
         db.api_tokens.update_one({"_id": token["_id"]}, {"$set": {"last_used_at": now()}}, session=session)
         workspace_id = token["workspace_id"]
-        if ("tasks:write" if write else "tasks:read") not in token["scopes"]:
+        if (scope or ("tasks:write" if write else "tasks:read")) not in token["scopes"]:
             raise HTTPException(403, "Токен не разрешает это действие")
     if not workspace_id:
         raise HTTPException(422, "Укажи workspaceId")
@@ -21,9 +21,9 @@ def access(db, auth, workspace_id, session, write=False):
     return workspace_id
 
 
-def execute(store, auth, workspace_id, callback, write=False):
+def execute(store, auth, workspace_id, callback, write=False, scope=None):
     def operation(session):
-        ws = access(store.db, auth, workspace_id, session, write)
+        ws = access(store.db, auth, workspace_id, session, write, scope)
         if write:
             store.db.workspaces.update_one({"_id": ws}, {"$inc": {"revision": 1}}, session=session)
         return callback(store.db, ws, session)

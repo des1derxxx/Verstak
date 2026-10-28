@@ -7,7 +7,8 @@ async def request_policy(request, call_next):
         origin = request.headers.get("origin")
         if origin and origin.rstrip("/") != settings.public_origin:
             return JSONResponse({"detail": "Недопустимый источник запроса"}, 403)
-        integration = request.headers.get("authorization", "").startswith("Bearer ") and (request.url.path == "/api/tasks" or request.url.path.startswith("/api/tasks/") or request.url.path == "/api/projects")
+        # /api/mcp accepts only bearer tokens, so it never needs the browser header.
+        integration = request.url.path == "/api/mcp" or request.headers.get("authorization", "").startswith("Bearer ") and (request.url.path == "/api/tasks" or request.url.path.startswith("/api/tasks/") or request.url.path == "/api/projects")
         if not integration and request.headers.get("x-verstak-client") != "web":
             return JSONResponse({"detail": "Отсутствует заголовок клиента"}, 403)
         if "application/json" not in request.headers.get("content-type", ""):
