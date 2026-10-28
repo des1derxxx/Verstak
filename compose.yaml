@@ -1,28 +1,35 @@
 name: verstak
 
+# Verstak shares its server with other products, so every service is capped and
+# yields first: a low CPU weight (cpu_shares) and a higher OOM score than anything else.
 services:
   mongo:
-    image: mongo:8.0
-    entrypoint: ["bash", "/opt/verstak/mongo-entrypoint.sh"]
+    cpu_shares: 256
+    oom_score_adj: 500
+    build: ./deploy/mongo
+    entrypoint: ["bash", "/opt/verstak/entrypoint.sh"]
     environment:
       MONGO_INITDB_ROOT_USERNAME: verstak_admin
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?Run python3 scripts/setup_env.py}
+      MONGO_CACHE_GB: ${MONGO_CACHE_GB:-0.25}
     volumes:
       - mongo_data:/data/db
       - mongo_config:/data/configdb
-      - ./deploy/mongo/entrypoint.sh:/opt/verstak/mongo-entrypoint.sh:ro
-      - ./deploy/mongo/healthcheck.sh:/opt/verstak/mongo-healthcheck.sh:ro
+    mem_limit: 768m
+    cpus: 1
     networks: [database]
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "bash", "/opt/verstak/mongo-healthcheck.sh"]
+      test: ["CMD", "bash", "/opt/verstak/healthcheck.sh"]
       interval: 5s
       timeout: 5s
       retries: 30
       start_period: 30s
 
   mongo-init:
-    image: mongo:8.0
+    cpu_shares: 256
+    oom_score_adj: 500
+    build: ./deploy/mongo
     depends_on:
       mongo: {condition: service_healthy}
     environment:
@@ -30,14 +37,17 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?Run python3 scripts/setup_env.py}
       MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD:?Run python3 scripts/setup_env.py}
       MONGODB_DATABASE: ${MONGODB_DATABASE:-verstak}
-    volumes:
-      - ./deploy/mongo/init.sh:/opt/verstak/mongo-init.sh:ro
-    entrypoint: ["bash", "/opt/verstak/mongo-init.sh"]
+    entrypoint: ["bash", "/opt/verstak/init.sh"]
+    mem_limit: 256m
     networks: [database]
     restart: "no"
 
   api:
+    cpu_shares: 256
+    oom_score_adj: 500
     build: ./backend
+    mem_limit: 384m
+    cpus: 1
     depends_on:
       mongo-init: {condition: service_completed_successfully}
     environment:
@@ -63,7 +73,11 @@ services:
       start_period: 15s
 
   frontend:
+    cpu_shares: 256
+    oom_score_adj: 500
     build: ./frontend
+    mem_limit: 384m
+    cpus: 1
     environment:
       API_INTERNAL_ORIGIN: http://api:8000
     networks: [frontend]
@@ -76,7 +90,11 @@ services:
       start_period: 20s
 
   web:
+    cpu_shares: 256
+    oom_score_adj: 500
     build: ./deploy/gateway
+    mem_limit: 64m
+    cpus: 0.5
     depends_on:
       api: {condition: service_healthy}
       frontend: {condition: service_healthy}
